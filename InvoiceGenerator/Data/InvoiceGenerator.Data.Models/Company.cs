@@ -1,0 +1,37 @@
+﻿using InvoiceGenerator.Data.Models.Enum;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace InvoiceGenerator.Data.Models
+{
+    public class Company
+    {
+        public Company()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public TypeOfCompany CompanyType { get; set; }
+
+        public Address Address { get; set; }
+
+        public string VatNumber { get; set; }
+
+        public string UniqueIdentificationNumber { get; set; }
+
+        public ICollection<SellerToBuyer> Sellers { get; set; }
+
+
+
+
+
+
+
+    }
+}
