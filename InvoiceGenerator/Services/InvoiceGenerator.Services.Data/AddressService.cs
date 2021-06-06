@@ -32,7 +32,7 @@ namespace InvoiceGenerator.Services.Data
             return country.Id;
         }
 
-        public async  Task AddFullAddress(AddressInputModel inputmodel)
+        public async  Task<string> AddFullAddress(AddressInputModel inputmodel)
         {
             var countryId =  await AddCountry(inputmodel.CountryName);
             var townId = await AddTown(inputmodel.TownName, countryId);
@@ -44,6 +44,7 @@ namespace InvoiceGenerator.Services.Data
             };
             await context.Addresses.AddAsync(address);
             await context.SaveChangesAsync();
+            return address.Id;
 
             
         }

@@ -1,7 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\InvoiceGenerator.Common\InvoiceGenerator.Common.csproj" />
+    <ProjectReference Include="..\..\Data\InvoiceGenerator.Data\InvoiceGenerator.Data.csproj" />
+    <ProjectReference Include="..\..\Web\InvoiceGenerator.Web.Models\InvoiceGenerator.Web.Models.csproj" />
+  </ItemGroup>
 
 </Project>

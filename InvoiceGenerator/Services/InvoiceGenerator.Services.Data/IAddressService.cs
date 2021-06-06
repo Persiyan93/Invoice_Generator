@@ -13,6 +13,6 @@ namespace InvoiceGenerator.Services.Data
 
         Task<int> AddTown(string townName,int countryName);
 
-        Task AddFullAddress(AddressInputModel inputmodel);
+        Task<string> AddFullAddress(AddressInputModel inputmodel);
     }
 }
