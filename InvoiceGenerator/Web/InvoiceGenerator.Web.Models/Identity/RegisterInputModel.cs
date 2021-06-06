@@ -12,6 +12,9 @@ namespace InvoiceGenerator.Web.Models.Identity
         [Required(ErrorMessage = "User Name is required")]
         public string Name { get; set; }
 
+        [Required]
+        public string UserName { get; set; }
+
         [EmailAddress]
         [Required]
         public string Email { get; set; }
