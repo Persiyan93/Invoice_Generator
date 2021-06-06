@@ -8,6 +8,10 @@ namespace InvoiceGenerator.Data.Models
 {
     public class Address
     {
+        public Address()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
         public string Id { get; set; }
 
         public string AddressText { get; set; }

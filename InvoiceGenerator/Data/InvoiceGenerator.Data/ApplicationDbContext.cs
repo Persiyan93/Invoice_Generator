@@ -19,9 +19,13 @@ namespace InvoiceGenerator.Data
 
         public DbSet<Company> Companies { get; set; }
 
+        public DbSet<Client> Clients { get; set; }
+
+        public DbSet<ContactPerson> ContactPeople { get; set; }
+
         public DbSet<RegisteredCompany> RegisteredCompanies { get; set; }
 
-        public DbSet<Country> Country { get; set; }
+        public DbSet<Country> Countries { get; set; }
 
         public DbSet<Invoice> Invoices { get; set; }
 

@@ -13,8 +13,8 @@ namespace InvoiceGenerator.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Company> builder)
         {
-            builder.HasDiscriminator<string>("CompanyStatus")
-                .HasValue<Company>("Client")
+            builder.HasDiscriminator<string>("TypeOfCompany")
+                .HasValue<Client>("Client")
                 .HasValue<RegisteredCompany>("RegisteredCompany");
         }
     }

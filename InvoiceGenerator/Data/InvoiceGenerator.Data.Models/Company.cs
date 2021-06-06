@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models
 {
-    public class Company
+    public abstract class Company
     {
         public Company()
         {
@@ -19,13 +19,15 @@ namespace InvoiceGenerator.Data.Models
 
         public TypeOfCompany CompanyType { get; set; }
 
+        public string AddressId { get; set; }
+
         public Address Address { get; set; }
 
         public string VatNumber { get; set; }
 
         public string UniqueIdentificationNumber { get; set; }
 
-        public ICollection<SellerToBuyer> Sellers { get; set; }
+       
 
 
 

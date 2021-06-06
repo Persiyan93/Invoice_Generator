@@ -17,5 +17,9 @@ namespace InvoiceGenerator.Data.Models
         public Company   Buyer  { get; set; }
 
         public string BuyerId { get; set; }
+
+        public bool IsActive { get; set; }
+
+       
     }
 }

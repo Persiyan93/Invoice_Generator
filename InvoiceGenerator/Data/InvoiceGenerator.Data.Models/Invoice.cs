@@ -8,6 +8,11 @@ namespace InvoiceGenerator.Data.Models
 {
     public class Invoice
     {
+        public Invoice()
+        {
+            this.Id = Guid.NewGuid().ToString();
+            this.Articles = new HashSet<InvoiceToArticle>();
+        }
         public string Id { get; set; }
 
         public int InvoiceNumber { get; set; }
@@ -20,6 +25,9 @@ namespace InvoiceGenerator.Data.Models
         public Company Buyer { get; set; }
 
         public string BuyerId { get; set; }
+
+        public string ContactPersonId { get; set; }
+        public ContactPerson ContactPerson { get; set; }
 
         public DateTime IssueDate { get; set; }
 
