@@ -27,6 +27,7 @@ namespace InvoiceGenerator.Data.Models
         public string BuyerId { get; set; }
 
         public string ContactPersonId { get; set; }
+
         public ContactPerson ContactPerson { get; set; }
 
         public DateTime IssueDate { get; set; }

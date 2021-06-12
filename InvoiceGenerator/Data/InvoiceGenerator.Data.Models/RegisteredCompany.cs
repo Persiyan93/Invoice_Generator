@@ -12,13 +12,13 @@ namespace InvoiceGenerator.Data.Models
         {
             this.Invoices = new HashSet<Invoice>();
             this.Users = new HashSet<ApplicationUser>();
-            this.Buyers = new HashSet<SellerToBuyer>();
+            this.Clients = new HashSet<Client>();
         }
         public ICollection<Invoice> Invoices { get; set; }
 
         public ICollection<ApplicationUser> Users { get; set; }
 
-        public ICollection<SellerToBuyer> Buyers { get; set; }
+        public ICollection<Client> Clients { get; set; }
 
         
     }

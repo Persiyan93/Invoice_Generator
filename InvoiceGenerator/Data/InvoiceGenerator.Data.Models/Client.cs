@@ -10,11 +10,14 @@ namespace InvoiceGenerator.Data.Models
     {
         public Client()
         {
-            this.Sellers = new HashSet<SellerToBuyer>();
+           
             this.Employees = new HashSet<ContactPerson>();
             
         }
-        public ICollection<SellerToBuyer> Sellers { get; set; }
+
+        public RegisteredCompany Seller { get; set; }
+
+        public string SellerId { get; set; }
 
         public Address MailingAddress { get; set; }
 

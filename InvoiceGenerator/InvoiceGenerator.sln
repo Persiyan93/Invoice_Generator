@@ -19,11 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{F9830B88-25E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Web", "InvoiceGenerator.Web\InvoiceGenerator.Web.csproj", "{465BC5B0-22A2-4E77-8480-0444834ECE36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceGenerator.Web.Models", "Web\InvoiceGenerator.Web.Models\InvoiceGenerator.Web.Models.csproj", "{0BE6E09D-CB9A-4D09-A525-E84A611B803E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Web.Models", "Web\InvoiceGenerator.Web.Models\InvoiceGenerator.Web.Models.csproj", "{0BE6E09D-CB9A-4D09-A525-E84A611B803E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{7CDEB159-3C6F-4282-BF21-DFF2578C6891}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceGenerator.Common", "Common\InvoiceGenerator.Common\InvoiceGenerator.Common.csproj", "{04095D62-AE5C-4E3E-A09C-530336154621}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Common", "Common\InvoiceGenerator.Common\InvoiceGenerator.Common.csproj", "{04095D62-AE5C-4E3E-A09C-530336154621}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceGenerator.Services.Messaging", "Services\InvoiceGenerator.Services.Messaging\InvoiceGenerator.Services.Messaging.csproj", "{A8CCF620-1869-4CD8-B0E3-6012F4502653}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{04095D62-AE5C-4E3E-A09C-530336154621}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04095D62-AE5C-4E3E-A09C-530336154621}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04095D62-AE5C-4E3E-A09C-530336154621}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8CCF620-1869-4CD8-B0E3-6012F4502653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8CCF620-1869-4CD8-B0E3-6012F4502653}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8CCF620-1869-4CD8-B0E3-6012F4502653}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8CCF620-1869-4CD8-B0E3-6012F4502653}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +77,7 @@ Global
 		{465BC5B0-22A2-4E77-8480-0444834ECE36} = {F9830B88-25E6-43C2-BEE0-1F4521D6520C}
 		{0BE6E09D-CB9A-4D09-A525-E84A611B803E} = {F9830B88-25E6-43C2-BEE0-1F4521D6520C}
 		{04095D62-AE5C-4E3E-A09C-530336154621} = {7CDEB159-3C6F-4282-BF21-DFF2578C6891}
+		{A8CCF620-1869-4CD8-B0E3-6012F4502653} = {C6205EE6-51C0-4E31-AD64-1C5DC6EFA163}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F1F05753-4606-41AF-8FA5-BAD0FF37ADB8}
