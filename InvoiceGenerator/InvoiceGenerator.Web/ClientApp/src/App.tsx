@@ -8,9 +8,14 @@ import FetchData from './components/FetchData';
 import './custom.css'
 
 export default () => (
+    <div>
+        <h1>i am the best</h1>
     <Layout>
+      
         <Route exact path='/' component={Home} />
         <Route path='/counter' component={Counter} />
         <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
-    </Layout>
+        </Layout>
+    </div>
 );
+ 

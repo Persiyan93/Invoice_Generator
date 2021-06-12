@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Client
 {
-   public  class ClientCompanyInputModel
+   public  class ClientViewModel
     {
-
     }
 }

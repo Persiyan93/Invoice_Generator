@@ -65,5 +65,15 @@ namespace InvoiceGenerator.Services.Data
             await context.SaveChangesAsync();
             return town.Id;
         }
+
+        public Task EditAddress(AddressInputModel inputModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T> GetAddressInfo<T>(string addressId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
