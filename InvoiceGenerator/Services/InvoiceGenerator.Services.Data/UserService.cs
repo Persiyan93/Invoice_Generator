@@ -6,16 +6,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Services.Data
 {
-    public interface IUserService
+    public class UserService
     {
-        Task CreateUser();
-
-        Task EditUser();
-
-        Task RemoveUser();
-
-        Task AddCompany(string userId, string CompanyId);
-
-
     }
 }

@@ -21,7 +21,10 @@ namespace InvoiceGenerator.Web.Models.Company
         [Required]
         public string VatNumber { get; set; }
 
-        
+
+        public string AccontablePersonName { get; set; }
+
+
         public string UniqueIdentificationNumber { get; set; }
     }
 }

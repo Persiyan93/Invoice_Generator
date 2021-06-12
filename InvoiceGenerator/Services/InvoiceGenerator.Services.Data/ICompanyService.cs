@@ -9,7 +9,7 @@ namespace InvoiceGenerator.Services.Data
 {
    public  interface ICompanyService
     {
-        Task CreateAsync(CompanyInputModel inputModel);
+        Task<string> CreateAsync(CompanyInputModel inputModel ,string userId);
 
         Task EditAsync();
 
@@ -17,6 +17,10 @@ namespace InvoiceGenerator.Services.Data
 
         Task AddUser();
 
+        Task AddClient(string clientId, string companyId);
 
+       
+
+             
     }
 }
