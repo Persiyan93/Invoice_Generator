@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -6,6 +6,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\InvoiceGenerator.Data.Models\InvoiceGenerator.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Services\InvoiceGenerator.Services.Mapping\InvoiceGenerator.Services.Mapping.csproj" />
+    <ProjectReference Include="..\..\Services\InvoiceGenerator.Services.Messaging\InvoiceGenerator.Services.Messaging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Invoices\" />
   </ItemGroup>
 
 </Project>

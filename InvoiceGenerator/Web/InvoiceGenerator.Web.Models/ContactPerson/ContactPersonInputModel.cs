@@ -11,11 +11,14 @@ namespace InvoiceGenerator.Web.Models.ContactPerson
     {
         [Required]
         public string Name { get; set; }
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
         [Required]
         public string PhoneNumber { get; set; }
+
         [Required]
         public string ClientId { get; set; }
 
