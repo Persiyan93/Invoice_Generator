@@ -17,8 +17,6 @@ namespace InvoiceGenerator.Data
 
         public DbSet<Article> Articles { get; set; }
 
-        public DbSet<Company> Companies { get; set; }
-
         public DbSet<Client> Clients { get; set; }
 
         public DbSet<ContactPerson> ContactPeople { get; set; }

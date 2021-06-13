@@ -19,6 +19,10 @@ namespace InvoiceGenerator.Data.Models
 
         public TypeOfCompany CompanyType { get; set; }
 
+        public string AccontablePersonName { get; set; }
+
+        public bool IsActive { get; set; }
+
         public string AddressId { get; set; }
 
         public Address Address { get; set; }
@@ -26,6 +30,8 @@ namespace InvoiceGenerator.Data.Models
         public string VatNumber { get; set; }
 
         public string UniqueIdentificationNumber { get; set; }
+
+        
 
        
 

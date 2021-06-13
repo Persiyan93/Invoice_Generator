@@ -11,9 +11,12 @@ namespace InvoiceGenerator.Data.Models
         public Client()
         {
            
-            this.Employees = new HashSet<ContactPerson>();
+            this.ContactList = new HashSet<ContactPerson>();
+            this.Invoices = new HashSet<Invoice>();
+            this.IsActive = true;
             
         }
+    
 
         public RegisteredCompany Seller { get; set; }
 
@@ -23,6 +26,10 @@ namespace InvoiceGenerator.Data.Models
 
         public string MailingAddressId { get; set; }
 
-        public ICollection<ContactPerson> Employees { get; set; }
+        public ICollection<ContactPerson> ContactList { get; set; }
+
+        public ICollection<Invoice> Invoices  { get; set; }
+
+
     }
 }

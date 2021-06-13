@@ -14,6 +14,10 @@ namespace InvoiceGenerator.Data.Models
             this.Users = new HashSet<ApplicationUser>();
             this.Clients = new HashSet<Client>();
         }
+        public string AdministratorId { get; set; }
+
+        public ApplicationUser Administrator { get; set; }
+
         public ICollection<Invoice> Invoices { get; set; }
 
         public ICollection<ApplicationUser> Users { get; set; }
