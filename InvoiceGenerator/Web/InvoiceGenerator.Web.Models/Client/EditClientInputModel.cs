@@ -1,14 +1,11 @@
 ﻿using InvoiceGenerator.Data.Models.Enum;
-
+using InvoiceGenerator.Web.Models.Company;
 
 namespace InvoiceGenerator.Web.Models.Client
 {
-   public  class EditClientInputModel
+    public class EditClientInputModel : CompanyInputModel
     {
-        public string Name { get; set; }
 
-        public TypeOfCompany CompanyType { get; set; }
-
-        public string  AccontablePersonName { get; set; }
     }
+
 }
