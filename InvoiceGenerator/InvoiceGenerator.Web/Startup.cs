@@ -75,6 +75,11 @@ namespace InvoiceGenerator.Web
             });
             services.AddTransient<ICompanyService, CompanyService>();
             services.AddTransient<IAddressService, AddressService>();
+            services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<IContactListService, ContactListService>();
+            services.AddTransient<IArticleService, ArticleService>();
+            services.AddTransient<IUserService, UserService>();
+            
 
         }
 
@@ -103,6 +108,10 @@ namespace InvoiceGenerator.Web
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
