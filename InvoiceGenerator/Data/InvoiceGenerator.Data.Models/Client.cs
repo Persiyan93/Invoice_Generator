@@ -13,14 +13,15 @@ namespace InvoiceGenerator.Data.Models
            
             this.ContactList = new HashSet<ContactPerson>();
             this.Invoices = new HashSet<Invoice>();
-            this.IsActive = true;
+            
             
         }
     
-
-        public RegisteredCompany Seller { get; set; }
+         public RegisteredCompany Seller { get; set; }
 
         public string SellerId { get; set; }
+
+        public string Email { get; set; }
 
         public Address MailingAddress { get; set; }
 

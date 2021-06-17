@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models.Enum
 {
-    public enum TypeOfCompany
+    public enum  LanguageOfInvoice
     {
-        SoleProprietorship=1,
-        Partneship=2,
-        LLP=3,
-        LLC=4,
-        LTD=5
-
-          
+       Bulgarian=1,
+       English=2
     }
 }

@@ -18,7 +18,13 @@ namespace InvoiceGenerator.Data.Models
 
         public string Description { get; set; }
 
+        public double VatRate { get; set; }
+
         public ICollection<InvoiceToArticle> Invoices { get; set; }
+
+        public string CompanyId { get; set; }
+
+        public RegisteredCompany Company { get; set; }
 
     }
 }

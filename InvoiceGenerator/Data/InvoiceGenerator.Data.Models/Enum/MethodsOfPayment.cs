@@ -6,14 +6,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models.Enum
 {
-    public enum TypeOfCompany
+   public enum MethodsOfPayment
     {
-        SoleProprietorship=1,
-        Partneship=2,
-        LLP=3,
-        LLC=4,
-        LTD=5
-
-          
     }
 }

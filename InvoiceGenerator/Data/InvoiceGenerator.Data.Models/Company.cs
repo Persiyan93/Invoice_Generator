@@ -12,6 +12,7 @@ namespace InvoiceGenerator.Data.Models
         public Company()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.IsActive = true;
         }
         public string Id { get; set; }
 
@@ -28,6 +29,10 @@ namespace InvoiceGenerator.Data.Models
         public Address Address { get; set; }
 
         public string VatNumber { get; set; }
+
+        public DefaultInvoiceOptions DefaultInvoiceOptions { get; set; }
+
+        public string DefaultInvoiceOptinsId { get; set; }
 
         public string UniqueIdentificationNumber { get; set; }
 
