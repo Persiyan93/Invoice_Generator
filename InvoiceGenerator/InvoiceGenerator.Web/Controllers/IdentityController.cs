@@ -1,5 +1,6 @@
 ﻿using InvoiceGenerator.Common;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Web.Models;
 using InvoiceGenerator.Web.Models.Identity;
 using Microsoft.AspNetCore.Http;
@@ -23,11 +24,13 @@ namespace InvoiceGenerator.Web.Controllers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
+       
 
         public IdentityController(UserManager<ApplicationUser> userManager,IConfiguration configuration)
         {
             this.userManager = userManager;
             this.configuration = configuration;
+            
         }
 
         [HttpPost]
@@ -36,11 +39,16 @@ namespace InvoiceGenerator.Web.Controllers
             var user = await userManager.FindByNameAsync(inputModel.UserName);
             if (user != null && await userManager.CheckPasswordAsync(user, inputModel.Password))
             {
+                
                 var userRoles = await userManager.GetRolesAsync(user);
+                var companyId = user.CompanyId;
+
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name,user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()) };
+                    new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                    new Claim("CompanyId",companyId)
+                };
                 foreach (var userRole in userRoles)
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
@@ -50,7 +58,7 @@ namespace InvoiceGenerator.Web.Controllers
                 var token = new JwtSecurityToken(
                     issuer: configuration["JWT:ValidIssuer"],
                     audience: configuration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddHours(3),
+                    expires: DateTime.Now.AddHours(8),
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
@@ -68,7 +76,7 @@ namespace InvoiceGenerator.Web.Controllers
         }
 
         [HttpPost]
-        [Route("/Register")]
+        [Route("Register")]
         public async Task<IActionResult> Register(RegisterInputModel inputModel)
         {
             var response = new ResponseViewModel();
@@ -76,9 +84,30 @@ namespace InvoiceGenerator.Web.Controllers
             if (user != null)
             {
                 response.Status = "Unsuccessful";
-                response.Message=ErrorMessages
+                response.Message = string.Format( ErrorMessages.UserAlreadyExist,inputModel.Email);
                 
             }
+            else
+            {
+                user = new ApplicationUser
+                {
+                    Email = inputModel.Email,
+                    UserName = inputModel.UserName,
+                    Name = inputModel.UserName
+                };
+               var result= await userManager.CreateAsync(user, inputModel.Password);
+                if (result.Succeeded)
+                {
+                    response.Status = "Successfully";
+                    response.Message = string.Format(SuccessMessages.SuccessfullyAddedUser,inputModel.Email);
+                }
+                else
+                {
+                    response.Status = "Unsuccessful";
+                    response.Message = result.Errors.First().Description;
+                }
+            }
+            return this.Ok(response);
         }
     }
             
