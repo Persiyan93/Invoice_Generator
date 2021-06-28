@@ -10,8 +10,4 @@
     <ProjectReference Include="..\..\Services\InvoiceGenerator.Services.Messaging\InvoiceGenerator.Services.Messaging.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Invoices\" />
-  </ItemGroup>
-
 </Project>
