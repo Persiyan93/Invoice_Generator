@@ -1,5 +1,7 @@
-﻿using InvoiceGenerator.Data;
+﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.Address;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,20 +21,9 @@ namespace InvoiceGenerator.Services.Data
             this.context = context;
         }
 
-        public async  Task<int> AddCountry(string countryName)
-        {
-            var country = await context.Countries.FirstOrDefaultAsync(x => x.Name.ToUpper() == countryName.ToUpper());
-            if (country!=null)
-            {
-                return country.Id;
-            }
-            country = new Country { Name = countryName };
-            await context.Countries.AddAsync(country);
-            await context.SaveChangesAsync();
-            return country.Id;
-        }
+       
 
-        public async  Task<string> AddFullAddress(AddressInputModel inputmodel)
+        public async  Task<string> AddFullAddressAsync(IAddress inputmodel)
         {
             var countryId =  await AddCountry(inputmodel.CountryName);
             var townId = await AddTown(inputmodel.TownName, countryId);
@@ -49,10 +40,56 @@ namespace InvoiceGenerator.Services.Data
             
         }
 
-        public  async Task<int> AddTown(string townName,int countryid)
+        public async  Task<string> AddMailingAddressAsync(MailingAddressInputModel inputModel)
+        {
+            var client = await context.Clients
+                .FirstOrDefaultAsync(x => x.Id == inputModel.ClientId);
+            if (client==null)
+            {
+                throw new InvalidUserDataException(string.Format(ErrorMessages.ClientDoesNotExist, inputModel.ClientId));
+            }
+
+            var mailingAddressId = await AddFullAddressAsync(inputModel);
+            client.MailingAddressId = mailingAddressId;
+            await context.SaveChangesAsync();
+            return mailingAddressId;
+
+        }
+
+   
+
+        public Task EditAddress(AddressInputModel inputModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<T> GetAddressInfoAsync<T>(string addressId)
+        {
+            var addressInfo =  await context.Addresses
+                .Where(x => x.Id == addressId)
+                .To<T>()
+                .FirstOrDefaultAsync();
+
+            return addressInfo;
+        }
+
+        private async Task<int> AddCountry(string countryName)
+        {
+            var country = await context.Countries.FirstOrDefaultAsync(x => x.Name.ToUpper() == countryName.ToUpper());
+            if (country != null)
+            {
+                return country.Id;
+            }
+            country = new Country { Name = countryName };
+            await context.Countries.AddAsync(country);
+            await context.SaveChangesAsync();
+            return country.Id;
+        }
+
+        private async Task<int> AddTown(string townName, int countryid)
         {
             var town = await context.Towns.FirstOrDefaultAsync(x => x.Name.ToUpper() == townName.ToUpper());
-            if (town!=null)
+            if (town != null)
             {
                 return town.Id;
             }
@@ -66,14 +103,5 @@ namespace InvoiceGenerator.Services.Data
             return town.Id;
         }
 
-        public Task EditAddress(AddressInputModel inputModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> GetAddressInfo<T>(string addressId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

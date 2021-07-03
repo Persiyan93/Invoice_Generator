@@ -1,5 +1,7 @@
 ﻿using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Services.Mapping;
+
 using InvoiceGenerator.Web.Models.Invoices;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,7 +25,7 @@ namespace InvoiceGenerator.Services.Data
         {
             var company = context.RegisteredCompanies
                 .Include(x => x.DefaultInvoiceOptions)
-                .FirstOrDefault(x => x.Id == inputModel.CompanyId);
+                .FirstOrDefault(x => x.Id == inputModel.SellerId);
             if (company == null)
             {
 
@@ -53,7 +55,10 @@ namespace InvoiceGenerator.Services.Data
                 PaymentDueDate = DateTime.Now.AddDays(inputModel.PaymentTerm.Value.TotalDays),
                 IssueDate = inputModel.IssueDate,
                 DiscountPercentage = inputModel.DiscountPercentage,
-                Language = inputModel.Language
+                Language = inputModel.Language,
+                PaymentMethod=inputModel.PaymentMethod,
+                AdditionalOptions=inputModel.AdditionalOptions
+
             };
 
             await context.Invoices.AddAsync(invoice);
@@ -79,14 +84,57 @@ namespace InvoiceGenerator.Services.Data
 
         }
 
-        public Task<ICollection<T>> GetAllCompanyInvoices<T>(string companyId)
+     
+
+        public async Task<ICollection<T>> GetAllCompanyInvoices<T>(string userId)
         {
-            throw new NotImplementedException();
+            var invoices = await context.Invoices
+                .Where(x => x.Seller.Users.Any(u => u.Id == userId))
+                .To<T>()
+                .ToListAsync();
+
+            return invoices;
+
         }
 
-        public Task<T> GetInvoiceById<T>(string invoiceId)
+        public async  Task<T> GetInvoiceById<T>(string invoiceId)
         {
-            throw new NotImplementedException();
+            var invoice = await context.Invoices
+               .Where(x => x.Id == invoiceId)
+               .To<T>()
+               .FirstOrDefaultAsync();
+               
+            return invoice;
         }
+
+        //public Task<InvoiceTemplateModel> GetInvoiceInformation(string invoiceId)
+        //{
+        //    var invoice = context.Invoices
+        //        .Where(x => x.Id == invoiceId)
+        //        .To<InvoiceTemplateModel>()
+        //        .FirstOrDefault();
+
+
+        //    return 
+
+
+        //        //.Select(x => new InvoiceTemplateModel
+        //        //{
+        //        //    InvoiceNumber = x.InvoiceNumber.ToString(),
+        //        //    ClientCompanyName = x.Client.Name,
+        //        //    ClientCompanyType = x.Client.CompanyType.ToString(),
+        //        //    ClientVatNumber = x.Client.VatNumber,
+        //        //    ClientCountryName = x.Client.Address.Town.Country.Name,
+        //        //    ClientTownName = x.Client.Address.Town.Country.Name,
+        //        //    ClientAddressText = x.Client.Address.AddressText,
+        //        //    ClientAccontablePersonName = x.Client.AccontablePersonName,
+        //        //    ClientUniqueIdentificationNumbe = x.Client.UniqueIdentificationNumber,
+        //        //    SellerVatNumber=x.Seller.VatNumber,
+                   
+
+
+
+        //        //});
+        //}
     }
 }

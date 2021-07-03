@@ -25,7 +25,7 @@ namespace InvoiceGenerator.Services.Data
         public async Task<string> CreateAsync(CompanyInputModel inputModel ,string userId)
         {
             var company = await context.RegisteredCompanies
-                .FirstOrDefaultAsync(x => x.VatNumber == inputModel.VatNumber);
+                .FirstOrDefaultAsync(x => x.VatNumber == inputModel.VatNumber && x.IsActive==true);
             if (company!=null)
             {
                 throw new InvalidUserDataException(ErrorMessages.CompanyAlreadyExist);
@@ -44,62 +44,25 @@ namespace InvoiceGenerator.Services.Data
 
                 
             };
-            var addressId = await addressService.AddFullAddress(inputModel.Address);
+            var addressId = await addressService.AddFullAddressAsync(inputModel.Address);
             company.AddressId = addressId;
-            await context.Companies.AddAsync(company);
+            company.Users.Add(user);
+            await context.RegisteredCompanies.AddAsync(company);
             await context.SaveChangesAsync();
             return company.Id;
 
 
 
         }
-        public async  Task AddUser(string userId,string companyId)
-        {
-            var company = await  context.RegisteredCompanies
-                .FirstOrDefaultAsync(x => x.Id == companyId);
-            if (company==null)
-            {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist,companyId));
-            }
-            var user =await   context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            if (user==null)
-            {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.UserWithSuchIdDoesNotExist, userId));
-            }
-            company.Users.Add(user);
-            await  context.SaveChangesAsync();
-        }
 
-        public Task DeleteAsync()
+        public Task EditCompanyInfoAsync(CompanyInputModel inputModel)
         {
             throw new NotImplementedException();
         }
 
-        public Task EditAsync()
+        public Task<T> GetCompanyInfoAsync<T>(string companyId)
         {
             throw new NotImplementedException();
-        }
-
-        public async  Task AddClient(string clientId, string companyId)
-        {
-            var company = await context.RegisteredCompanies
-                .FirstOrDefaultAsync(x => x.Id == companyId);
-            if (company==null)
-            {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist,companyId));
-            }
-
-            var client = await  context.Clients
-                .FirstOrDefaultAsync(x => x.Id == clientId);
-
-            if (client==null)
-            {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist, clientId));
-            }
-
-            company.Clients.Add(client);
-            await context.SaveChangesAsync();
-
         }
     }
 }

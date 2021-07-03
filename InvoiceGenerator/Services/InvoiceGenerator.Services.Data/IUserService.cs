@@ -16,6 +16,8 @@ namespace InvoiceGenerator.Services.Data
 
         Task AddCompany(string userId, string CompanyId);
 
+        public Task<string> GetUserCompanyId(string userId);
+
 
     }
 }

@@ -12,15 +12,15 @@ namespace InvoiceGenerator.Services.Data
     public interface IClientService
     {
 
-        Task<string> CreateClientAsync(CompanyInputModel inputModel);
+        Task<string> CreateClientAsync(ClientInputModel inputModel);
 
-        Task AddMailingAddressAsync(string clientId, AddressInputModel inputModel);
+        Task<ICollection<T>> GetAllClientsAsync<T>(string registeredCompanyId);
 
         Task<T> GetClientByIdAsync<T>(string clientId);
 
         Task EditClientInfoAsync(EditClientInputModel inputModel,string clientId);
 
-        Task AddContactPersonAsync(string contactPersonId, string clientId);
+      
 
         
 

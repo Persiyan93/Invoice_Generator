@@ -9,10 +9,14 @@ namespace InvoiceGenerator.Services.Data
 {
     public interface IAddressService
     {
-        Task<int> AddCountry(string countryName);
+      
 
-        Task<int> AddTown(string townName,int countryName);
+        Task<string> AddFullAddressAsync(IAddress inputmodel);
 
-        Task<string> AddFullAddress(AddressInputModel inputmodel);
+        Task<string> AddMailingAddressAsync(MailingAddressInputModel inputModel);
+
+        Task EditAddress(AddressInputModel inputModel);
+
+        Task<T> GetAddressInfoAsync<T>(string addressId);
     }
 }

@@ -25,33 +25,11 @@ namespace InvoiceGenerator.Services.Data
             this.addressService = addressService;
         }
 
-        public  async Task AddContactPersonAsync(string contactPersonId, string clientId)
-        {
-            var client = await  context.Clients
-                     .FirstOrDefaultAsync(x => x.Id == clientId);
-            var contactPerson = await context.ContactPeople.FirstOrDefaultAsync(x => x.Id == contactPersonId);
-            if (client==null|| contactPerson==null)
-            {
-                throw new InvalidUserDataException(ErrorMessages.IncorectData);
-            }
-            client.Employees.Add(contactPerson);
-            await context.SaveChangesAsync();
-        }
+       
 
-        public async Task AddMailingAddressAsync(string clientId, AddressInputModel inputModel)
-        {
-            var client = await context.Clients
-                .FirstOrDefaultAsync(x => x.Id == clientId);
-            if (client==null)
-            {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist, clientId));
-            }
-            var addressId = await addressService.AddFullAddress(inputModel);
-            client.MailingAddressId = addressId;
-            await context.SaveChangesAsync();
-        }
+      
 
-        public async Task<string> CreateClientAsync(CompanyInputModel inputModel )
+        public async Task<string> CreateClientAsync(ClientInputModel inputModel )
         {
             var client = await context.Clients
                     .FirstOrDefaultAsync(x => x.VatNumber == inputModel.VatNumber && x.IsActive == true);
@@ -59,14 +37,25 @@ namespace InvoiceGenerator.Services.Data
             {
                 throw new InvalidUserDataException(string.Format(ErrorMessages.ClientAlreadyExist, inputModel.VatNumber));
             }
+            var company = await context.RegisteredCompanies
+                .FirstOrDefaultAsync(x => x.Id == inputModel.RegisteredCompanyId);
+            if (company==null)
+            {
+                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist, inputModel.RegisteredCompanyId));
+            }
             client = new Client
             {
                 Name = inputModel.Name,
-                VatNumber=inputModel.VatNumber,
-                CompanyType=inputModel.CompanyType,
+                VatNumber = inputModel.VatNumber,
+                CompanyType = inputModel.CompanyType,
+                SellerId = inputModel.RegisteredCompanyId,
+                UniqueIdentificationNumber = inputModel.UniqueIdentificationNumber ,
+                AccontablePersonName=inputModel.AccontablePersonName??null
+                
+
                 
             };
-            var addressId = await addressService.AddFullAddress(inputModel.Address);
+            var addressId = await addressService.AddFullAddressAsync(inputModel.Address);
             client.AddressId = addressId;
             await context.Clients.AddAsync(client);
             await context.SaveChangesAsync();
@@ -116,16 +105,24 @@ namespace InvoiceGenerator.Services.Data
             else
             {
                 client.Name = inputModel.Name;
+                client.VatNumber = inputModel.VatNumber;
                 client.AccontablePersonName = inputModel.AccontablePersonName;
                 client.CompanyType = inputModel.CompanyType;
+                client.UniqueIdentificationNumber = client.UniqueIdentificationNumber;
                 
             }
             await context.SaveChangesAsync();
             
         }
 
-       
+        public async Task<ICollection<T>> GetAllClientsAsync<T>(string registeredCompanyId)
+        {
+            var clients = await context.Clients
+                     .Where(x => x.SellerId == registeredCompanyId && x.IsActive==true)
+                     .To<T>()
+                     .ToListAsync();
 
-       
+            return clients;
+        }
     }
 }

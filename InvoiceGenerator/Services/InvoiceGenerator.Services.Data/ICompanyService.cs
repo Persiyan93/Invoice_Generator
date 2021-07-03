@@ -11,13 +11,11 @@ namespace InvoiceGenerator.Services.Data
     {
         Task<string> CreateAsync(CompanyInputModel inputModel ,string userId);
 
-        Task EditAsync();
+        Task EditCompanyInfoAsync(CompanyInputModel inputModel);
 
-        Task DeleteAsync();
+        Task<T> GetCompanyInfoAsync<T>(string companyId);
 
-        Task AddUser();
-
-        Task AddClient(string clientId, string companyId);
+        
 
        
 

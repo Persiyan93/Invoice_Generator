@@ -8,6 +8,7 @@
     <ProjectReference Include="..\..\Common\InvoiceGenerator.Common\InvoiceGenerator.Common.csproj" />
     <ProjectReference Include="..\..\Data\InvoiceGenerator.Data\InvoiceGenerator.Data.csproj" />
     <ProjectReference Include="..\..\Web\InvoiceGenerator.Web.Models\InvoiceGenerator.Web.Models.csproj" />
+    <ProjectReference Include="..\InvoiceGenerator.Services.Mapping\InvoiceGenerator.Services.Mapping.csproj" />
   </ItemGroup>
 
 </Project>

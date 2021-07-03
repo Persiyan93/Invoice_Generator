@@ -1,4 +1,5 @@
-﻿using InvoiceGenerator.Web.Models.Invoices;
+﻿
+using InvoiceGenerator.Web.Models.Invoices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,16 @@ namespace InvoiceGenerator.Services.Data
     {
         Task<string> CreateInvoice(InvoiceInputModel invoice,string userId);
 
-        Task<ICollection<T>> GetAllCompanyInvoices<T>(string companyId);
+        Task<ICollection<T>> GetAllCompanyInvoices<T>(string userId);
+
 
         Task<T> GetInvoiceById<T>(string invoiceId);
+
+
+
+        //Task<InvoiceTemplateModel> GetInvoiceInformation(string invoiceId); 
+
+        
+
     }
 }
