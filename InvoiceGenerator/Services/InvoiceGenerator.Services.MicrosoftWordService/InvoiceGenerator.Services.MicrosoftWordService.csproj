@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1003" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\InvoiceGenerator.Data.Models\InvoiceGenerator.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\InvoiceGenerator.Data\InvoiceGenerator.Data.csproj" />
+    <ProjectReference Include="..\InvoiceGenerator.Services.Data\InvoiceGenerator.Services.Data.csproj" />
+    <ProjectReference Include="..\InvoiceGenerator.Services.Mapping\InvoiceGenerator.Services.Mapping.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+</Project>
