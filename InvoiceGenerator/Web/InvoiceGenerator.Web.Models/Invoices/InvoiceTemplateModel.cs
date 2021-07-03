@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Services.Mapping;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,25 +8,25 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Services.MicrosoftWordService.Models
 {
-    public class InvoiceTemplateModel
-    {
-        public string Number { get; set; }
+    public class InvoiceTemplateModel: TemplateModel,IMapFrom<Invoice>
+    { 
+        public string InvoiceNumber { get; set; }
 
-        public string    BuyerCompanyName { get; set; }
+        public string    ClientCompanyName { get; set; }
 
-        public string BuyerCompanyType { get; set; }
+        public string ClientCompanyType { get; set; }
 
-        public string BuyerVatNumber { get; set; }
+        public string ClientVatNumber { get; set; }
 
-        public string BuyerCountryName { get; set; }
+        public string ClientCountryName { get; set; }
 
-        public string BuyerTownName { get; set; }
+        public string ClientTownName { get; set; }
 
-        public string BuyerAddressText { get; set; }
+        public string ClientAddressText { get; set; }
 
-        public string BuyerUniqueIdentificationNumbe { get; set; }
+        public string ClientUniqueIdentificationNumbe { get; set; }
 
-        public string BuyerAccontablePersonName { get; set; }
+        public string ClientAccontablePersonName { get; set; }
 
         public string SellerVatNumber { get; set; }
 
