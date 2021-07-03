@@ -8,5 +8,7 @@ namespace InvoiceGenerator.Data.Models.Enum
 {
    public enum MethodsOfPayment
     {
+        Cash=1,
+        BankTransfer=2
     }
 }

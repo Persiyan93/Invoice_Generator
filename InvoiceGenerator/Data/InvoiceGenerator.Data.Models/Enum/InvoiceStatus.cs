@@ -8,5 +8,6 @@ namespace InvoiceGenerator.Data.Models.Enum
 {
     public enum  InvoiceStatus
     {
+
     }
 }

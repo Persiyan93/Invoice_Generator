@@ -21,7 +21,6 @@ namespace InvoiceGenerator.Data.Models
 
         public RegisteredCompany Seller { get; set; }
 
-
         public  string SellerId { get; set; }
 
         public Client Client { get; set; }
@@ -53,8 +52,10 @@ namespace InvoiceGenerator.Data.Models
         public string CreatedByUserId { get; set; }
 
         public ApplicationUser User { get; set; }
+
         public LanguageOfInvoice Language { get; set; }
 
+        public AdditionalInvoiceOptions AdditionalOptions { get; set; }
 
         public ICollection<InvoiceToArticle> Articles { get; set; }
 

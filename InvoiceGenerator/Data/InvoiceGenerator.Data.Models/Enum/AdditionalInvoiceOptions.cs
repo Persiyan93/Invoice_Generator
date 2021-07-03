@@ -8,6 +8,7 @@ namespace InvoiceGenerator.Data.Models.Enum
 {
     public enum  AdditionalInvoiceOptions
     {
+        ZeroVatRate=1,
 
     }
 }

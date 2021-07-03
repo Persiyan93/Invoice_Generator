@@ -2,6 +2,7 @@ using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Data.Seeding;
 using InvoiceGenerator.Services.Data;
+using InvoiceGenerator.Services.MicrosoftWordService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -79,6 +80,7 @@ namespace InvoiceGenerator.Web
             services.AddTransient<IContactListService, ContactListService>();
             services.AddTransient<IArticleService, ArticleService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IDocumentService, DocumentService>();
             
 
         }
