@@ -34,7 +34,8 @@ const StyledMenuItem = withStyles((theme) => ({
         '&:focus': {
             backgroundColor: theme.palette.primary.main,
             '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-                color: theme.palette.common.white,
+                // color: theme.palette.common.white,
+                color:theme.palette.common.white,
             },
         },
     },
@@ -58,22 +59,25 @@ export default function InvoiceMenu() {
                 aria-haspopup="true"
                 variant="contained"
                 color="primary"
-                onClick={handleClick}
+                onMouseOver={handleClick}
             >
-               Фактури
+               Артикули
       </Button>
+     
             <StyledMenu
                 id="customized-menu"
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
-                onClose={handleClose}
+                onMouseLeave={handleClose}
             >
                 <StyledMenuItem>
+                    
                     <ListItemIcon>
                         <FiberNewIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText primary="Нова Фактура " />
+                    <ListItemText primary="Нов артикул " />
+                   
                 </StyledMenuItem>
                 <StyledMenuItem>
                     <ListItemIcon>
@@ -85,7 +89,7 @@ export default function InvoiceMenu() {
                     <ListItemIcon>
                         <InboxIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText primary="Просрочени Фактури" />
+                    <ListItemText primary="Намери артикул" />
                 </StyledMenuItem>
             </StyledMenu>
         </div>
