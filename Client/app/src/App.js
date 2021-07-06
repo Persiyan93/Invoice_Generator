@@ -1,31 +1,24 @@
 import logo from './logo.svg';
 import './App.css';
-import InvoiceMenu from './components/NavigationMenu/IvoiceMenu';
+import Header from './components/Header/Header';
+import Main from './components/Main/Main';
+import DataTable from './components/Main/DataTable/DataTable';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <div className="Navigation-Menu">
-
-        <InvoiceMenu></InvoiceMenu>
-        </div>
+   
+ 
+      
+      
+      <Header/>
     
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+        
+       
+       
+     
+    
+  )
 }
 
 export default App;
