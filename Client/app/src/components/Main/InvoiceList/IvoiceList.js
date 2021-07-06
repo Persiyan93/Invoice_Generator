@@ -1,10 +1,11 @@
+import DataTable from '../DataTable/DataTable'
+
 const InvoiceList=(props)=>{
 
-    <div className='Container'>
-
-
-        
-    </div>
+    return(
+        <DataTable/>
+    
+    );
 
 
 }

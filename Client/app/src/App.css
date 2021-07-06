@@ -5,7 +5,7 @@
 } */
 .Navigation-Menu{
   color: black;
-  width: 100%;
+  width: 99%;
   padding-top:2%;
   padding-inline-start: 1%;
   background-color: rgb(10, 105, 89);
@@ -16,10 +16,11 @@
   
 } 
 
- /* .Container{
-  height: 400;
-  width: 100%;
-}  */
+ .Container{
+   padding-top: 7%;
+  height: 400 ;
+  width: 99%;
+} 
 
 
 
