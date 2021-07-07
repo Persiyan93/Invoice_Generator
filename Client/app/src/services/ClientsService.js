@@ -1,17 +1,6 @@
-import api from "./api";
+import  endpoints from "./apiEndpoints";
+import * as dataservice from '../services/dataService'
 
 export const addNewClient=(newClient)=>{
-    return fetch(api.addNewClient,{
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json',
-        },
-        body:JSON.stringify(newClient)
-    })
-    .then(response=>response.json())
-    .then(data=>console.log(data))
-    .catch(error=>console.log(error))
-        
-
-    
+    return dataservice.post(newClient,endpoints.addNewClient)
 }
