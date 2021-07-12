@@ -8,8 +8,12 @@ import NewInvoice from './components/Main/NewInvoice/NewInvoice'
 import InvoiceList from './components/Main/InvoiceList/IvoiceList'
 import Error from './components/Main/Error/Error'
 import DataTable from './components/Main/DataTable/DataTable';
-import AddClient from './components/Main/Clients/AddClient/AddClient'
+import AddClient from './components/Main/Clients/AddClient/AddClientForm'
+import Login from './components/Identity/Login';
 import { Divider } from '@material-ui/core';
+import Footer from './components/Footer/Footer';
+import ClientInfo from'./components/Main/Clients/ClientInfo/ClientInfo'
+import ClientList from './components/Main/Clients/ClientList/ClientList'
 
 
 function App() {
@@ -18,21 +22,22 @@ function App() {
         <Header/>
 
         <div className='Container'>
-        <Switch>    
+          <Switch>    
             <Route path="/"exact component={Home}/>
             <Route path="/NewInvoice" component={NewInvoice}/>
             <Route path="/InvoiceList" component={InvoiceList}/>
-            <Route path="/AddClient" component={AddClient}/>
+            <Route path="/Clients/NewClient" component={AddClient}/>
+            <Route path="/Clients/All" component={ClientList}/>
+            <Route path="/Login" component={Login}/>
+            <Route path="/ClientInfo/:ClientId" component={ClientInfo}/>
 
             <Route component={Error}/>
 
 
 
-        </Switch>
-
-
-
+          </Switch>
         </div>
+        <Footer/>
 
       </Fragment>
 
