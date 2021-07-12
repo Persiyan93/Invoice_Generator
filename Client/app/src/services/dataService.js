@@ -1,34 +1,41 @@
-var headers={};
 
-const cookieValue=document.cookie
-.split('; ')
-.find(row=>row.startsWith('Baerer'));
-if(cookieValue){
-    headers['Baerer']=cookieValue;
-    
+
+var cookieValue = document.cookie
+    .split('; ')
+    .find(row => row.startsWith('Bearer'))
+if (cookieValue) {
+    cookieValue = cookieValue.replace('=', ' ');
 }
 
 
+export function post(data, endpoint) {
 
 
+    return fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': cookieValue
 
-export   function post(data,endpoint){
- 
-    return   fetch(endpoint,{
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json',
         },
-        body:JSON.stringify(data)
-        
-    });
-   
-    
- };
+        body: JSON.stringify(data)
 
-  export  function get(endpoint){
-    return  fetch(endpoint)
+    })
+        .then(res => res)
+        .catch(err => console.log(err))
+
+
+};
+
+export function get(endpoint) {
+    console.log(endpoint)
+    return fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Authorization': cookieValue
+        }
     }
-    
-  
-  
+    )
+}
+
+
