@@ -12,9 +12,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import * as Row from './ClientRow'
+import * as clientsService from'../../../../services/clientsService';
+import ClientRow from './ClientRow'
 const useStyles = (theme => ({
     root: {
         '& > *': {
@@ -32,16 +31,17 @@ class ClientList extends React.Component {
 
         this.state = {
             clients: [{
+                id:"dasdasdasdas",
                 name: "Vladis",
                 vatNumber: "BG213123123",
-                invoiceCount: "10",
-                countOfoverdueInvoices: "1",
+                countOfInvoice: "10",
+                countOfOverdueInvoices: "1",
                 invoices: [
                     {
                         id:"dasdnaskdnojasnd1231-231ndsdjnasd",
                         number:"234",
                         dateOfIssue:"20.04.2021",
-                        maturityDate:"10.05.2021",
+                        paymentDueDate:"10.05.2021",
                         price:"240.45",
                         status:"Delay",
                         
@@ -53,25 +53,13 @@ class ClientList extends React.Component {
     }
 
     componentDidMount() {
-        // console.log(this.props.match);
-        // console.log(this.props.location);
-        // var response = getClientInfo(this.props.match.params['ClientId'])
-        //     .then(resp => {
-
-        //         if (resp.status != 200) {
-        //             response.then(res => console.log(res))
-
-        //         }
-        //         else {
-        //             resp.json()
-        //                 .then(clientInfo => {
-        //                     this.setState({ ...clientInfo })
-        //                     console.log(this.state)
-        //                 })
-        //                 .catch(err => console.log(err))
-        //         }
-        //     })
-        //     .catch(err => console.log(err))
+       
+        clientsService.getAllClients()
+        .then(resp=> resp.json() )
+        .then(result=>
+            this.setState({clients:result})
+            )
+        .catch(err=>console.log(err))
 
 
 
@@ -83,11 +71,7 @@ class ClientList extends React.Component {
 
 
     render() {
-        // let { name, companyType, vatNumber, accontablePersonName, uniqueIdentificationNumber, address: { town, country, addressText } } = this.state;
-        // const { classes } = this.props;
-        // const rows = [
-
-        // ];
+      
 
         return (
             <React.Fragment>
@@ -97,17 +81,18 @@ class ClientList extends React.Component {
                         <TableHead>
                             <TableRow>
                                 <TableCell />
-                                <TableCell>Клиенти</TableCell>
+                               
                                 <TableCell align="right">Име на фирмата</TableCell>
                                 <TableCell align="right">ДДС Номер</TableCell>
                                 <TableCell align="right">Брой на всички фактури</TableCell>
                                 <TableCell align="right">Брой на просрочени фактури</TableCell>
+                                <TableCell align="right">Действия</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {this.state.clients.map((client) => (
-                                <Row key={client.id} {...client} />
-                            ))}
+                                <ClientRow key={client.id} {...client}  />
+                            ))} 
                         </TableBody>
                     </Table>
                 </TableContainer>

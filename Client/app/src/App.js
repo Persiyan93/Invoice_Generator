@@ -29,7 +29,7 @@ function App() {
             <Route path="/Clients/NewClient" component={AddClient}/>
             <Route path="/Clients/All" component={ClientList}/>
             <Route path="/Login" component={Login}/>
-            <Route path="/ClientInfo/:ClientId" component={ClientInfo}/>
+            <Route path="/Clients/ClientInfo/:clientId" component={ClientInfo}/>
 
             <Route component={Error}/>
 
