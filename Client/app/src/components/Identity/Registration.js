@@ -1,9 +1,8 @@
 import React from "react";
-import TextField from '@material-ui/core/TextField';
-import { Button } from "@material-ui/core";
+import { Button,TextField } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 import * as identityService from '../../services/identityService';
-import Cookies from 'universal-cookie';
+
 
 
 
@@ -22,7 +21,9 @@ class Login extends React.Component{
     super(props)
     this.state={
         userName:'',
-        password:''
+        password:'',
+        repatPassword:'',
+        email:''
     }
     this.changeHandler=this.changeHandler.bind(this);
     this.submitHandler=this.submitHandler.bind(this);
@@ -48,12 +49,7 @@ class Login extends React.Component{
         else
         {
             
-            var {token,expiration}=await response.json();
-            var expirationDate=Date.parse(expiration);
-            var maxAgeInSeconds=(expirationDate-Date.now())/1000;
-            const cookies = new Cookies();
-            cookies.set('Bearer', token, { maxAge:maxAgeInSeconds });
-            this.props.history.push(`/`)
+           
             
         }
        
@@ -61,17 +57,21 @@ class Login extends React.Component{
        
     }
     render(){
-        const {username,password}=this.state;
+        const {username,password,repatPassword,email}=this.state;
         const { classes } = this.props;
         return(
             <form className={classes.root}  onSubmit={this.submitHandler}>
-            <TextField required variant="outlined" value={username} name="username" label="Потребител"   onChange={this.changeHandler}  />
+            <TextField required variant="outlined" value={username} name="username" label="Потребител"  defaultValue="" onChange={this.changeHandler}  />
             <TextField required variant="outlined" value={password} name="password" label="Парола"  type="password" onChange={this.changeHandler}  />
+            <TextField required variant="outlined" value={repatPassword} name="repatPassword" label="Повтори паролата"  type="password" onChange={this.changeHandler}  />
+            <TextField required variant="outlined" value={email} name="email" label="Имеил адрес"  type="password" onChange={this.changeHandler}  />
+
+
 
           
             
             <Button  variant="contained" type="submit"  color="primary">
-                Вход
+               Регистрация
             </Button>
          
          </form>

@@ -96,7 +96,7 @@ class ClientRow extends React.Component {
                                     }
 
                                 </Typography>
-                                {invoices.length != 0 ? <Table size="small" aria-label="purchases">
+                                {invoices.length != 0 && <Table size="small" aria-label="purchases">
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Номер на фактурата</TableCell>
@@ -118,7 +118,7 @@ class ClientRow extends React.Component {
                                             </TableRow>
                                         ))}
                                     </TableBody>
-                                </Table> : ''}
+                                </Table> }
 
                             </Box>
                         </Collapse>
