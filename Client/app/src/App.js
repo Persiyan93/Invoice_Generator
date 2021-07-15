@@ -10,10 +10,11 @@ import Error from './components/Main/Error/Error'
 import DataTable from './components/Main/DataTable/DataTable';
 import AddClient from './components/Main/Clients/AddClient/AddClientForm'
 import Login from './components/Identity/Login';
-import { Divider } from '@material-ui/core';
+import { CssBaseline, Divider } from '@material-ui/core';
 import Footer from './components/Footer/Footer';
 import ClientInfo from'./components/Main/Clients/ClientInfo/ClientInfo'
-import ClientList from './components/Main/Clients/ClientList/ClientList'
+import ClientList from './components/Main/Clients/ClientList/ClientList';
+import Registration from './components/Identity/Registration';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/Clients/NewClient" component={AddClient}/>
             <Route path="/Clients/All" component={ClientList}/>
             <Route path="/Login" component={Login}/>
+            <Route path="/Registration" component={Registration}/>
             <Route path="/Clients/ClientInfo/:clientId" component={ClientInfo}/>
 
             <Route component={Error}/>
@@ -38,7 +40,7 @@ function App() {
           </Switch>
         </div>
         <Footer/>
-
+      <CssBaseline/>
       </Fragment>
 
     
