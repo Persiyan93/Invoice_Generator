@@ -11,7 +11,7 @@ namespace InvoiceGenerator.Services.Data
     {
       
 
-        Task<string> AddFullAddressAsync(IAddress inputmodel);
+        Task<string> AddFullAddressAsync(AddressModel inputmodel);
 
         Task<string> AddMailingAddressAsync(MailingAddressInputModel inputModel);
 

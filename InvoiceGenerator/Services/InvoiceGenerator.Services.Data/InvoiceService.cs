@@ -1,5 +1,6 @@
 ﻿using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
 
 using InvoiceGenerator.Web.Models.Invoices;
@@ -25,7 +26,7 @@ namespace InvoiceGenerator.Services.Data
         {
             var company = context.RegisteredCompanies
                 .Include(x => x.DefaultInvoiceOptions)
-                .FirstOrDefault(x => x.Id == inputModel.SellerId);
+                .FirstOrDefault(x =>x.Users.Any(u=>u.Id==userId));
             if (company == null)
             {
 
@@ -38,43 +39,62 @@ namespace InvoiceGenerator.Services.Data
             {
 
             }
-            var contactPerson = client.ContactList.FirstOrDefault(x => x.Id == inputModel.ClientId);
-
-            contactPerson ??= client.ContactList.FirstOrDefault();
 
             inputModel.PaymentTerm ??= company.DefaultInvoiceOptions.DefaultPaymentTerm;
-
-
 
             var invoice = new Invoice
             {
                 SellerId = company.Id,
                 ClientId = company.Id,
-                ContactPersonId = contactPerson.Id,
                 CreatedByUserId = userId,
-                PaymentDueDate = DateTime.Now.AddDays(inputModel.PaymentTerm.Value.TotalDays),
+                PaymentDueDate = DateTime.Now.AddDays((int)inputModel.PaymentTerm),
+                DateOfTaxEvent=inputModel.DateOfTaxEvent,
                 IssueDate = inputModel.IssueDate,
-                DiscountPercentage = inputModel.DiscountPercentage,
                 Language = inputModel.Language,
                 PaymentMethod=inputModel.PaymentMethod,
-                AdditionalOptions=inputModel.AdditionalOptions
+                
 
             };
-
-            await context.Invoices.AddAsync(invoice);
-            foreach (var article in inputModel.Articles)
+            var contactPerson = client.ContactList.FirstOrDefault(x => x.Id == inputModel.ContactPersonId);
+            if (contactPerson!=null)
             {
+                invoice.ContactPersonId = contactPerson.Id;
+            }
+            
+
+           
+
+           
+            await context.Invoices.AddAsync(invoice);
+            foreach (var inputArticle in inputModel.Articles)
+            {
+                var article =await  context.Articles
+                    .FirstOrDefaultAsync(x => x.Id == inputArticle.Id);
                 invoice.Articles.Add(
                     new InvoiceToArticle
                     {
-                        ArticleId=article.Id,
-                        PriceWithoutVat=article.Price
+                        Article = article,
+                        PriceWithoutVat = inputArticle.PriceWithoutVat
 
-                    });
+
+                    }) ;
             }
 
             invoice.PriceWithoutVat = invoice.Articles.Sum(x => x.PriceWithoutVat);
-            invoice.VatValue = invoice.Articles.Sum(x => (decimal)x.Article.VatRate * x.PriceWithoutVat);
+            if (inputModel.AdditionalOptions==AdditionalInvoiceOptions.ZeroVatRate)
+            {
+                invoice.VatValue = 0;
+            }
+            else
+            {
+                invoice.VatValue = invoice.Articles.Sum(x => (decimal)x.Article.VatRate * x.PriceWithoutVat);
+            }
+           
+
+            if (inputModel.DiscountPercentage!=null)
+            {
+                invoice.DiscountPercentage = (double)inputModel.DiscountPercentage;
+            }
 
             await context.SaveChangesAsync();
 

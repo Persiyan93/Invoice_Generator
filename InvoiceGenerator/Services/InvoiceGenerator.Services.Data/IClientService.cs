@@ -12,7 +12,7 @@ namespace InvoiceGenerator.Services.Data
     public interface IClientService
     {
 
-        Task<string> CreateClientAsync(ClientInputModel inputModel);
+        Task<string> CreateClientAsync(ClientInputModel inputModel,string companyId);
 
         Task<ICollection<T>> GetAllClientsAsync<T>(string registeredCompanyId);
 

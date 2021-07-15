@@ -23,11 +23,11 @@ namespace InvoiceGenerator.Services.Data
 
        
 
-        public async  Task<string> AddFullAddressAsync(IAddress inputmodel)
+        public async  Task<string> AddFullAddressAsync(Web.Models.Address.AddressModel inputmodel)
         {
-            var countryId =  await AddCountry(inputmodel.CountryName);
-            var townId = await AddTown(inputmodel.TownName, countryId);
-            var address = new Address
+            var countryId =  await AddCountry(inputmodel.Country);
+            var townId = await AddTown(inputmodel.Town, countryId);
+            var address = new InvoiceGenerator.Data.Models.Address
             {
                 TownId = townId,
                 AddressText = inputmodel.AddressText

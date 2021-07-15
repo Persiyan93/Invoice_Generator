@@ -17,12 +17,12 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientController : ControllerBase
+    public class ClientsController : ControllerBase
     {
         private readonly IClientService clientService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public ClientController(IClientService clientService, UserManager<ApplicationUser> userManager)
+        public ClientsController(IClientService clientService, UserManager<ApplicationUser> userManager)
         {
             this.clientService = clientService;
             this.userManager = userManager;
@@ -32,7 +32,9 @@ namespace InvoiceGenerator.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddClient(ClientInputModel inputModel)
         {
-            var clientId = await clientService.CreateClientAsync(inputModel);
+            var user = await userManager.FindByNameAsync(this.User.Identity.Name);
+            var companyId = user.CompanyId;
+            var clientId = await clientService.CreateClientAsync(inputModel, companyId);
 
             return this.Ok(
                 new ResponseViewModel
@@ -48,10 +50,14 @@ namespace InvoiceGenerator.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllClients()
         {
-            var companyId = User.Claims.FirstOrDefault(x => x.Type == "CompanyId").Value;
+            var user = await userManager.FindByNameAsync(this.User.Identity.Name);
+            var companyId = user.CompanyId;
             var clients = await clientService.GetAllClientsAsync<ClientInListViewModel>(companyId);
             return this.Ok(clients);
         }
+
+
+
         [Authorize]
         [HttpGet("{clientId}")]
         public async Task<IActionResult> GetClientInfo(string clientId)
@@ -61,8 +67,19 @@ namespace InvoiceGenerator.Web.Controllers
             return this.Ok(client);
 
         }
-        
-        
+
+        [Authorize]
+        [HttpGet]
+        [Route("additionalInfo/{clientId}")]
+        public async Task<IActionResult> GetAdditionalClientInfo(string clientId)
+        {
+            var client = await clientService.GetClientByIdAsync<AdditionalClientInfo>(clientId);
+
+            return this.Ok(client);
+
+        }
+
+
 
 
 

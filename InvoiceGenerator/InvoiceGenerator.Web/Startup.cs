@@ -2,7 +2,9 @@ using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Data.Seeding;
 using InvoiceGenerator.Services.Data;
+using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Services.MicrosoftWordService;
+using InvoiceGenerator.Web.Models.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 using System.Text;
 
 namespace InvoiceGenerator.Web
@@ -80,6 +83,7 @@ namespace InvoiceGenerator.Web
             services.AddTransient<IContactListService, ContactListService>();
             services.AddTransient<IArticleService, ArticleService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IInvoiceService, InvoiceService>();
             services.AddTransient<IDocumentService, DocumentService>();
             
 
@@ -98,12 +102,26 @@ namespace InvoiceGenerator.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseCors(options =>
+
+              options.AllowAnyMethod()
+              .AllowAnyHeader()
+              .SetIsOriginAllowed(origin => true)
+              .AllowCredentials());
+
+            //Register Automaper 
+            AutoMapperConfig.RegisterMappings(typeof(LoginInputModel).GetTypeInfo().Assembly);
+
+            //Seeding Data
             using (var serviceScope=app.ApplicationServices.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 dbContext.Database.Migrate();
                 new ApplicationSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider, Configuration).GetAwaiter().GetResult();
             }
+
+           
 
             app.UseHttpsRedirection();
            // app.UseStaticFiles();

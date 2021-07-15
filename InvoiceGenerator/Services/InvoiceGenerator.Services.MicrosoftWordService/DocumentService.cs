@@ -37,7 +37,7 @@ namespace InvoiceGenerator.Services.MicrosoftWordService
 
         }
 
-        private void GenerateDocument(ITemplateModel model, string templatePath = "faktura-356.docx")
+        private void GenerateDocument(TemplateModel model, string templatePath = "faktura-356.docx")
         {
             Application app = new Application();
             Document doc = app.Documents.Open(templatePath, ReadOnly: false);

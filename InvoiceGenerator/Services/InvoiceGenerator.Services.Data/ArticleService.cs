@@ -20,10 +20,10 @@ namespace InvoiceGenerator.Services.Data
         {
             this.context = context;
         }
-        public async Task<string> AddArticle(ArticleInputModel inputModel)
+        public async Task<string> AddArticle(ArticleInputModel inputModel,string companyId)
         {
             var company = context.RegisteredCompanies
-                .FirstOrDefault(x => x.IsActive == true && x.Id == inputModel.CompanyId);
+                .FirstOrDefault(x => x.IsActive == true && x.Id == companyId);
             if (company==null)
             {
                 throw new InvalidUserDataException(ErrorMessages.CompanyWithSuchIdDoesNotExist);
@@ -33,7 +33,7 @@ namespace InvoiceGenerator.Services.Data
                 Name = inputModel.Name,
                 Description = inputModel.Description,
                 VatRate = inputModel.VatRate,
-                CompanyId=company.Id
+                CompanyId=companyId
 
 
             };

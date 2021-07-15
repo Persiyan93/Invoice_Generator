@@ -33,9 +33,9 @@ namespace InvoiceGenerator.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateInvoice(InvoiceInputModel inputModel)
         {
-            
-            var userId =  userManager.GetUserId(User);
-            var invoiceId=await invoiceService.CreateInvoice(inputModel,userId);
+
+            var user= await userManager.FindByNameAsync(this.User.Identity.Name);
+            var invoiceId=await invoiceService.CreateInvoice(inputModel,user.Id);
 
             return this.Ok(new ResponseViewModel
             {

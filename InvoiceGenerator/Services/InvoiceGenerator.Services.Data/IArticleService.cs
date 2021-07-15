@@ -9,7 +9,7 @@ namespace InvoiceGenerator.Services.Data
 {
     public interface IArticleService
     {
-        public Task<string> AddArticle(ArticleInputModel inputModel);
+        public Task<string> AddArticle(ArticleInputModel inputModel,string companyId);
 
         public Task<ICollection<T>> GetAllArticlesByCompanyId<T>(string companyId);
 

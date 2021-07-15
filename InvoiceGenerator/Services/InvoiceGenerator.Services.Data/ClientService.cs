@@ -29,7 +29,7 @@ namespace InvoiceGenerator.Services.Data
 
       
 
-        public async Task<string> CreateClientAsync(ClientInputModel inputModel )
+        public async Task<string> CreateClientAsync(ClientInputModel inputModel,string companyId )
         {
             var client = await context.Clients
                     .FirstOrDefaultAsync(x => x.VatNumber == inputModel.VatNumber && x.IsActive == true);
@@ -38,17 +38,17 @@ namespace InvoiceGenerator.Services.Data
                 throw new InvalidUserDataException(string.Format(ErrorMessages.ClientAlreadyExist, inputModel.VatNumber));
             }
             var company = await context.RegisteredCompanies
-                .FirstOrDefaultAsync(x => x.Id == inputModel.RegisteredCompanyId);
+                .FirstOrDefaultAsync(x => x.Id == companyId);
             if (company==null)
             {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist, inputModel.RegisteredCompanyId));
+                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist, companyId));
             }
             client = new Client
             {
                 Name = inputModel.Name,
                 VatNumber = inputModel.VatNumber,
                 CompanyType = inputModel.CompanyType,
-                SellerId = inputModel.RegisteredCompanyId,
+                SellerId = companyId,
                 UniqueIdentificationNumber = inputModel.UniqueIdentificationNumber ,
                 AccontablePersonName=inputModel.AccontablePersonName??null
                 

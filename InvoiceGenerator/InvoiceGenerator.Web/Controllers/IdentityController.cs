@@ -46,9 +46,14 @@ namespace InvoiceGenerator.Web.Controllers
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name,user.UserName),
+                    
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                    new Claim("CompanyId",companyId)
+                   
                 };
+                if (companyId!=null)
+                {
+                    authClaims.Add(new Claim("CompanyId", companyId));
+                }
                 foreach (var userRole in userRoles)
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));

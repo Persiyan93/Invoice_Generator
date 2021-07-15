@@ -1,9 +1,11 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Web.Models;
 using InvoiceGenerator.Web.Models.Articles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,16 +20,24 @@ namespace InvoiceGenerator.Web.Controllers
     public class ArticleController : ControllerBase
     {
         private readonly IArticleService articleService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public ArticleController(IArticleService articleService)
+        public ArticleController(IArticleService articleService,UserManager<ApplicationUser> userManager)
         {
             this.articleService = articleService;
+            this.userManager = userManager;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddArticle(ArticleInputModel inputModel)
         {
-            var articleId = await articleService.AddArticle(inputModel);
+            var user = await userManager.FindByNameAsync(this.User.Identity.Name);
+            var companyId = user.CompanyId;
+            if (companyId==null)
+            {
+                return this.BadRequest();
+            }
+            var articleId = await articleService.AddArticle(inputModel,companyId);
 
             return this.Ok(
                 new ResponseViewModel

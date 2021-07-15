@@ -25,7 +25,12 @@
     <ProjectReference Include="..\Common\InvoiceGenerator.Common\InvoiceGenerator.Common.csproj" />
     <ProjectReference Include="..\Data\InvoiceGenerator.Data\InvoiceGenerator.Data.csproj" />
     <ProjectReference Include="..\Services\InvoiceGenerator.Services.Data\InvoiceGenerator.Services.Data.csproj" />
+    <ProjectReference Include="..\Services\InvoiceGenerator.Services.MicrosoftWordService\InvoiceGenerator.Services.MicrosoftWordService.csproj" />
     <ProjectReference Include="..\Web\InvoiceGenerator.Web.Models\InvoiceGenerator.Web.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientApp\src\components\Header\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

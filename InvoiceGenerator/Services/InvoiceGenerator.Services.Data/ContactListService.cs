@@ -24,7 +24,7 @@ namespace InvoiceGenerator.Services.Data
         {
             var contactactPerson = await context.ContactPeople
                 .FirstOrDefaultAsync(x => x.PhoneNumber == inputModel.PhoneNumber ||
-                                           x.EmailAddress == inputModel.Email);
+                                           x.Email == inputModel.Email);
             if (contactactPerson != null)
             {
                 throw new InvalidUserDataException(ErrorMessages.IncorectData);
@@ -39,7 +39,7 @@ namespace InvoiceGenerator.Services.Data
             contactactPerson = new ContactPerson
             {
                 Name = inputModel.Name,
-                EmailAddress = inputModel.Email,
+                Email = inputModel.Email,
                 PhoneNumber = inputModel.PhoneNumber,
                 ClientId=inputModel.ClientId 
                 

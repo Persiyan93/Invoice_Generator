@@ -9,7 +9,7 @@ import './custom.css'
 
 export default () => (
     <div>
-        <h1>i am the best</h1>
+      
     <Layout>
       
         <Route exact path='/' component={Home} />
