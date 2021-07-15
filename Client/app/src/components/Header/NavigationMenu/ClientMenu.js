@@ -8,6 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import FiberNewIcon from '@material-ui/icons/FiberNew';
+import {Link} from 'react-router-dom';
+import style from './Menu.module.css';
 
 const StyledMenu = withStyles({
     paper: {
@@ -70,18 +72,22 @@ export default function InvoiceMenu() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
+                <Link to="/Clients/NewClient" className={style.Link}>
                 <StyledMenuItem>
                     <ListItemIcon>
                         <FiberNewIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText primary="Добави нов клиент" />
                 </StyledMenuItem>
+                </Link>
+                <Link to="/Clients/All" className={style.Link}>
                 <StyledMenuItem>
                     <ListItemIcon>
                         <DraftsIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText primary="Всички " />
                 </StyledMenuItem>
+                </Link>
                 <StyledMenuItem>
                     <ListItemIcon>
                         <InboxIcon fontSize="small" />
