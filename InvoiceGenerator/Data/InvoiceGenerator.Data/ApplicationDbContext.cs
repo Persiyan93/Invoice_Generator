@@ -29,6 +29,8 @@ namespace InvoiceGenerator.Data
 
         public DbSet<Town> Towns { get; set; }
 
+        public DbSet<DefaultInvoiceOptions> DefaultInvoiceOptions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

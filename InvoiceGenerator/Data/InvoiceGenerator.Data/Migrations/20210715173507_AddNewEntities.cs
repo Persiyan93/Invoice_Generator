@@ -3,10 +3,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace InvoiceGenerator.Data.Migrations
 {
-    public partial class ChangeInvoiceProperties : Migration
+    public partial class AddNewEntities : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_AspNetUsers_Company_RegisteredCompanyId",
+                table: "AspNetUsers");
+
             migrationBuilder.DropForeignKey(
                 name: "FK_Invoices_Company_BuyerId",
                 table: "Invoices");
@@ -15,9 +19,17 @@ namespace InvoiceGenerator.Data.Migrations
                 name: "IX_Invoices_BuyerId",
                 table: "Invoices");
 
+            migrationBuilder.DropIndex(
+                name: "IX_AspNetUsers_RegisteredCompanyId",
+                table: "AspNetUsers");
+
             migrationBuilder.DropColumn(
                 name: "BuyerId",
                 table: "Invoices");
+
+            migrationBuilder.DropColumn(
+                name: "RegisteredCompanyId",
+                table: "AspNetUsers");
 
             migrationBuilder.RenameColumn(
                 name: "VatRate",
@@ -28,6 +40,11 @@ namespace InvoiceGenerator.Data.Migrations
                 name: "Price",
                 table: "Invoices",
                 newName: "VatValue");
+
+            migrationBuilder.RenameColumn(
+                name: "EmailAddress",
+                table: "ContactPeople",
+                newName: "Email");
 
             migrationBuilder.AlterColumn<string>(
                 name: "CreatedByUserId",
@@ -87,12 +104,6 @@ namespace InvoiceGenerator.Data.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "DefaultInvoiceOptionsId",
-                table: "Company",
-                type: "nvarchar(450)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
                 name: "Email",
                 table: "Company",
                 type: "nvarchar(max)",
@@ -117,7 +128,7 @@ namespace InvoiceGenerator.Data.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CompanyId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    DefaultPaymentTerm = table.Column<TimeSpan>(type: "time", nullable: false),
+                    DefaultPaymentTerm = table.Column<int>(type: "int", nullable: false),
                     DefaultLanguage = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -135,11 +146,6 @@ namespace InvoiceGenerator.Data.Migrations
                 name: "IX_Invoices_CreatedByUserId",
                 table: "Invoices",
                 column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Company_DefaultInvoiceOptionsId",
-                table: "Company",
-                column: "DefaultInvoiceOptionsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_CompanyId",
@@ -162,14 +168,6 @@ namespace InvoiceGenerator.Data.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Company_DefaultInvoiceOptions_DefaultInvoiceOptionsId",
-                table: "Company",
-                column: "DefaultInvoiceOptionsId",
-                principalTable: "DefaultInvoiceOptions",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_Invoices_AspNetUsers_CreatedByUserId",
                 table: "Invoices",
                 column: "CreatedByUserId",
@@ -185,10 +183,6 @@ namespace InvoiceGenerator.Data.Migrations
                 table: "Articles");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Company_DefaultInvoiceOptions_DefaultInvoiceOptionsId",
-                table: "Company");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Invoices_AspNetUsers_CreatedByUserId",
                 table: "Invoices");
 
@@ -198,10 +192,6 @@ namespace InvoiceGenerator.Data.Migrations
             migrationBuilder.DropIndex(
                 name: "IX_Invoices_CreatedByUserId",
                 table: "Invoices");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Company_DefaultInvoiceOptionsId",
-                table: "Company");
 
             migrationBuilder.DropIndex(
                 name: "IX_Articles_CompanyId",
@@ -236,10 +226,6 @@ namespace InvoiceGenerator.Data.Migrations
                 table: "Company");
 
             migrationBuilder.DropColumn(
-                name: "DefaultInvoiceOptionsId",
-                table: "Company");
-
-            migrationBuilder.DropColumn(
                 name: "Email",
                 table: "Company");
 
@@ -261,6 +247,11 @@ namespace InvoiceGenerator.Data.Migrations
                 table: "Invoices",
                 newName: "VatRate");
 
+            migrationBuilder.RenameColumn(
+                name: "Email",
+                table: "ContactPeople",
+                newName: "EmailAddress");
+
             migrationBuilder.AlterColumn<string>(
                 name: "CreatedByUserId",
                 table: "Invoices",
@@ -276,10 +267,29 @@ namespace InvoiceGenerator.Data.Migrations
                 type: "nvarchar(450)",
                 nullable: true);
 
+            migrationBuilder.AddColumn<string>(
+                name: "RegisteredCompanyId",
+                table: "AspNetUsers",
+                type: "nvarchar(450)",
+                nullable: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_BuyerId",
                 table: "Invoices",
                 column: "BuyerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_RegisteredCompanyId",
+                table: "AspNetUsers",
+                column: "RegisteredCompanyId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUsers_Company_RegisteredCompanyId",
+                table: "AspNetUsers",
+                column: "RegisteredCompanyId",
+                principalTable: "Company",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Invoices_Company_BuyerId",

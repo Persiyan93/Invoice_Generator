@@ -16,7 +16,7 @@ namespace InvoiceGenerator.Data.Models
 
         public string Name { get; set; }
 
-        public Company Company { get; set; }
+        public RegisteredCompany Company { get; set; }
 
         public string CompanyId { get; set; }
 

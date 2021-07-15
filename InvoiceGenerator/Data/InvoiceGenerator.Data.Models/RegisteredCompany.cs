@@ -18,6 +18,10 @@ namespace InvoiceGenerator.Data.Models
         }
         public string AdministratorId { get; set; }
 
+        public DefaultInvoiceOptions DefaultInvoiceOptions { get; set; }
+
+        public string DefaultInvoiceOptinsId { get; set; }
+
         public ApplicationUser Administrator { get; set; }
 
         public ICollection<Invoice> Invoices { get; set; }

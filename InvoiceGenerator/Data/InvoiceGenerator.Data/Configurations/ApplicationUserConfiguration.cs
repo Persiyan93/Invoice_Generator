@@ -29,6 +29,12 @@ namespace InvoiceGenerator.Data.Configurations
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            appUser
+                .HasOne(x => x.Company)
+                .WithMany(c => c.Users)
+                .HasForeignKey(x => x.CompanyId);
+
         }
     }
 }

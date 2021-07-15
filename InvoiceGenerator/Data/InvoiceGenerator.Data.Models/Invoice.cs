@@ -38,7 +38,7 @@ namespace InvoiceGenerator.Data.Models
         public DateTime DateOfTaxEvent { get; set; }
 
         public MethodsOfPayment PaymentMethod { get; set; }
-
+        
         public decimal PriceWithoutVat { get; set; }
 
         public InvoiceStatus Status { get; set; }

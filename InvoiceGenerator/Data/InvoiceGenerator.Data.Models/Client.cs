@@ -21,9 +21,7 @@ namespace InvoiceGenerator.Data.Models
 
         public string SellerId { get; set; }
 
-        public string Email { get; set; }
-
-        public Address MailingAddress { get; set; }
+         public Address MailingAddress { get; set; }
 
         public string MailingAddressId { get; set; }
 

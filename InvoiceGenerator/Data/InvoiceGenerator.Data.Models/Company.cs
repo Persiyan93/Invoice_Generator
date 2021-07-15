@@ -22,6 +22,8 @@ namespace InvoiceGenerator.Data.Models
 
         public string AccontablePersonName { get; set; }
 
+        public string Email { get; set; }
+
         public bool IsActive { get; set; }
 
         public string AddressId { get; set; }
@@ -29,11 +31,7 @@ namespace InvoiceGenerator.Data.Models
         public Address Address { get; set; }
 
         public string VatNumber { get; set; }
-
-        public DefaultInvoiceOptions DefaultInvoiceOptions { get; set; }
-
-        public string DefaultInvoiceOptinsId { get; set; }
-
+        
         public string UniqueIdentificationNumber { get; set; }
 
         

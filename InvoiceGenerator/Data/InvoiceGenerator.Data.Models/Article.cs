@@ -10,6 +10,7 @@ namespace InvoiceGenerator.Data.Models
     {
         public Article()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Invoices = new HashSet<InvoiceToArticle>();
         }
         public string Id { get; set; }

@@ -15,7 +15,7 @@ namespace InvoiceGenerator.Data.Models
 
         public string CompanyId { get; set; }
 
-        public TimeSpan DefaultPaymentTerm { get; set; }
+        public int DefaultPaymentTerm { get; set; }
 
         public LanguageOfInvoice DefaultLanguage { get; set; }
     }
