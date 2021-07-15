@@ -5,5 +5,8 @@ export default  {
     clientInfo:`${baseUrl}/Clients`,
     allClients:`${baseUrl}/Clients`,
     login:`${baseUrl}/Identity`,
+    addMailingAddress:`${baseUrl}/MailingAddress`,
+    contactList:`${baseUrl}/ContactList`,
+    additinalClientInfo:`${baseUrl}/Clients/additionalInfo`
 
 }
