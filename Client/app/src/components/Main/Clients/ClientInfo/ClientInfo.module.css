@@ -1,0 +1,33 @@
+.form{
+    width: auto;
+  
+    
+}
+
+.h2{
+    text-align: center;
+    align-content: center;
+}
+.additionalInfo{
+    text-align:center;
+    
+}
+.addressCard{
+    margin-right:10px;
+    display: inline-block;
+    
+}
+.container{
+    display: flex;
+}
+.info{
+    text-align:center;
+    padding-inline: 12;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-right: 10%;
+    margin-left: 10%;
+}
+.hideelement{
+  display: none;
+}
