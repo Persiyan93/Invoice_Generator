@@ -18,10 +18,9 @@ namespace InvoiceGenerator.Web.Models.Client
 
         public TypeOfCompany CompanyType { get; set; }
 
-        public AddressViewModel  Address { get; set; }
+        public string UniqueIdentificationNumber { get; set; }
 
-         public AddressViewModel MailingAddress { get; set; }
-
+        
         public ICollection<InvoiceInClientViewModel> LastTenInvoices { get; set; }
 
         public int CountOfAllInvoices { get; set; }

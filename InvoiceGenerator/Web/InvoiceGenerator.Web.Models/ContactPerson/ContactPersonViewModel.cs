@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using InvoiceGenerator.Services.Mapping;
+
 
 namespace InvoiceGenerator.Web.Models.ContactPerson
 {
-    public class ContactPersonViewModel
+    public class ContactPersonViewModel:IMapFrom<InvoiceGenerator.Data.Models.ContactPerson>
     {
         public string Id { get; set; }
 

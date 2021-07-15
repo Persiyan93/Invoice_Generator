@@ -15,7 +15,7 @@ namespace InvoiceGenerator.Web.Models.Company
         [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public TypeOfCompany CompanyType { get; set; }
-
+        
         [Required]
         public AddressInputModel   Address { get; set; }
 

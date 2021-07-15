@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Address
 {
-   public class MailingAddressInputModel :AddressInputModel,IAddress
+   public class MailingAddressInputModel :AddressModel
     {
         public string ClientId { get; set; }
     }

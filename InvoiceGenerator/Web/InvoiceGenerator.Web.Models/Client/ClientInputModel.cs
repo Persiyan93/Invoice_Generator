@@ -9,6 +9,6 @@ namespace InvoiceGenerator.Web.Models.Client
 {
     public class ClientInputModel:CompanyInputModel
     {
-        public string RegisteredCompanyId { get; set; }
+        
     }
 }

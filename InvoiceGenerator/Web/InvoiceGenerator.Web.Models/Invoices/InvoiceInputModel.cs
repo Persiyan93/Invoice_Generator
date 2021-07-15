@@ -1,34 +1,43 @@
 ﻿using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Web.Models.Articles;
+using InvoiceGenerator.Web.Models.JsonConverters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Invoices
 {
     public class InvoiceInputModel
     {
-        public string SellerId { get; set; }
-
-        public string ClientId { get; set; }
+        [Required]
+       public string ClientId { get; set; }
 
         public  string ContactPersonId { get; set; }
 
+        [Required]
+        [JsonConverter(typeof(DateTimeConverter))]
         public DateTime IssueDate { get; set; }
 
-        public TimeSpan?  PaymentTerm { get; set; }
+        public int?  PaymentTerm { get; set; }
 
         public ICollection<ArticleToInvoiceInputModel > Articles { get; set; }
 
-        public DateTime DateOfTaxEven { get; set; }
 
+        [Required]
+        [JsonConverter(typeof(DateTimeConverter))]
+        public DateTime DateOfTaxEvent { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public MethodsOfPayment PaymentMethod { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public LanguageOfInvoice Language { get; set; }
 
-        public double DiscountPercentage { get; set; }
+        public double? DiscountPercentage { get; set; }
 
         public AdditionalInvoiceOptions AdditionalOptions { get; set; }
 

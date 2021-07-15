@@ -7,15 +7,8 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Address
 {
-    public class AddressInputModel:IAddress
+    public class AddressInputModel:AddressModel
     {
-        [Required]
-        public string AddressText { get; set; }
-
-        [Required]
-        public string TownName { get; set; }
-
-        [Required]
-        public string CountryName { get; set; }
+        
     }
 }

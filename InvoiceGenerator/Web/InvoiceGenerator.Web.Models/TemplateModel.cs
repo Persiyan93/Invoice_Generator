@@ -8,6 +8,6 @@ namespace InvoiceGenerator.Services.MicrosoftWordService
 {
     public  abstract class TemplateModel
     {
-
+        
     }
 }

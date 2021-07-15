@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\InvoiceGenerator.Common\InvoiceGenerator.Common.csproj" />
     <ProjectReference Include="..\..\Data\InvoiceGenerator.Data.Models\InvoiceGenerator.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\InvoiceGenerator.Services.Mapping\InvoiceGenerator.Services.Mapping.csproj" />
     <ProjectReference Include="..\..\Services\InvoiceGenerator.Services.Messaging\InvoiceGenerator.Services.Messaging.csproj" />
