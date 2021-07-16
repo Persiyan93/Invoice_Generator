@@ -4,6 +4,8 @@ using InvoiceGenerator.Data.Seeding;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Services.MicrosoftWordService;
+using InvoiceGenerator.Web.Extensions;
+using InvoiceGenerator.Web.Models;
 using InvoiceGenerator.Web.Models.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +18,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -72,6 +76,24 @@ namespace InvoiceGenerator.Web
 
             services.AddControllersWithViews();
 
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    return new OkObjectResult(new ResponseViewModel
+                    {
+                        Status = "Unsuccessful",
+                        Message = context.ModelState.Values
+                            .SelectMany(x => x.Errors)
+                            .Select(x => x.ErrorMessage)
+                            .FirstOrDefault()
+
+                    }); 
+
+                };
+            });
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -85,16 +107,17 @@ namespace InvoiceGenerator.Web
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IInvoiceService, InvoiceService>();
             services.AddTransient<IDocumentService, DocumentService>();
-            
+
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.ConfigureExceptionHandler(logger);
+                //app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -114,17 +137,17 @@ namespace InvoiceGenerator.Web
             AutoMapperConfig.RegisterMappings(typeof(LoginInputModel).GetTypeInfo().Assembly);
 
             //Seeding Data
-            using (var serviceScope=app.ApplicationServices.CreateScope())
+            using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 dbContext.Database.Migrate();
                 new ApplicationSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider, Configuration).GetAwaiter().GetResult();
             }
 
-           
+
 
             app.UseHttpsRedirection();
-           // app.UseStaticFiles();
+            // app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
             app.UseRouting();
