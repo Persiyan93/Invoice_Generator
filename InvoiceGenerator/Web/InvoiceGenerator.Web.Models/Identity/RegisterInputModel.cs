@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InvoiceGenerator.Web.Models.Company;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace InvoiceGenerator.Web.Models.Identity
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
+
+        public CompanyInputModel   CompanyDetails { get; set; }
 
     }
 }

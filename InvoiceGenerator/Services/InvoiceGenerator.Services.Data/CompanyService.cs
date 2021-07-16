@@ -24,18 +24,8 @@ namespace InvoiceGenerator.Services.Data
 
         public async Task<string> CreateAsync(CompanyInputModel inputModel ,string userId)
         {
-            var company = await context.RegisteredCompanies
-                .FirstOrDefaultAsync(x => x.VatNumber == inputModel.VatNumber && x.IsActive==true);
-            if (company!=null)
-            {
-                throw new InvalidUserDataException(ErrorMessages.CompanyAlreadyExist);
-            }
-            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            if (user.CompanyId!=null)
-            {
-                throw new InvalidUserDataException(ErrorMessages.UserExistInAnotherCompany);
-            }
-            company = new RegisteredCompany
+            
+            var company = new RegisteredCompany
             {
                 Name = inputModel.Name,
                 VatNumber = inputModel.VatNumber,
@@ -46,7 +36,6 @@ namespace InvoiceGenerator.Services.Data
             };
             var addressId = await addressService.AddFullAddressAsync(inputModel.Address);
             company.AddressId = addressId;
-            company.Users.Add(user);
             await context.RegisteredCompanies.AddAsync(company);
             await context.SaveChangesAsync();
             return company.Id;

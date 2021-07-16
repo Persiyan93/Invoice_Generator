@@ -24,33 +24,39 @@ namespace InvoiceGenerator.Web.Controllers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
-       
+        private readonly IIdentityService identityService;
 
-        public IdentityController(UserManager<ApplicationUser> userManager,IConfiguration configuration)
+        public IdentityController
+            (
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration,
+            IIdentityService identityService
+            )
         {
             this.userManager = userManager;
             this.configuration = configuration;
-            
+            this.identityService = identityService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginInputModel inputModel)
         {
+
             var user = await userManager.FindByNameAsync(inputModel.UserName);
             if (user != null && await userManager.CheckPasswordAsync(user, inputModel.Password))
             {
-                
+
                 var userRoles = await userManager.GetRolesAsync(user);
                 var companyId = user.CompanyId;
 
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name,user.UserName),
-                    
+
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                   
+
                 };
-                if (companyId!=null)
+                if (companyId != null)
                 {
                     authClaims.Add(new Claim("CompanyId", companyId));
                 }
@@ -85,36 +91,17 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> Register(RegisterInputModel inputModel)
         {
             var response = new ResponseViewModel();
-            var user = await userManager.FindByEmailAsync(inputModel.Email);
-            if (user != null)
-            {
-                response.Status = "Unsuccessful";
-                response.Message = string.Format( ErrorMessages.UserAlreadyExist,inputModel.Email);
-                
-            }
-            else
-            {
-                user = new ApplicationUser
-                {
-                    Email = inputModel.Email,
-                    UserName = inputModel.UserName,
-                    Name = inputModel.UserName
-                };
-               var result= await userManager.CreateAsync(user, inputModel.Password);
-                if (result.Succeeded)
-                {
-                    response.Status = "Successfully";
-                    response.Message = string.Format(SuccessMessages.SuccessfullyAddedUser,inputModel.Email);
-                }
-                else
-                {
-                    response.Status = "Unsuccessful";
-                    response.Message = result.Errors.First().Description;
-                }
-            }
+            await identityService.RegisterUserAsync(inputModel);
+            response.Status = "Successfully";
+            response.Message = string.Format(SuccessMessages.SuccessfullyAddedUser, inputModel.Email);
+
+
+
             return this.Ok(response);
         }
     }
-            
+
 }
+
+
 
