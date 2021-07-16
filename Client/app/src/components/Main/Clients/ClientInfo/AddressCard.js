@@ -53,7 +53,7 @@ class AddressCard extends React.Component {
   }
 
   setOpenPopup() {
-    console.log('open is trigered')
+  
     this.setState((state) => ({ openPopup: !state.openPopup }))
   }
 

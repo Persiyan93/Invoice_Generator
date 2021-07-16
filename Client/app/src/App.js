@@ -9,12 +9,14 @@ import InvoiceList from './components/Main/InvoiceList/IvoiceList'
 import Error from './components/Main/Error/Error'
 import DataTable from './components/Main/DataTable/DataTable';
 import AddClient from './components/Main/Clients/AddClient/AddClientForm'
-import Login from './components/Identity/Login';
+
 import { CssBaseline, Divider } from '@material-ui/core';
 import Footer from './components/Footer/Footer';
 import ClientInfo from'./components/Main/Clients/ClientInfo/ClientInfo'
 import ClientList from './components/Main/Clients/ClientList/ClientList';
-import Registration from './components/Identity/Registration';
+import ConnectionError from'./components/Main/Error/ConnectionError'
+import LoginForm from './components/Identity/LoginForm';
+import RegisterForm from './components/Identity/Register/RegisterForm';
 
 
 function App() {
@@ -29,9 +31,11 @@ function App() {
             <Route path="/InvoiceList" component={InvoiceList}/>
             <Route path="/Clients/NewClient" component={AddClient}/>
             <Route path="/Clients/All" component={ClientList}/>
-            <Route path="/Login" component={Login}/>
-            <Route path="/Registration" component={Registration}/>
+            <Route path="/Identity/Login" component={LoginForm}/>
+            <Route path="/Identity/Register" component={RegisterForm}/>
             <Route path="/Clients/ClientInfo/:clientId" component={ClientInfo}/>
+            <Route path="/Errors/ConnectionError" component={ConnectionError}/>
+
 
             <Route component={Error}/>
 

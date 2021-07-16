@@ -7,6 +7,8 @@ export default  {
     login:`${baseUrl}/Identity`,
     addMailingAddress:`${baseUrl}/MailingAddress`,
     contactList:`${baseUrl}/ContactList`,
-    additinalClientInfo:`${baseUrl}/Clients/additionalInfo`
+    additinalClientInfo:`${baseUrl}/Clients/additionalInfo`,
+    register:`${baseUrl}/Identity/Register`,
+    
 
 }

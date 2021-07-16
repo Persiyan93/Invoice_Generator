@@ -21,8 +21,7 @@ export function post(data, endpoint) {
         body: JSON.stringify(data)
 
     })
-        .then(res => res)
-        .catch(err => console.log(err))
+        
 
 
 };

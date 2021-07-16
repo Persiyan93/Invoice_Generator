@@ -44,29 +44,32 @@ class AddClient extends React.Component {
             vatNumber: '',
             accontablePersonName: '',
             uniqueIdentificationNumber: '',
-            companyType: ''
+            
         };
         this.changeHandler = this.changeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
     }
 
     async submitHandler(event) {
-        console.log(this.state)
-        if (event) {
-            event.preventDefault();
-        }
+        event.preventDefault();
+       
         var response = await clientService.addNewClient({ ...this.state })
-            .catch(x => console.log(x))
-        if (response.status != 200) {
-            console.log(await response.json());
-        }
-        else {
-            let message = await response.json();
-            let clientId = getIdFromResponse(message);
-
-            this.props.history.push(`/Clients/${clientId}`);
-
-        }
+        .then(res=>res.json())
+                    .then(res=> {
+                        if(res.status=="Unsuccessful"){
+                            console.log('Unsuccessful status ')
+                            console.log(res);
+                        }
+                        else{
+                            let clientId = getIdFromResponse(res.message);
+                            this.props.history.push(`/Clients/${clientId}`);
+                        }
+                       
+                    })
+                    .catch(err=>{
+                        this.props.history.push('/Errors/ConnectionError')
+                    })
+            
 
     }
 
@@ -116,18 +119,18 @@ class AddClient extends React.Component {
                     </Select>
                     <FormHelperText>Required</FormHelperText>
                 </FormControl>
-                <TextField required variant="outlined" name="country" value={country} label="Държава на регистрация" defaultValue="" onChange={this.changeHandler} />
+                <TextField required variant="outlined" name="country" value={country} label="Държава на регистрация"  onChange={this.changeHandler} />
 
-                <TextField required variant="outlined" name="town" value={town} label="Град" defaultValue="" onChange={this.changeHandler} />
+                <TextField required variant="outlined" name="town" value={town} label="Град"  onChange={this.changeHandler} />
 
-                <TextField required variant="outlined" value={addressText} name="addressText" label="Адрес" defaultValue="" onChange={this.changeHandler} />
+                <TextField required variant="outlined" value={addressText} name="addressText" label="Адрес" onChange={this.changeHandler} />
 
                 <TextField required variant="outlined" name="vatNumber" value={vatNumber} label="ДДС номер" defaultValue="" onChange={this.changeHandler} />
 
 
-                <TextField variant="outlined" value={accontablePersonName} name="accontablePersonName" label="Материално отговорно лице " defaultValue="" onChange={this.changeHandler} />
+                <TextField variant="outlined" value={accontablePersonName} name="accontablePersonName" label="Материално отговорно лице " onChange={this.changeHandler} />
 
-                <TextField required variant="outlined" value={uniqueIdentificationNumber} name="uniqueIdentificationNumber" label="ЕИК" defaultValue="" onChange={this.changeHandler} />
+                <TextField required variant="outlined" value={uniqueIdentificationNumber} name="uniqueIdentificationNumber" label="ЕИК"  onChange={this.changeHandler} />
 
                 <Button variant="contained" type="submit" color="primary">
                     Добави клиент
