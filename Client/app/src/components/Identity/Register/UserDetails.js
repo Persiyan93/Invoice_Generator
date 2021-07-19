@@ -27,7 +27,7 @@ class Register extends React.Component {
         return (
             <form className={classes.root} >
                 <TextField variant="outlined" value={inputFields.username} name="username" label="Потребителско име " onChange={changeHandler} />
-                <TextField required variant="outlined" value={inputFields.name} name="name" label="Име на потребителя" onChange={changeHandler} />
+                <TextField required variant="outlined" value={inputFields.name} name="name" label="Име и Фамилия" onChange={changeHandler} />
                 <TextField required variant="outlined" value={inputFields.password} name="password" label="Парола" type="password" onChange={changeHandler} />
                 <TextField required variant="outlined" value={inputFields.repatPassword} name="repatPassword" label="Повтори паролата" type="password" onChange={changeHandler} />
                 <TextField required variant="outlined" value={inputFields.email} name="email" label="Имеил адрес" onChange={changeHandler} />

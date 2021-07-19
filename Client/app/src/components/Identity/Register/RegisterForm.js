@@ -30,7 +30,7 @@ class RegisterForm extends React.Component {
             repatPassword: '',
             email: '',
             companyDetails: {
-                name: '',
+                companyName: '',
                 vatNumber: '',
                 companyType: '',
                 address: {
@@ -51,16 +51,38 @@ class RegisterForm extends React.Component {
 
     }
     changeHandler(event) {
-        console.log('triger event')
+
         const target = event.target;
         const value = target.value;
         const name = target.name;
-        this.setState({ [name]: value });
+        if (name == 'addressText' || name == 'town' || name == 'country') {
+            this.setState(prevState=>({
+                ...prevState,
+                companyDetails:{
+                    ...prevState.companyDetails,
+                    address:{
+                        ...prevState.companyDetails.address,[name]:value
+                    }
+                }
+            }))
+        }
+        else if (name == 'companyName' || name == 'vatNumber'
+            || name == 'accontablePersonName' || name == 'companyEmail' || name == 'uniqueIdentificationNumber'||name == 'companyType') {
+           this.setState({
+                companyDetails:
+                    { ...this.state.companyDetails, [name]: value }
+            });
+        }
+        else {
+
+            this.setState({ [name]: value });
+        }
 
     }
 
     submitHandler(event) {
         event.preventDefault();
+        console.log('inside submit handler')
         identityService.register({ ...this.state })
             .then(res => res.json())
             .then(res => {
@@ -88,7 +110,7 @@ class RegisterForm extends React.Component {
         this.setState(prevState => ({ step: prevState.step + 1 }))
     }
     render() {
-        const { step,companyDetails } = this.state
+        const { step, companyDetails } = this.state
 
         const { classes } = this.props;
         switch (step) {
@@ -106,7 +128,7 @@ class RegisterForm extends React.Component {
                     <CompanyDetails
                         nextStep={this.nextStep}
                         prevStep={this.prevStep}
-                        inputFields={{...companyDetails}}
+                        inputFields={{ ...companyDetails }}
                         changeHandler={this.changeHandler}
                     >
 
@@ -116,9 +138,9 @@ class RegisterForm extends React.Component {
             case 3:
                 return (
                     <CompanyAddressDetails
-                        onSubmitHandler={this.onSubmitHandler}
+                        submitHandler={this.submitHandler}
                         prevStep={this.prevStep}
-                        inputFields={{ ...this.state }}
+                        inputFields={{ ...companyDetails }}
                         changeHandler={this.changeHandler}
                     >
 

@@ -45,7 +45,7 @@ namespace InvoiceGenerator.Services.Data
             }
             client = new Client
             {
-                Name = inputModel.Name,
+                Name = inputModel.CompanyName,
                 VatNumber = inputModel.VatNumber,
                 CompanyType = inputModel.CompanyType,
                 SellerId = companyId,
@@ -88,7 +88,7 @@ namespace InvoiceGenerator.Services.Data
             {
                 var newClient = new Client
                 {
-                    Name = inputModel.Name,
+                    Name = inputModel.CompanyName,
                     AccontablePersonName = inputModel.AccontablePersonName,
                     VatNumber = client.VatNumber,
                     AddressId = client.AddressId,
@@ -104,7 +104,7 @@ namespace InvoiceGenerator.Services.Data
             }
             else
             {
-                client.Name = inputModel.Name;
+                client.Name = inputModel.CompanyName;
                 client.VatNumber = inputModel.VatNumber;
                 client.AccontablePersonName = inputModel.AccontablePersonName;
                 client.CompanyType = inputModel.CompanyType;

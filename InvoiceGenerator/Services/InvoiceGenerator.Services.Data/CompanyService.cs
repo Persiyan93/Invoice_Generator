@@ -27,7 +27,7 @@ namespace InvoiceGenerator.Services.Data
             
             var company = new RegisteredCompany
             {
-                Name = inputModel.Name,
+                Name = inputModel.CompanyName,
                 VatNumber = inputModel.VatNumber,
                 CompanyType = inputModel.CompanyType,
                 AdministratorId = userId

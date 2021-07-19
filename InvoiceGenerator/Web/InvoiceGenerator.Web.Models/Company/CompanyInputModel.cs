@@ -10,7 +10,7 @@ namespace InvoiceGenerator.Web.Models.Company
     public class CompanyInputModel
     {
         [Required]
-        public string Name { get; set; }
+        public string CompanyName { get; set; }
 
         [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
