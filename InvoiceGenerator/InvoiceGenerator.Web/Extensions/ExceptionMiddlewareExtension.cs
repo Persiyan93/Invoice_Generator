@@ -29,16 +29,19 @@ namespace InvoiceGenerator.Web.Extensions
                     {
                         response.Message = exception.Message;
                         logger.LogWarning(exception, "User enter invalid Data", context.TraceIdentifier);
+                        context.Response.StatusCode = 400;
 
                     }
                     else
                     {
                         logger.LogCritical(context.TraceIdentifier, exception, "Unexpected Error!");
                         response.Message = "Internal server error";
+                        context.Response.StatusCode = 500;
 
                     }
 
                     string responseAsString = JsonSerializer.Serialize<ResponseViewModel>(response);
+                    
                     await context.Response.WriteAsync(responseAsString);
                 });
             });

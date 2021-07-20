@@ -46,7 +46,9 @@ namespace InvoiceGenerator.Services.Data
             var result = await userManager.CreateAsync(user, inputModel.Password);
             if (result.Succeeded)
             {
-                await companyService.CreateAsync(inputModel.CompanyDetails, user.Id);
+                var companyId=await companyService.CreateAsync(inputModel.CompanyDetails, user.Id);
+                user.CompanyId = companyId;
+                await context.SaveChangesAsync();
             }
             
 

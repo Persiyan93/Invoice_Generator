@@ -56,10 +56,7 @@ namespace InvoiceGenerator.Web.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
 
                 };
-                if (companyId != null)
-                {
-                    authClaims.Add(new Claim("CompanyId", companyId));
-                }
+               
                 foreach (var userRole in userRoles)
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
