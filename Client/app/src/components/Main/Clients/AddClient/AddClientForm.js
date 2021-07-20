@@ -34,7 +34,7 @@ class AddClient extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            name: '',
+            companyName: '',
             companyType: '',
             address: {
                 addressText: '',
@@ -92,12 +92,12 @@ class AddClient extends React.Component {
     }
 
     render() {
-        const { name, companyType, vatNumber, accontablePersonName, uniqueIdentificationNumber, address: { town, country, addressText } } = this.state;
+        const { companyName, companyType, vatNumber, accontablePersonName, uniqueIdentificationNumber, address: { town, country, addressText } } = this.state;
         const { classes } = this.props;
         return (
 
             <form className={classes.root} onSubmit={this.submitHandler}>
-                <TextField required variant="outlined" value={name} name="name" label="Име на фирмата" defaultValue="" onChange={this.changeHandler} />
+                <TextField required variant="outlined" value={companyName} name="companyName" label="Име на фирмата"  onChange={this.changeHandler} />
 
                 <FormControl className={classes.formControl} >
 
@@ -125,7 +125,7 @@ class AddClient extends React.Component {
 
                 <TextField required variant="outlined" value={addressText} name="addressText" label="Адрес" onChange={this.changeHandler} />
 
-                <TextField required variant="outlined" name="vatNumber" value={vatNumber} label="ДДС номер" defaultValue="" onChange={this.changeHandler} />
+                <TextField required variant="outlined" name="vatNumber" value={vatNumber} label="ДДС номер" onChange={this.changeHandler} />
 
 
                 <TextField variant="outlined" value={accontablePersonName} name="accontablePersonName" label="Материално отговорно лице " onChange={this.changeHandler} />

@@ -6,8 +6,8 @@ import ContactList from './ContactList';
 import AddressForm from './AddressForm/AddressForm';
 const useStyles = (theme => ({
 
-    root:{
-        marginTop:'5%'
+    root: {
+        marginTop: '5%'
     },
     formControl: {
         minWidth: 120,
@@ -31,7 +31,7 @@ class AdditionalClientInfo extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            clientId:this.props.clientId,
+            clientId: this.props.clientId,
             openPopup: false,
             address: {
                 addressText: '',
@@ -51,39 +51,49 @@ class AdditionalClientInfo extends React.Component {
     }
 
     updateMailingAddress(newMailingAddress) {
-        let result=clientService.addMailingAddress({...this.state})
-                    .then(res=>res.json())
-                    .then(res=>{
-                        this.setState({ mailingAddress: newMailingAddress });
-                    })
-                    .catch(err=>console.log(err));
-        
+        let result = clientService.addMailingAddress({ ...newMailingAddress })
+            .then(res => res.json())
+            .then(res => {
+                if (res.status == "Unsuccessful") {
+                    
+                    console.log(res);
+                }
+                else {
+                    this.setState({ mailingAddress: newMailingAddress });
+                }
+
+            })
+            .catch(err => {
+                this.props.history.push('/Errors/ConnectionError')
+            })
+            
     }
 
     updateAddress(newAddress) {
+
         this.setState({ address: newAddress })
     }
-    componentDidMount(){
-        let res=clientService.getAdditionalInfo(this.state.clientId)
-            .then(res=>res.json())
-            .then(res=>{
+    componentDidMount() {
+        let res = clientService.getAdditionalInfo(this.state.clientId)
+            .then(res => res.json())
+            .then(res => {
                 console.log(res)
-                this.setState({...res})
+                this.setState({ ...res })
                 console.log(res)
             })
-            .catch(err=>console.log(err));
+            .catch(err => console.log(err));
 
-       
+
     }
 
 
 
 
     render() {
-       
+
         const { classes } = this.props;
-        
-        
+
+
 
         return (
             <>
@@ -99,16 +109,16 @@ class AdditionalClientInfo extends React.Component {
                     >
                         Адрес на фирмата
                     </AddressCard>
-                    <AddressCard 
-                     {...this.state.mailingAddress}
-                     className={classes.addressCard} 
-                     setOpenPopup={this.setOpenPopup}
-                     changeAddress={this.updateMailingAddress}
-                     clientId={this.state.clientId}
-                     >
-                          Адрес за кореспонденция
+                    <AddressCard
+                        {...this.state.mailingAddress}
+                        className={classes.addressCard}
+                        setOpenPopup={this.setOpenPopup}
+                        changeAddress={this.updateMailingAddress}
+                        clientId={this.state.clientId}
+                    >
+                        Адрес за кореспонденция
                     </AddressCard>
-                   
+
                 </div>
 
             </>
