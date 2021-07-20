@@ -9,7 +9,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const useStyles=makeStyles({
     root:{
-        backgroundColor:'#fff'
+        backgroundColor:'#379683'
     }
 })
 
