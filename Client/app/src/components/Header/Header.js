@@ -32,7 +32,7 @@ const Header = (props) => {
                         <InvoiceMenu />
 
                     </Grid>
-                    <Grid itme md={1}>
+                    <Grid item md={1}>
                         <IconButton>
                             <Badge color="secondary" badgeContent={4}>
                                 <EmailIcon fontSize="small" />
@@ -54,11 +54,3 @@ const Header = (props) => {
 
 export default Header
 
-{/* <div  className="Navigation-Menu">
-
-<InvoiceMenu/>
-<ClientMenu/>
-
-<ArticleMenu/>
-
-</div> */}

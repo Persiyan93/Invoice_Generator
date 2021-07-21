@@ -9,6 +9,7 @@ export default  {
     contactList:`${baseUrl}/ContactList`,
     additinalClientInfo:`${baseUrl}/Clients/additionalInfo`,
     register:`${baseUrl}/Identity/Register`,
+    companyInfo:`${baseUrl}/Company`
     
 
 }

@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
- import * as dataService from '../services/dataService'
+import * as dataService from '../services/dataService'
 import * as globalServices from '../services/globalServices'
 
 // 
 const useFetch = (endpoint, data, method) => {
-    const [response, setResponse] = useState({});
-     let history = useHistory();
-    const pesho=2;
+    const [response, setResponse] = useState();
+
+    let history = useHistory();
 
     useEffect(() => {
         if (method === 'post') {
@@ -19,7 +19,7 @@ const useFetch = (endpoint, data, method) => {
                         console.log(res);
                     }
                     else {
-                        let id = globalServices.getIdFromResponse(res.message)
+                        let id = globalServices.getIdFromResponse(res.message);
                         setResponse(id)
                     }
 
@@ -34,8 +34,7 @@ const useFetch = (endpoint, data, method) => {
             dataService.get(endpoint)
                 .then(res => res.json())
                 .then(res => {
-                    console.log(res)
-                    if (res.status == "Unsuccessful") {
+                   if (res.status == "Unsuccessful") {
                         console.log('Unsuccessful status ')
                         console.log(res);
                     }

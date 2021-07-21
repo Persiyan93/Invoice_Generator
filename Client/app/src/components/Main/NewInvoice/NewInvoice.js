@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { makeStyles, Paper, Grid } from '@material-ui/core/';
+
 import CompanyInfoCard from './CompanyInfoCard';
 import InvoiceInfo from './InvoiceInfo';
 import ArticleList from './ArticleList';
 import ControlMenu from './ControlMenu';
- import useFetch from '../../../hooks/useFetch'
+import useFetch from '../../../hooks/useFetch'
+import apiEndpoints from '../../../services/apiEndpoints'
 const useStyles = makeStyles({
     title: {
         display: 'inline',
@@ -21,19 +23,31 @@ const useStyles = makeStyles({
 })
 
 const NewInvoice = (props) => {
-    // const[userCompanyInfo,setUserCompanyInfo]=useState();
-    
-    const[companies]= useFetch('http://localhost:45163/api/Clients',{},'get');
-
-
-
+    const [count, setCount] = useState(0);
+    const [sellerInfo, setSellerInfo] = useState({});
+    const [clientInfo,setClientInfo]=useState({});
+    const [clientId,setClientId]=useState('');
+    const [companyInfo] = useFetch(apiEndpoints.companyInfo);
+    const [response]=useFetch(apiEndpoints.clientInfo+`/${clientId}`)
+  
     useEffect(()=>{
-   
-       console.log(companies)
-    },[])
+        if(clientId!=''){
+            console.log(clientId)
+            console.log(response)
+        }
+    },[clientId])
+
+    useEffect(() => {
+        if (companyInfo) {
+            const { address } = companyInfo
+            setSellerInfo((prevState) => ({ ...companyInfo,address: address.country + ',гр. ' + address.town + ' , ' + address.addressText  }))
+            
+        }
+
+    }, [companyInfo])
 
     const classes = useStyles();
-    const clientInfo={name:'dadsadas',vatNumber:'dsadasdasd',}
+   
     return (
 
         <div>
@@ -47,8 +61,8 @@ const NewInvoice = (props) => {
                     {/* <Grid item md={1} /> */}
                     <Grid item md={2}>
                         <CompanyInfoCard
-                        companyInfo={{...clientInfo}}
-                        
+                          setClientId={setClientId}
+
                         >
                             Получател
                         </CompanyInfoCard>
@@ -59,8 +73,8 @@ const NewInvoice = (props) => {
                     </Grid>
                     <Grid >
                         <CompanyInfoCard
-                        companyInfo={{...clientInfo}}
-                        disableButton={true}
+                            companyInfo={{ ...sellerInfo }}
+                            disableButton={true}
                         >
                             Доставчик
                         </CompanyInfoCard>
@@ -68,11 +82,11 @@ const NewInvoice = (props) => {
                 </Grid>
 
 
-                <ArticleList>
+                {/* <ArticleList>
 
-                </ArticleList>
+                </ArticleList> */}
 
-                <ControlMenu></ControlMenu>
+                {/* <ControlMenu></ControlMenu> */}
             </Paper>
         </div>
     );

@@ -7,9 +7,9 @@ class Popup extends React.Component {
     }
 
     render() {
-        const { title, children, openPopup, setOpenPopup } = this.props;
+        const { title, children, openPopup, setOpenPopup ,width } = this.props;
         return (
-            <Dialog open={openPopup} >
+            <Dialog open={openPopup} maxWidth={width} fullWidth={true}  >
                 <DialogTitle> 
                     <Typography variant="h6">
                         {title}

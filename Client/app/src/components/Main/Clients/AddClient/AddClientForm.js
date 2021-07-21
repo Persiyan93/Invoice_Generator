@@ -1,4 +1,4 @@
-
+import { withRouter } from 'react-router';
 import React from "react";
 import TextField from '@material-ui/core/TextField';
 import { Button } from "@material-ui/core";
@@ -62,7 +62,7 @@ class AddClient extends React.Component {
                         }
                         else{
                             let clientId = getIdFromResponse(res.message);
-                            this.props.history.push(`/Clients/${clientId}`);
+                            this.props.history.push(`/Clients/ClientInfo/${clientId}`);
                         }
                        
                     })
@@ -145,6 +145,6 @@ class AddClient extends React.Component {
 }
 
 
-export default withStyles(useStyles)(AddClient);
+export default withRouter(withStyles(useStyles)(AddClient));
 
 
