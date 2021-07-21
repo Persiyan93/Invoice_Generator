@@ -2,9 +2,11 @@
 using InvoiceGenerator.Common;
 using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.Company;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Services.Data
@@ -49,9 +51,16 @@ namespace InvoiceGenerator.Services.Data
             throw new NotImplementedException();
         }
 
-        public Task<T> GetCompanyInfoAsync<T>(string companyId)
+        public async  Task<T> GetCompanyInfoAsync<T>(string companyId)
         {
-            throw new NotImplementedException();
+            var company =  await context.RegisteredCompanies
+                 .Where(x => x.Id == companyId && x.IsActive == true)
+                 .To<T>()
+                 .FirstOrDefaultAsync();
+
+            return company;
+
+                
         }
     }
 }

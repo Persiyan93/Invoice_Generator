@@ -42,5 +42,16 @@ namespace InvoiceGenerator.Web.Controllers
                 Message = string.Format(SuccessMessages.SuccessfullyCreatedCompany, companyId)
             });
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetCompanyInfo()
+        {
+            var userName = this.User.Identity.Name;
+            var user = await userManager.FindByNameAsync(userName);
+            var companyId = user.CompanyId;
+            var companyInfo = await companyService.GetCompanyInfoAsync<CompanyViewModel>(companyId);
+            return this.Ok(companyInfo);
+        }
     }
 }
