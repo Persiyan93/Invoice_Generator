@@ -14,7 +14,7 @@ namespace InvoiceGenerator.Web.Models.Invoices
     public class InvoiceInputModel
     {
         [Required]
-       public string ClientId { get; set; }
+        public string ClientId { get; set; }
 
         public  string ContactPersonId { get; set; }
 

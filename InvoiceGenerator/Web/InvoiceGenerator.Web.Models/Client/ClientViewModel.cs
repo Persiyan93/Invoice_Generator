@@ -20,7 +20,9 @@ namespace InvoiceGenerator.Web.Models.Client
 
         public string UniqueIdentificationNumber { get; set; }
 
-        
+        public AddressViewModel Address { get; set; }
+
+
         public ICollection<InvoiceInClientViewModel> LastTenInvoices { get; set; }
 
         public int CountOfAllInvoices { get; set; }
