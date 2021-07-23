@@ -13,6 +13,8 @@ namespace InvoiceGenerator.Data
         {
 
         }
+        public DbSet<Service> Services { get; set; }
+
         public DbSet<Address> Addresses { get; set; }
 
         public DbSet<Article> Articles { get; set; }

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models
 {
-    public class InvoiceToArticle
+    public class InvoiceToService
     {
-        public InvoiceToArticle()
+
+        public InvoiceToService()
         {
             this.Id = Guid.NewGuid().ToString();
         }
@@ -18,12 +15,15 @@ namespace InvoiceGenerator.Data.Models
 
         public string InvoiceId { get; set; }
 
-        public Article Article { get; set; }
+        public Service Service { get; set; }
 
-        public string ArticleId { get; set; }
+        public string ServiceId { get; set; }
 
-       public decimal Discount { get; set; }
+        public decimal PriceWithoutVat { get; set; }
 
         public double Quantity { get; set; }
+
+        public string AdditionalInfo { get; set; }
+
     }
 }
