@@ -108,6 +108,7 @@ namespace InvoiceGenerator.Web
             services.AddTransient<IInvoiceService, InvoiceService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<IOfferedService, OfferedServices>();
 
 
         }

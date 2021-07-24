@@ -17,12 +17,12 @@ namespace InvoiceGenerator.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ArticleController : ControllerBase
+    public class ArticlesController : ControllerBase
     {
         private readonly IArticleService articleService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public ArticleController(IArticleService articleService,UserManager<ApplicationUser> userManager)
+        public ArticlesController(IArticleService articleService,UserManager<ApplicationUser> userManager)
         {
             this.articleService = articleService;
             this.userManager = userManager;

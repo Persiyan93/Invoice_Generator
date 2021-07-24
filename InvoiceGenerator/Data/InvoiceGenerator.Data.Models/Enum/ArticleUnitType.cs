@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models.Enum
 {
-    class ArticleUnitType
+    public enum ArticleUnitType
     {
+        Kilogram=1,
+        Count=2
     }
 }

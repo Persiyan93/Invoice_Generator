@@ -18,7 +18,8 @@ namespace InvoiceGenerator.Common
         public const string SuccessfullyAddedContactPerson= "Person with Id:{0} was added successfully to contact list!";
         public const string SuccessfullyAddedArticle= "Article with Id:{0} was added successfully!";
         public const string SuccessfullyCreatedInvoice= "Invoice with Id:{0} was created successfully";
-        
+        public const string SuccessfullyAddedService = "Service with Id:{0} was added successfully!";
+
 
     }
 }

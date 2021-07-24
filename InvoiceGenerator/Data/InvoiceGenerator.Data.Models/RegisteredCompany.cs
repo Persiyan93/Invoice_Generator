@@ -31,6 +31,7 @@ namespace InvoiceGenerator.Data.Models
         public ICollection<Client> Clients { get; set; }
 
         public ICollection<Article> Articles { get; set; }
+        public ICollection<Service> Services { get; set; }
 
 
     }

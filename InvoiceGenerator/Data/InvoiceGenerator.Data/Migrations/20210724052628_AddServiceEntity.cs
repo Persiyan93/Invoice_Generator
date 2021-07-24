@@ -6,6 +6,10 @@ namespace InvoiceGenerator.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Description",
+                table: "Articles");
+
             migrationBuilder.RenameColumn(
                 name: "PriceWithoutVat",
                 table: "InvoiceToArticle",
@@ -17,6 +21,27 @@ namespace InvoiceGenerator.Data.Migrations
                 type: "float",
                 nullable: false,
                 defaultValue: 0.0);
+
+            migrationBuilder.AddColumn<decimal>(
+                name: "Price",
+                table: "Articles",
+                type: "decimal(18,2)",
+                nullable: false,
+                defaultValue: 0m);
+
+            migrationBuilder.AddColumn<double>(
+                name: "Quantity",
+                table: "Articles",
+                type: "float",
+                nullable: false,
+                defaultValue: 0.0);
+
+            migrationBuilder.AddColumn<int>(
+                name: "UnitType",
+                table: "Articles",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.CreateTable(
                 name: "Services",
@@ -95,10 +120,28 @@ namespace InvoiceGenerator.Data.Migrations
                 name: "Quantity",
                 table: "InvoiceToArticle");
 
+            migrationBuilder.DropColumn(
+                name: "Price",
+                table: "Articles");
+
+            migrationBuilder.DropColumn(
+                name: "Quantity",
+                table: "Articles");
+
+            migrationBuilder.DropColumn(
+                name: "UnitType",
+                table: "Articles");
+
             migrationBuilder.RenameColumn(
                 name: "Discount",
                 table: "InvoiceToArticle",
                 newName: "PriceWithoutVat");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Description",
+                table: "Articles",
+                type: "nvarchar(max)",
+                nullable: true);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InvoiceGenerator.Data.Models.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,17 @@ namespace InvoiceGenerator.Data.Models
             this.Id = Guid.NewGuid().ToString();
             this.Invoices = new HashSet<InvoiceToArticle>();
         }
+
+
         public string Id { get; set; }
 
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public ArticleUnitType UnitType { get; set; }
+
+        public decimal Price { get; set; }
+
+        public double Quantity { get; set; }
 
         public double VatRate { get; set; }
 
@@ -29,3 +36,4 @@ namespace InvoiceGenerator.Data.Models
 
     }
 }
+

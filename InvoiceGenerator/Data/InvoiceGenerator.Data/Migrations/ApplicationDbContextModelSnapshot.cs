@@ -145,11 +145,17 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<string>("CompanyId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
+
+                    b.Property<int>("UnitType")
+                        .HasColumnType("int");
 
                     b.Property<double>("VatRate")
                         .HasColumnType("float");
@@ -679,7 +685,7 @@ namespace InvoiceGenerator.Data.Migrations
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Service", b =>
                 {
                     b.HasOne("InvoiceGenerator.Data.Models.RegisteredCompany", "Company")
-                        .WithMany()
+                        .WithMany("Services")
                         .HasForeignKey("CompanyId");
 
                     b.Navigation("Company");
@@ -816,6 +822,8 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Navigation("DefaultInvoiceOptions");
 
                     b.Navigation("Invoices");
+
+                    b.Navigation("Services");
 
                     b.Navigation("Users");
                 });

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace InvoiceGenerator.Data.Models
 {
     public abstract class Company
@@ -31,12 +33,12 @@ namespace InvoiceGenerator.Data.Models
         public Address Address { get; set; }
 
         public string VatNumber { get; set; }
-        
+
         public string UniqueIdentificationNumber { get; set; }
 
-        
 
-       
+
+
 
 
 

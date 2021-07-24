@@ -20,20 +20,22 @@ namespace InvoiceGenerator.Services.Data
         {
             this.context = context;
         }
-        public async Task<string> AddArticle(ArticleInputModel inputModel,string companyId)
+        public async Task<string> AddArticle(ArticleInputModel inputModel, string companyId)
         {
             var company = context.RegisteredCompanies
                 .FirstOrDefault(x => x.IsActive == true && x.Id == companyId);
-            if (company==null)
+            if (company == null)
             {
                 throw new InvalidUserDataException(ErrorMessages.CompanyWithSuchIdDoesNotExist);
             }
             var article = new Article
             {
                 Name = inputModel.Name,
-                Description = inputModel.Description,
+                UnitType = inputModel.UnitType,
+                Quantity = inputModel.Quantity,
+                Price = inputModel.Price,
                 VatRate = inputModel.VatRate,
-                CompanyId=companyId
+                CompanyId = companyId
 
 
             };
@@ -48,7 +50,7 @@ namespace InvoiceGenerator.Services.Data
 
         public async Task<ICollection<T>> GetAllArticlesByCompanyId<T>(string companyId)
         {
-            var articles = await  context.Articles
+            var articles = await context.Articles
                 .Where(x => x.CompanyId == companyId)
                 .To<T>()
                 .ToListAsync();
