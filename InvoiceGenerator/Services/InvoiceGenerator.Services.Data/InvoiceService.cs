@@ -74,27 +74,27 @@ namespace InvoiceGenerator.Services.Data
                     new InvoiceToArticle
                     {
                         Article = article,
-                        PriceWithoutVat = inputArticle.PriceWithoutVat
+                       
 
 
                     }) ;
             }
 
-            invoice.PriceWithoutVat = invoice.Articles.Sum(x => x.PriceWithoutVat);
-            if (inputModel.AdditionalOptions==AdditionalInvoiceOptions.ZeroVatRate)
-            {
-                invoice.VatValue = 0;
-            }
-            else
-            {
-                invoice.VatValue = invoice.Articles.Sum(x => (decimal)x.Article.VatRate * x.PriceWithoutVat);
-            }
+            //invoice.PriceWithoutVat = invoice.Articles.Sum(x => x.PriceWithoutVat);
+            //if (inputModel.AdditionalOptions==AdditionalInvoiceOptions.ZeroVatRate)
+            //{
+            //    invoice.VatValue = 0;
+            //}
+            //else
+            //{
+            //    invoice.VatValue = invoice.Articles.Sum(x => (decimal)x.Article.VatRate * x.PriceWithoutVat);
+            //}
            
 
-            if (inputModel.DiscountPercentage!=null)
-            {
-                invoice.DiscountPercentage = (double)inputModel.DiscountPercentage;
-            }
+            //if (inputModel.DiscountPercentage!=null)
+            //{
+            //    invoice.DiscountPercentage = (double)inputModel.DiscountPercentage;
+            //}
 
             await context.SaveChangesAsync();
 
