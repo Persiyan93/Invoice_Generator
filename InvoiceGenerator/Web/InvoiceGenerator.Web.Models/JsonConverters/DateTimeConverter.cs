@@ -17,7 +17,7 @@ namespace InvoiceGenerator.Web.Models.JsonConverters
         {
             DateTime date;
             var test = reader.GetString();
-            var IsDateValid = DateTime.TryParseExact(reader.GetString(), "dd.MM.yyyy",
+            var IsDateValid = DateTime.TryParseExact(reader.GetString(), "yyyy-MM-dd",
                                        CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
             if (!IsDateValid)
             {
@@ -28,7 +28,8 @@ namespace InvoiceGenerator.Web.Models.JsonConverters
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.ToString());
+            var date = value.Date;
+            writer.WriteStringValue(value.Date.ToString("yyyy-MM-dd"));
         }
     }
 }
