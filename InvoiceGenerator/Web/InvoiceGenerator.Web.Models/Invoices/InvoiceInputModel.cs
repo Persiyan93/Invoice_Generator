@@ -19,10 +19,18 @@ namespace InvoiceGenerator.Web.Models.Invoices
         public  string ContactPersonId { get; set; }
 
         [Required]
+        public decimal PriceWithoutVat { get; set; }
+
+        [Required]
+        public decimal VatValue { get; set; }
+
+        [Required]
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime IssueDate { get; set; }
 
-        public int?  PaymentTerm { get; set; }
+
+        public int  PaymentTerm { get; set; }
+
 
         public ICollection<ArticleToInvoiceInputModel > Articles { get; set; }
 
@@ -31,13 +39,15 @@ namespace InvoiceGenerator.Web.Models.Invoices
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime DateOfTaxEvent { get; set; }
 
+        [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public MethodsOfPayment PaymentMethod { get; set; }
+
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public LanguageOfInvoice Language { get; set; }
 
-        public double? DiscountPercentage { get; set; }
+        public double DiscountPercentage { get; set; }
 
         public AdditionalInvoiceOptions AdditionalOptions { get; set; }
 

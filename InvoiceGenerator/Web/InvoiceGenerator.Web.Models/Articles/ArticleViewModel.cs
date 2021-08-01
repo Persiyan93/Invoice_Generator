@@ -1,4 +1,5 @@
-﻿using InvoiceGenerator.Data.Models;
+﻿using AutoMapper;
+using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Services.Mapping;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,24 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Articles
 {
-    public class ArticleViewModel:IMapFrom<Article>
+    public class ArticleViewModel:IMapFrom<Article>,IHaveCustomMappings
     {
         public string Id { get; set; }
 
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public string UnitPrice { get; set; }
 
         public double VatRate { get; set; }
+
+        public double Quantity { get; set; }
+
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration.CreateMap<Article, ArticleViewModel>()
+              .ForMember(x => x.UnitPrice, opt =>
+                     opt.MapFrom(y => y.Price));
+             
+        }
     }
 }
