@@ -53,6 +53,8 @@ namespace InvoiceGenerator.Web.Controllers
                 {
                     new Claim(ClaimTypes.Name,user.UserName),
 
+                    new Claim("companyId",user.CompanyId),
+
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
 
                 };

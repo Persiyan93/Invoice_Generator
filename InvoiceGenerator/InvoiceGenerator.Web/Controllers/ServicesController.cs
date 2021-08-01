@@ -48,22 +48,15 @@ namespace InvoiceGenerator.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Test()
+        public async Task<IActionResult> GetAll()
         {
-            //var user = await userManager.FindByNameAsync(this.User.Identity.Name);
-            //var companyId = user.CompanyId;
-            //if (companyId == null)
-            //{
-            //    return this.BadRequest();
-            //}
-            //var serviceId = await offeredService.AddService(inputModel, companyId);
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
 
-            return this.Ok(
-                new ResponseViewModel
-                {
-                    Status = "Successful",
-                    //Message = string.Format(SuccessMessages.SuccessfullyAddedService, serviceId)
-                });
+            var services = await offeredService.GetAllServices<ServiceViewModel>(companyId);
+
+
+            return this.Ok(services);
+                
         }
     }
 }
