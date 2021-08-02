@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Client
@@ -16,6 +17,7 @@ namespace InvoiceGenerator.Web.Models.Client
 
         public string VatNumber { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public TypeOfCompany CompanyType { get; set; }
 
         public string UniqueIdentificationNumber { get; set; }

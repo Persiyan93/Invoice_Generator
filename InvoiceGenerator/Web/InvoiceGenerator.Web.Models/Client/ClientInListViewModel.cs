@@ -6,11 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Client
 {
-    public class ClientInListViewModel :IMapFrom<InvoiceGenerator.Data.Models.Client>,IHaveCustomMappings
+    public class ClientInListViewModel : IMapFrom<InvoiceGenerator.Data.Models.Client>, IHaveCustomMappings
     {
         public ClientInListViewModel()
         {
@@ -26,16 +27,26 @@ namespace InvoiceGenerator.Web.Models.Client
 
         public int CountOfOverdueInvoices { get; set; }
 
+        public decimal PriceOfAllOverdueInvoices { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public TypeOfCompany CompanyType { get; set; }
+
         public ICollection<InvoiceInClientViewModel> Invoices { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
-           
+
             configuration.CreateMap<InvoiceGenerator.Data.Models.Client, ClientInListViewModel>()
                 .ForMember(x => x.CountOfInvoice, opt =>
                            opt.MapFrom(y => y.Invoices.Count))
                 .ForMember(x => x.CountOfInvoice, opt =>
-                               opt.MapFrom(y => y.Invoices.Where(i => i.Status == InvoiceStatus.Overdue).Count()));
+                               opt.MapFrom(y => y.Invoices.Where(i => i.Status == InvoiceStatus.Overdue).Count()))
+                .ForMember(x => x.PriceOfAllOverdueInvoices, opt =>
+                                opt.MapFrom(y => y.Invoices.Where(i => i.Status == InvoiceStatus.Overdue)
+                                            .Sum(i => (i.PriceWithoutVat + i.VatValue))));
+
+
         }
     }
 }
