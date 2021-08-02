@@ -3,10 +3,7 @@ using InvoiceGenerator.Services.MicrosoftWordService.Models;
 using Microsoft.Office.Interop.Word;
 using System;
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace InvoiceGenerator.Services.MicrosoftWordService
 {
@@ -30,14 +27,14 @@ namespace InvoiceGenerator.Services.MicrosoftWordService
             }
         }
 
-        public void  GenerateInvoice(string templatePath,string invoiceId)
+        public void  GenerateInvoice(string invoiceId ,string templatePath="faktura-356.docx")
         {
             var invoice = invoiceService.GetInvoiceById<InvoiceTemplateModel>(invoiceId).GetAwaiter().GetResult();
-             GenerateDocument(invoice);
+             GenerateDocument(invoice,templatePath);
 
         }
 
-        private void GenerateDocument(TemplateModel model, string templatePath = "faktura-356.docx")
+        private void GenerateDocument(TemplateModel model, string templatePath )
         {
             Application app = new Application();
             Document doc = app.Documents.Open(templatePath, ReadOnly: false);

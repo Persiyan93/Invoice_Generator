@@ -1,6 +1,8 @@
 ﻿using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.OfferedService;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +38,16 @@ namespace InvoiceGenerator.Services.Data
 
 
 
+        }
+
+        public async Task<ICollection<T>> GetAllServices<T>(string companyId)
+        {
+            var services = await context.Services
+                 .Where(x => x.CompanyId == companyId)
+                 .To<T>()
+                 .ToListAsync();
+            
+            return services;
         }
     }
 }

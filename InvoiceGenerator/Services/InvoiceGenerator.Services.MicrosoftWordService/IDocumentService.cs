@@ -8,6 +8,6 @@ namespace InvoiceGenerator.Services.MicrosoftWordService
     {
       
 
-        void GenerateInvoice(string invoiceId, string templatePath);
+        void GenerateInvoice(string invoiceId,  string templatePath= "faktura-356.docx");
     }
 }

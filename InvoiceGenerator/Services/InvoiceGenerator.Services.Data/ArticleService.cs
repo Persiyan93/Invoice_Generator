@@ -68,5 +68,7 @@ namespace InvoiceGenerator.Services.Data
 
             return article;
         }
+
+        
     }
 }

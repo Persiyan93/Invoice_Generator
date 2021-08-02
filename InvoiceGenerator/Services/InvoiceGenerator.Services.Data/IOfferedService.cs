@@ -11,5 +11,7 @@ namespace InvoiceGenerator.Services.Data
     {
 
         Task<string> AddService(ServiceInputModel inputModel,string companyId);
+
+        Task<ICollection<T>> GetAllServices<T>(string companyId);
     }
 }
