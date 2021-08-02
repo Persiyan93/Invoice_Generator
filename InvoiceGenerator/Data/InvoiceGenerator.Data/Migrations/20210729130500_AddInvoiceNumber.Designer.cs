@@ -4,14 +4,16 @@ using InvoiceGenerator.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InvoiceGenerator.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210729130500_AddInvoiceNumber")]
+    partial class AddInvoiceNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,10 +292,10 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<string>("CreatedByUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("DateOfTaxEvent")
+                    b.Property<DateTime>("DateOfTaxEvent")
                         .HasColumnType("datetime2");
 
-                    b.Property<double?>("DiscountPercentage")
+                    b.Property<double>("DiscountPercentage")
                         .HasColumnType("float");
 
                     b.Property<int>("InvoiceNumber")
@@ -301,19 +303,19 @@ namespace InvoiceGenerator.Data.Migrations
                         .HasColumnType("int")
                         .HasDefaultValueSql("NEXT VALUE FOR shared.InvoiceNumbers");
 
-                    b.Property<DateTime?>("IssueDate")
+                    b.Property<DateTime>("IssueDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("PaymentDueDate")
+                    b.Property<DateTime>("PaymentDueDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("PriceWithoutVat")
+                    b.Property<decimal>("PriceWithoutVat")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("SellerId")
@@ -322,7 +324,7 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("VatValue")
+                    b.Property<decimal>("VatValue")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");

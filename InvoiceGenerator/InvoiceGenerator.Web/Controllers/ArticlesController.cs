@@ -50,7 +50,7 @@ namespace InvoiceGenerator.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllArticles()
         {
-            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "CompanyId").Value;
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
             var articles = await articleService.GetAllArticlesByCompanyId<ArticleViewModel>(companyId);
 
             return this.Ok(articles);

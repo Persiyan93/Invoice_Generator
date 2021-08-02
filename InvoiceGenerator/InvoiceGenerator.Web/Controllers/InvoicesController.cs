@@ -30,6 +30,8 @@ namespace InvoiceGenerator.Web.Controllers
             this.userManager = userManager;
         }
 
+
+
         //[HttpPost]
         //public async Task<IActionResult> SaveInvoiceTemporary(TempInvoiceModel inputmodel)
         //{
@@ -46,6 +48,15 @@ namespace InvoiceGenerator.Web.Controllers
         //    });
 
         //}
+
+        [HttpGet("{invoiceId}")]
+        public async Task<IActionResult> GenerateInvoiceInPdf(string invoiceId)
+        {
+            var invoice = await invoiceService.GetInvoiceById<InvoiceViewModel>(invoiceId);
+
+            return this.Ok(invoice);
+
+        }
         [HttpPost]
         public async Task<IActionResult> SaveInvoice(InvoiceInputModel inputModel)
         {
@@ -64,14 +75,14 @@ namespace InvoiceGenerator.Web.Controllers
         }
 
 
-        [HttpGet("{invoiceId}")]
-        public async Task<IActionResult> GetInvoiceById(string invoiceId)
-        {
-            var invoice = await invoiceService.GetInvoiceById<InvoiceViewModel>(invoiceId);
+        //[HttpGet("{invoiceId}")]
+        //public async Task<IActionResult> GetInvoiceById(string invoiceId)
+        //{
+        //    var invoice = await invoiceService.GetInvoiceById<InvoiceViewModel>(invoiceId);
 
-            return this.Ok(invoice);
+        //    return this.Ok(invoice);
 
-        }
+        //}
 
         [HttpGet]
 

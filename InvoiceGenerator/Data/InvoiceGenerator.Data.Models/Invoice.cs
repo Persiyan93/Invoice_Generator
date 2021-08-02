@@ -14,6 +14,7 @@ namespace InvoiceGenerator.Data.Models
         {
             this.Id = Guid.NewGuid().ToString();
             this.Articles = new HashSet<InvoiceToArticle>();
+            this.Services = new HashSet<InvoiceToService>();
         }
         public string Id { get; set; }
 
@@ -31,21 +32,21 @@ namespace InvoiceGenerator.Data.Models
 
         public ContactPerson ContactPerson { get; set; }
 
-        public DateTime IssueDate { get; set; }
+        public DateTime? IssueDate { get; set; }
 
-        public DateTime PaymentDueDate { get; set; }
+        public DateTime? PaymentDueDate { get; set; }
 
-        public DateTime DateOfTaxEvent { get; set; }
+        public DateTime? DateOfTaxEvent { get; set; }
 
         public MethodsOfPayment PaymentMethod { get; set; }
         
-        public decimal PriceWithoutVat { get; set; }
+        public decimal? PriceWithoutVat { get; set; }
 
         public InvoiceStatus Status { get; set; }
 
-        public decimal VatValue { get; set; }
+        public decimal? VatValue { get; set; }
 
-        public double DiscountPercentage { get; set; }
+        public double? DiscountPercentage { get; set; }
 
 
         [ForeignKey("User")]
@@ -59,7 +60,9 @@ namespace InvoiceGenerator.Data.Models
 
         public ICollection<InvoiceToArticle> Articles { get; set; }
 
-       
+        public ICollection<InvoiceToService> Services { get; set; }
+
+
 
     }
 }

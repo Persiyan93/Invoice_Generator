@@ -8,6 +8,9 @@ namespace InvoiceGenerator.Data.Models.Enum
 {
     public enum  InvoiceStatus
     {
-        Overdue=1
+        
+        Overdue=1,
+        UnCompleted=2,
+        WaitingForPayment=3
     }
 }

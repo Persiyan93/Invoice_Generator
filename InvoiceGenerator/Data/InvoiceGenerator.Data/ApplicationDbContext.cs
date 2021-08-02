@@ -37,6 +37,12 @@ namespace InvoiceGenerator.Data
         {
             base.OnModelCreating(builder);
             ConfigureUserIdentityRole(builder);
+            builder.HasSequence<int>("InvoiceNumbers", schema: "shared")
+                .StartsAt(00000001)
+                .IncrementsBy(1);
+            builder.Entity<Invoice>()
+                .Property(i => i.InvoiceNumber)
+                .HasDefaultValueSql("NEXT VALUE FOR shared.InvoiceNumbers");
         }
         private void ConfigureUserIdentityRole(ModelBuilder builder) => builder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
     }
