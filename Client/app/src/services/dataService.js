@@ -10,7 +10,8 @@ if (cookieValue) {
 
 export function post(data, endpoint) {
 
-
+console.log(endpoint)
+console.log(data)
     return fetch(endpoint, {
         method: 'POST',
         headers: {
