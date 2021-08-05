@@ -33,6 +33,8 @@ namespace InvoiceGenerator.Data
 
         public DbSet<DefaultInvoiceOptions> DefaultInvoiceOptions { get; set; }
 
+        public DbSet<HistoryEvent> HistoryEvents { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

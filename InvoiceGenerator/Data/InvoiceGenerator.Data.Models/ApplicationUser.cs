@@ -12,6 +12,7 @@ namespace InvoiceGenerator.Data.Models
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
+            this.History = new HashSet<HistoryEvent>();
         }
 
         public string Name { get; set; }
@@ -26,7 +27,9 @@ namespace InvoiceGenerator.Data.Models
 
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
 
-       
+        public ICollection<HistoryEvent> History { get; set; }
+
+
 
 
     }

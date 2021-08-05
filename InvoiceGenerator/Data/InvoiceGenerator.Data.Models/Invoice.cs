@@ -15,6 +15,7 @@ namespace InvoiceGenerator.Data.Models
             this.Id = Guid.NewGuid().ToString();
             this.Articles = new HashSet<InvoiceToArticle>();
             this.Services = new HashSet<InvoiceToService>();
+            this.History = new HashSet<HistoryEvent>();
         }
         public string Id { get; set; }
 
@@ -48,8 +49,9 @@ namespace InvoiceGenerator.Data.Models
 
         public double? DiscountPercentage { get; set; }
 
+        public int PaymentPeriod { get; set; }
 
-        [ForeignKey("User")]
+       [ForeignKey("User")]
         public string CreatedByUserId { get; set; }
 
         public ApplicationUser User { get; set; }
@@ -59,6 +61,8 @@ namespace InvoiceGenerator.Data.Models
         public AdditionalInvoiceOptions AdditionalOptions { get; set; }
 
         public ICollection<InvoiceToArticle> Articles { get; set; }
+
+        public ICollection<HistoryEvent> History { get; set; }
 
         public ICollection<InvoiceToService> Services { get; set; }
 
