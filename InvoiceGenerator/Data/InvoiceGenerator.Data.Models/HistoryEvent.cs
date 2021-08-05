@@ -15,15 +15,20 @@ namespace InvoiceGenerator.Data.Models
         }
         public string Id { get; set; }
 
-        public string InvoiceId { get; set; }
-
-        public Invoice Invoice { get; set; }
+        public DateTime DateOfEvent { get; set; }
 
         public HistoryEventType EventType { get; set; }
 
         public string AdditionalText { get; set; }
 
+        public string InvoiceId { get; set; }
+
+        public Invoice Invoice { get; set; }
+
+    
         public string UserId { get; set; }
+
+     
 
         public ApplicationUser User { get; set; }
 

@@ -32,22 +32,7 @@ namespace InvoiceGenerator.Web.Controllers
 
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> SaveInvoiceTemporary(TempInvoiceModel inputmodel)
-        //{
-        //    var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
-        //    var user = await userManager.FindByNameAsync(this.User.Identity.Name);
-        //    var userId = user.Id;
-
-        //    var invoiceId = await invoiceService.SaveInvoiceTemporary(inputmodel, companyId,userId);
-
-        //    return this.Ok(new ResponseViewModel
-        //    {
-        //        Status = SuccessMessages.SuccessfullyStatus,
-        //        Message = string.Format(SuccessMessages.SuccessfullyCreatedInvoice, invoiceId)
-        //    });
-
-        //}
+       
 
         [HttpGet("{invoiceId}")]
         public async Task<IActionResult> GenerateInvoiceInPdf(string invoiceId)

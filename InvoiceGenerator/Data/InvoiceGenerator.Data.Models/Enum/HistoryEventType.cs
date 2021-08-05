@@ -8,5 +8,8 @@ namespace InvoiceGenerator.Data.Models.Enum
 {
     public enum HistoryEventType
     {
+
+        CreateInvoice=1,
+
     }
 }

@@ -281,6 +281,9 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<string>("AdditionalText")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DateOfEvent")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("EventType")
                         .HasColumnType("int");
 

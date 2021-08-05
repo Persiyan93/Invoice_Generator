@@ -29,7 +29,7 @@ namespace InvoiceGenerator.Web.Models.Invoices
         public DateTime IssueDate { get; set; }
 
 
-        public int  PaymentTerm { get; set; }
+        public int  PaymentPeriod{ get; set; }
 
 
         public ICollection<ArticleToInvoiceInputModel > Articles { get; set; }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace InvoiceGenerator.Data.Migrations
 {
@@ -18,9 +19,10 @@ namespace InvoiceGenerator.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    InvoiceId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DateOfEvent = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EventType = table.Column<int>(type: "int", nullable: false),
                     AdditionalText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InvoiceId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>

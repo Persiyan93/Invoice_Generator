@@ -36,11 +36,12 @@ namespace InvoiceGenerator.Services.Data
                 DateOfTaxEvent = inputModel.DateOfTaxEvent,
                 IssueDate = inputModel.IssueDate,
                 Status = InvoiceStatus.WaitingForPayment,
-                PaymentDueDate = DateTime.Now.Add(TimeSpan.FromDays(inputModel.PaymentTerm + invoiceShipingTime)),
+                PaymentDueDate = DateTime.Now.Add(TimeSpan.FromDays(inputModel.PaymentPeriod + invoiceShipingTime)),
                 PaymentMethod = inputModel.PaymentMethod,
                 CreatedByUserId = userId,
                 PriceWithoutVat = inputModel.PriceWithoutVat ,
-                VatValue = inputModel.VatValue 
+                VatValue = inputModel.VatValue ,
+                PaymentPeriod=inputModel.PaymentPeriod
             };
             await context.Invoices.AddAsync(invoice);
             foreach (var article in inputModel.Articles)
@@ -55,6 +56,13 @@ namespace InvoiceGenerator.Services.Data
                 };
                 invoice.Articles.Add(articleToInvoice);
             }
+            var historyEvent = new HistoryEvent
+            {
+                InvoiceId = invoice.Id,
+                UserId = userId,
+                EventType = HistoryEventType.CreateInvoice,
+                DateOfEvent = DateTime.Now();
+            };
 
             await context.SaveChangesAsync();
 
@@ -218,34 +226,6 @@ namespace InvoiceGenerator.Services.Data
 
 
 
-        //public Task<InvoiceTemplateModel> GetInvoiceInformation(string invoiceId)
-        //{
-        //    var invoice = context.Invoices
-        //        .Where(x => x.Id == invoiceId)
-        //        .To<InvoiceTemplateModel>()
-        //        .FirstOrDefault();
-
-
-        //    return 
-
-
-        //        //.Select(x => new InvoiceTemplateModel
-        //        //{
-        //        //    InvoiceNumber = x.InvoiceNumber.ToString(),
-        //        //    ClientCompanyName = x.Client.Name,
-        //        //    ClientCompanyType = x.Client.CompanyType.ToString(),
-        //        //    ClientVatNumber = x.Client.VatNumber,
-        //        //    ClientCountryName = x.Client.Address.Town.Country.Name,
-        //        //    ClientTownName = x.Client.Address.Town.Country.Name,
-        //        //    ClientAddressText = x.Client.Address.AddressText,
-        //        //    ClientAccontablePersonName = x.Client.AccontablePersonName,
-        //        //    ClientUniqueIdentificationNumbe = x.Client.UniqueIdentificationNumber,
-        //        //    SellerVatNumber=x.Seller.VatNumber,
-
-
-
-
-        //        //});
-        //}
+       
     }
 }

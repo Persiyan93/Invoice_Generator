@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvoiceGenerator.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210805060206_AddHistoryEvent")]
+    [Migration("20210805061951_AddHistoryEvent")]
     partial class AddHistoryEvent
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -282,6 +282,9 @@ namespace InvoiceGenerator.Data.Migrations
 
                     b.Property<string>("AdditionalText")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfEvent")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("EventType")
                         .HasColumnType("int");
