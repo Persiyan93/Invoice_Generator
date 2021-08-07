@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvoiceGenerator.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210805061951_AddHistoryEvent")]
-    partial class AddHistoryEvent
+    [Migration("20210807144753_AddArticleHistoryEvent")]
+    partial class AddArticleHistoryEvent
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -145,6 +145,9 @@ namespace InvoiceGenerator.Data.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ArticleNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("CompanyId")
                         .HasColumnType("nvarchar(450)");
@@ -289,28 +292,24 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<int>("EventType")
                         .HasColumnType("int");
 
-                    b.Property<string>("InvoiceId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("TypeOfHistoryEvent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InvoiceId");
-
-                    b.HasIndex("UserId");
-
                     b.ToTable("HistoryEvents");
+
+                    b.HasDiscriminator<string>("TypeOfHistoryEvent").HasValue("HistoryEvent");
                 });
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Invoice", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AdditionalOptions")
-                        .HasColumnType("int");
 
                     b.Property<string>("ClientId")
                         .HasColumnType("nvarchar(450)");
@@ -324,13 +323,13 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<DateTime?>("DateOfTaxEvent")
                         .HasColumnType("datetime2");
 
-                    b.Property<double?>("DiscountPercentage")
-                        .HasColumnType("float");
-
                     b.Property<int>("InvoiceNumber")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("NEXT VALUE FOR shared.InvoiceNumbers");
+
+                    b.Property<bool>("IsInvoiceWithZeroVatRate")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("IssueDate")
                         .HasColumnType("datetime2");
@@ -349,6 +348,9 @@ namespace InvoiceGenerator.Data.Migrations
 
                     b.Property<decimal?>("PriceWithoutVat")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ReasonForInvoiceWithZeroVatRate")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SellerId")
                         .HasColumnType("nvarchar(450)");
@@ -379,6 +381,9 @@ namespace InvoiceGenerator.Data.Migrations
 
                     b.Property<string>("ArticleId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("ArticlePrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
@@ -607,6 +612,34 @@ namespace InvoiceGenerator.Data.Migrations
                     b.HasDiscriminator().HasValue("RegisteredCompany");
                 });
 
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.ArticleHistoryEvent", b =>
+                {
+                    b.HasBaseType("InvoiceGenerator.Data.Models.HistoryEvent");
+
+                    b.Property<string>("ArticleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasDiscriminator().HasValue("ArticleHistoryEvent");
+                });
+
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.InvoiceHistoryEvent", b =>
+                {
+                    b.HasBaseType("InvoiceGenerator.Data.Models.HistoryEvent");
+
+                    b.Property<string>("InvoiceId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasDiscriminator().HasValue("InvoiceHistoryEvent");
+                });
+
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Address", b =>
                 {
                     b.HasOne("InvoiceGenerator.Data.Models.Town", "Town")
@@ -663,21 +696,6 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("InvoiceGenerator.Data.Models.HistoryEvent", b =>
-                {
-                    b.HasOne("InvoiceGenerator.Data.Models.Invoice", "Invoice")
-                        .WithMany("History")
-                        .HasForeignKey("InvoiceId");
-
-                    b.HasOne("InvoiceGenerator.Data.Models.ApplicationUser", "User")
-                        .WithMany("History")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Invoice");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Invoice", b =>
                 {
                     b.HasOne("InvoiceGenerator.Data.Models.Client", "Client")
@@ -713,7 +731,8 @@ namespace InvoiceGenerator.Data.Migrations
 
                     b.HasOne("InvoiceGenerator.Data.Models.Invoice", "Invoice")
                         .WithMany("Articles")
-                        .HasForeignKey("InvoiceId");
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Article");
 
@@ -830,11 +849,43 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Navigation("Administrator");
                 });
 
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.ArticleHistoryEvent", b =>
+                {
+                    b.HasOne("InvoiceGenerator.Data.Models.Article", "Article")
+                        .WithMany("History")
+                        .HasForeignKey("ArticleId");
+
+                    b.HasOne("InvoiceGenerator.Data.Models.ApplicationUser", "User")
+                        .WithMany("ArticleHistoryEvents")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Article");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.InvoiceHistoryEvent", b =>
+                {
+                    b.HasOne("InvoiceGenerator.Data.Models.Invoice", "Invoice")
+                        .WithMany("History")
+                        .HasForeignKey("InvoiceId");
+
+                    b.HasOne("InvoiceGenerator.Data.Models.ApplicationUser", "User")
+                        .WithMany("InvoiceHistoryEvents")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Invoice");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("InvoiceGenerator.Data.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("ArticleHistoryEvents");
+
                     b.Navigation("Claims");
 
-                    b.Navigation("History");
+                    b.Navigation("InvoiceHistoryEvents");
 
                     b.Navigation("Logins");
 
@@ -843,6 +894,8 @@ namespace InvoiceGenerator.Data.Migrations
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Article", b =>
                 {
+                    b.Navigation("History");
+
                     b.Navigation("Invoices");
                 });
 

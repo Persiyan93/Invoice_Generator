@@ -11,6 +11,8 @@ namespace InvoiceGenerator.Data.Models.Enum
         
         Overdue=1,
         UnCompleted=2,
-        WaitingForPayment=3
+        WaitingForPayment=3,
+        Paid=4,
+        Locked=5
     }
 }

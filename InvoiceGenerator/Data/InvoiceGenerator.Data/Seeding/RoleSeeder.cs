@@ -1,4 +1,5 @@
-﻿using InvoiceGenerator.Data.Models;
+﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,20 +13,32 @@ namespace InvoiceGenerator.Data.Seeding
 {
     public class RoleSeeder : ISeeder
     {
-        public  async Task SeedAsync(ApplicationDbContext context, IServiceProvider serviceProvider, IConfiguration configuration)
+        public async Task SeedAsync(ApplicationDbContext context, IServiceProvider serviceProvider, IConfiguration configuration)
         {
             var rolemanager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-            await SeedRoleAsync(rolemanager, "AdministratorOfCompany");
-            
+            var roles = new List<string>{
+                GlobalConstants.AdministratorOfCompany,
+                GlobalConstants.EmailAccessRole,
+                GlobalConstants.InvoiceAccessRole,
+                GlobalConstants.UsersAccessRole,
+                GlobalConstants.ProductsAccessRole,
+
+            };
+            await SeedRoleAsync(rolemanager, roles);
+
 
         }
-        private static async Task SeedRoleAsync(RoleManager<ApplicationRole> roleManager,string roleName)
+        private static async Task SeedRoleAsync(RoleManager<ApplicationRole> roleManager, ICollection<string> roles )
         {
-            var role = await roleManager.FindByNameAsync(roleName);
-            if (role==null)
+            foreach (var roleName in roles)
             {
-                await roleManager.CreateAsync(new ApplicationRole(roleName));
+                var role = await roleManager.FindByNameAsync(roleName);
+                if (role == null)
+                {
+                    await roleManager.CreateAsync(new ApplicationRole(roleName));
+                }
             }
+            
         }
     }
 }

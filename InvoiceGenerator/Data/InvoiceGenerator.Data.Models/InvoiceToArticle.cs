@@ -25,5 +25,7 @@ namespace InvoiceGenerator.Data.Models
        public decimal Discount { get; set; }
 
         public double Quantity { get; set; }
+
+        public decimal ArticlePrice { get; set; }
     }
 }

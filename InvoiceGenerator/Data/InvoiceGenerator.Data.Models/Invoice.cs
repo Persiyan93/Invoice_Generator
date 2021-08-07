@@ -15,7 +15,7 @@ namespace InvoiceGenerator.Data.Models
             this.Id = Guid.NewGuid().ToString();
             this.Articles = new HashSet<InvoiceToArticle>();
             this.Services = new HashSet<InvoiceToService>();
-            this.History = new HashSet<HistoryEvent>();
+            this.History = new HashSet<InvoiceHistoryEvent>();
         }
         public string Id { get; set; }
 
@@ -47,7 +47,7 @@ namespace InvoiceGenerator.Data.Models
 
         public decimal? VatValue { get; set; }
 
-        public double? DiscountPercentage { get; set; }
+        
 
         public int PaymentPeriod { get; set; }
 
@@ -58,11 +58,13 @@ namespace InvoiceGenerator.Data.Models
 
         public LanguageOfInvoice Language { get; set; }
 
-        public AdditionalInvoiceOptions AdditionalOptions { get; set; }
+        public bool IsInvoiceWithZeroVatRate { get; set; }
+
+        public string ReasonForInvoiceWithZeroVatRate { get; set; }
 
         public ICollection<InvoiceToArticle> Articles { get; set; }
 
-        public ICollection<HistoryEvent> History { get; set; }
+        public ICollection<InvoiceHistoryEvent> History { get; set; }
 
         public ICollection<InvoiceToService> Services { get; set; }
 

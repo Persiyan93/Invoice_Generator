@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models
 {
-     public class HistoryEvent
+    public abstract class HistoryEvent
     {
         public HistoryEvent()
         {
@@ -21,14 +21,7 @@ namespace InvoiceGenerator.Data.Models
 
         public string AdditionalText { get; set; }
 
-        public string InvoiceId { get; set; }
-
-        public Invoice Invoice { get; set; }
-
-    
         public string UserId { get; set; }
-
-     
 
         public ApplicationUser User { get; set; }
 

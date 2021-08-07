@@ -10,6 +10,7 @@ namespace InvoiceGenerator.Data.Models.Enum
     {
 
         CreateInvoice=1,
+        EditInvoice=2,
 
     }
 }

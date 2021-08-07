@@ -4,14 +4,16 @@ using InvoiceGenerator.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InvoiceGenerator.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210805142425_AddHistoryEvent")]
+    partial class AddHistoryEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,18 +292,19 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<int>("EventType")
                         .HasColumnType("int");
 
-                    b.Property<string>("TypeOfHistoryEvent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("InvoiceId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("HistoryEvents");
+                    b.HasIndex("InvoiceId");
 
-                    b.HasDiscriminator<string>("TypeOfHistoryEvent").HasValue("HistoryEvent");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("HistoryEvents");
                 });
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Invoice", b =>
@@ -610,34 +613,6 @@ namespace InvoiceGenerator.Data.Migrations
                     b.HasDiscriminator().HasValue("RegisteredCompany");
                 });
 
-            modelBuilder.Entity("InvoiceGenerator.Data.Models.ArticleHistoryEvent", b =>
-                {
-                    b.HasBaseType("InvoiceGenerator.Data.Models.HistoryEvent");
-
-                    b.Property<string>("ArticleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasIndex("ArticleId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasDiscriminator().HasValue("ArticleHistoryEvent");
-                });
-
-            modelBuilder.Entity("InvoiceGenerator.Data.Models.InvoiceHistoryEvent", b =>
-                {
-                    b.HasBaseType("InvoiceGenerator.Data.Models.HistoryEvent");
-
-                    b.Property<string>("InvoiceId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasDiscriminator().HasValue("InvoiceHistoryEvent");
-                });
-
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Address", b =>
                 {
                     b.HasOne("InvoiceGenerator.Data.Models.Town", "Town")
@@ -692,6 +667,21 @@ namespace InvoiceGenerator.Data.Migrations
                         .HasForeignKey("InvoiceGenerator.Data.Models.DefaultInvoiceOptions", "CompanyId");
 
                     b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.HistoryEvent", b =>
+                {
+                    b.HasOne("InvoiceGenerator.Data.Models.Invoice", "Invoice")
+                        .WithMany("History")
+                        .HasForeignKey("InvoiceId");
+
+                    b.HasOne("InvoiceGenerator.Data.Models.ApplicationUser", "User")
+                        .WithMany("History")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Invoice");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Invoice", b =>
@@ -847,43 +837,11 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Navigation("Administrator");
                 });
 
-            modelBuilder.Entity("InvoiceGenerator.Data.Models.ArticleHistoryEvent", b =>
-                {
-                    b.HasOne("InvoiceGenerator.Data.Models.Article", "Article")
-                        .WithMany("History")
-                        .HasForeignKey("ArticleId");
-
-                    b.HasOne("InvoiceGenerator.Data.Models.ApplicationUser", "User")
-                        .WithMany("ArticleHistoryEvents")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Article");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("InvoiceGenerator.Data.Models.InvoiceHistoryEvent", b =>
-                {
-                    b.HasOne("InvoiceGenerator.Data.Models.Invoice", "Invoice")
-                        .WithMany("History")
-                        .HasForeignKey("InvoiceId");
-
-                    b.HasOne("InvoiceGenerator.Data.Models.ApplicationUser", "User")
-                        .WithMany("InvoiceHistoryEvents")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Invoice");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("InvoiceGenerator.Data.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("ArticleHistoryEvents");
-
                     b.Navigation("Claims");
 
-                    b.Navigation("InvoiceHistoryEvents");
+                    b.Navigation("History");
 
                     b.Navigation("Logins");
 
@@ -892,8 +850,6 @@ namespace InvoiceGenerator.Data.Migrations
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Article", b =>
                 {
-                    b.Navigation("History");
-
                     b.Navigation("Invoices");
                 });
 

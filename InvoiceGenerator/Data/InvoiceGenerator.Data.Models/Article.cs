@@ -13,10 +13,13 @@ namespace InvoiceGenerator.Data.Models
         {
             this.Id = Guid.NewGuid().ToString();
             this.Invoices = new HashSet<InvoiceToArticle>();
+            this.History = new HashSet<ArticleHistoryEvent>();
         }
 
 
         public string Id { get; set; }
+
+        public int ArticleNumber { get; set; }
 
         public string Name { get; set; }
 
@@ -33,6 +36,8 @@ namespace InvoiceGenerator.Data.Models
         public string CompanyId { get; set; }
 
         public RegisteredCompany Company { get; set; }
+
+        public ICollection<ArticleHistoryEvent> History { get; set; }
 
     }
 }
