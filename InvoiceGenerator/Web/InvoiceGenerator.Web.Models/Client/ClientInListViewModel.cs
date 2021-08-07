@@ -25,7 +25,11 @@ namespace InvoiceGenerator.Web.Models.Client
 
         public int CountOfInvoice { get; set; }
 
+        public int CountOfUnPaindInvoices { get; set; }
+
         public int CountOfOverdueInvoices { get; set; }
+
+        public decimal ValueSumOfAllUnPaindInvoices { get; set; }
 
         public decimal PriceOfAllOverdueInvoices { get; set; }
 
@@ -44,7 +48,13 @@ namespace InvoiceGenerator.Web.Models.Client
                                opt.MapFrom(y => y.Invoices.Where(i => i.Status == InvoiceStatus.Overdue).Count()))
                 .ForMember(x => x.PriceOfAllOverdueInvoices, opt =>
                                 opt.MapFrom(y => y.Invoices.Where(i => i.Status == InvoiceStatus.Overdue)
-                                            .Sum(i => (i.PriceWithoutVat + i.VatValue))));
+                                            .Sum(i => (i.PriceWithoutVat + i.VatValue))))
+                .ForMember(x => x.CountOfUnPaindInvoices, opt =>
+                               opt.MapFrom(y => y.Invoices.Where(i => i.Status == InvoiceStatus.WaitingForPayment).Count()))
+                 .ForMember(x => x.ValueSumOfAllUnPaindInvoices, opt =>
+                               opt.MapFrom(y => y.Invoices.Where(i => i.Status != InvoiceStatus.Paid).Sum(i=>(i.PriceWithoutVat+i.VatValue))));
+
+
 
 
         }

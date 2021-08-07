@@ -33,19 +33,19 @@ namespace InvoiceGenerator.Data.Models
 
         public ContactPerson ContactPerson { get; set; }
 
-        public DateTime? IssueDate { get; set; }
+        public DateTime IssueDate { get; set; }
 
-        public DateTime? PaymentDueDate { get; set; }
+        public DateTime PaymentDueDate { get; set; }
 
-        public DateTime? DateOfTaxEvent { get; set; }
+        public DateTime DateOfTaxEvent { get; set; }
 
         public MethodsOfPayment PaymentMethod { get; set; }
         
-        public decimal? PriceWithoutVat { get; set; }
+        public decimal PriceWithoutVat { get; set; }
 
         public InvoiceStatus Status { get; set; }
 
-        public decimal? VatValue { get; set; }
+        public decimal VatValue { get; set; }
 
         
 

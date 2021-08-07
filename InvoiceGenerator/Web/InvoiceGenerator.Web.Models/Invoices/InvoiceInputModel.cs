@@ -11,28 +11,20 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Invoices
 {
-    public class InvoiceInputModel
+    public class InvoiceInputModel : IValidatableObject
     {
         [Required]
         public string ClientId { get; set; }
-
-        public  string ContactPersonId { get; set; }
-
-        [Required]
-        public decimal PriceWithoutVat { get; set; }
-
-        [Required]
-        public decimal VatValue { get; set; }
 
         [Required]
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime IssueDate { get; set; }
 
 
-        public int  PaymentPeriod{ get; set; }
+        public int PaymentPeriod { get; set; }
 
 
-        public ICollection<ArticleToInvoiceInputModel > Articles { get; set; }
+        public ICollection<ArticleToInvoiceInputModel> Articles { get; set; }
 
 
         [Required]
@@ -47,10 +39,20 @@ namespace InvoiceGenerator.Web.Models.Invoices
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public LanguageOfInvoice Language { get; set; }
 
-        public double DiscountPercentage { get; set; }
-
-        public AdditionalInvoiceOptions AdditionalOptions { get; set; }
 
 
+        public bool IsInvoiceWithZeroVatRate { get; set; }
+
+        public string ReasonForInvoiceWithZeroVatRate { get; set; }
+
+
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (IsInvoiceWithZeroVatRate && ReasonForInvoiceWithZeroVatRate == null)
+            {
+                yield return new ValidationResult("Reason for invoice with zero vat rate is required !");
+            }
+        }
     }
 }

@@ -13,9 +13,11 @@ namespace InvoiceGenerator.Web.Models.Articles
     {
         public string Id { get; set; }
 
+        
+
         public string Name { get; set; }
 
-        public string Quantity { get; set; }
+        public double Quantity { get; set; }
 
         public decimal UnitPrice { get; set; }
 
@@ -27,11 +29,17 @@ namespace InvoiceGenerator.Web.Models.Articles
         {
             configuration.CreateMap<InvoiceToArticle, ArticleViewModelInInvoice>()
              .ForMember(x => x.UnitPrice, opt =>
-                    opt.MapFrom(y => y.Article.Price))
+                    opt.MapFrom(y => y.ArticlePrice))
              .ForMember(x => x.Name, opt =>
                        opt.MapFrom(y => y.Article.Name))
               .ForMember(x => x.VatRate, opt =>
-                       opt.MapFrom(y => y.Article.VatRate));
+                       opt.MapFrom(y => y.Article.VatRate))
+              .ForMember(x => x.Id, opt =>
+                       opt.MapFrom(y => y.ArticleId));
+
+
+
+
 
 
 

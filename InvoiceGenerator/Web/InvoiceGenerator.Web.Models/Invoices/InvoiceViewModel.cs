@@ -29,7 +29,7 @@ namespace InvoiceGenerator.Web.Models.Invoices
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime IssueDate { get; set; }
 
-        public int? PaymentTerm { get; set; }
+       
 
         public ICollection<ArticleViewModelInInvoice> Articles { get; set; }
 
@@ -42,8 +42,12 @@ namespace InvoiceGenerator.Web.Models.Invoices
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public LanguageOfInvoice Language { get; set; }
 
-        public double? DiscountPercentage { get; set; }
+        
 
-        public AdditionalInvoiceOptions AdditionalOptions { get; set; }
+        public int PaymentPeriod { get; set; }
+
+        public bool IsInvoiceWithZeroVatRate { get; set; }
+
+        public string ReasonForInvoiceWithZeroVatRate { get; set; }
     }
 }

@@ -42,6 +42,6 @@ namespace InvoiceGenerator.Web.Models.Invoices
 
         public double? DiscountPercentage { get; set; }
 
-        public AdditionalInvoiceOptions AdditionalOptions { get; set; }
+        
     }
 }

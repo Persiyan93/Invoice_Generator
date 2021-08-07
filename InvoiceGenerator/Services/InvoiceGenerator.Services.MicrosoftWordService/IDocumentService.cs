@@ -1,5 +1,6 @@
 ﻿using InvoiceGenerator.Data.Models;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Services.MicrosoftWordService
@@ -8,6 +9,8 @@ namespace InvoiceGenerator.Services.MicrosoftWordService
     {
       
 
-        void GenerateInvoice(string invoiceId,  string templatePath= "faktura-356.docx");
+        void GenerateInvoice(string invoiceId,   string templatePath= "InvoiceTemplate.docx");
+
+        FileStream GetInvoiceAsPdf(string invoiceId);
     }
 }

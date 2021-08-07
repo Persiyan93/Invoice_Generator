@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Articles
@@ -20,6 +22,9 @@ namespace InvoiceGenerator.Web.Models.Articles
         public double VatRate { get; set; }
 
         public double Quantity { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public ArticleUnitType UnitType { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {

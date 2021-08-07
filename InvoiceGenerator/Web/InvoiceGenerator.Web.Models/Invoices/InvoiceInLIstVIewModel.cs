@@ -31,13 +31,18 @@ namespace InvoiceGenerator.Web.Models.Invoices
 
         public string ClientName { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public TypeOfCompany ClientCompanyType { get; set; }
+
         public string ClientId { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Invoice, InvoiceInListViewModel>()
               .ForMember(x => x.PriceWithVat, opt =>
-                     opt.MapFrom(y => y.PriceWithoutVat + y.VatValue));
+                     opt.MapFrom(y => y.PriceWithoutVat + y.VatValue))
+              .ForMember(x => x.ClientCompanyType, opt =>
+                         opt.MapFrom(y => y.Client.CompanyType));
         }
     }
 }
