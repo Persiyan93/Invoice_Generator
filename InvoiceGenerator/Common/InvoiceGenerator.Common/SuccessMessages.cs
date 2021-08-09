@@ -10,7 +10,7 @@ namespace InvoiceGenerator.Common
     {
         
         public const string SuccessfullyStatus = "Successful";
-        public const string SuccessfullyAddedUser = "{0} is successfully registered!";
+        public const string SuccessfullyAddedUser = "User with username {0} is successfully registered!";
         public const string SuccessfullyCreatedCompany = "Company with Id:{0} was successfully create!";
         public const string SuccessfullyCreatedClient = "Client with Id:{0} was successfully create!";
         public const string SuccessfullyAddedAddress = "Address with Id:{0} was syccessfully added";
@@ -18,7 +18,10 @@ namespace InvoiceGenerator.Common
         public const string SuccessfullyAddedContactPerson= "Person with Id:{0} was added successfully to contact list!";
         public const string SuccessfullyAddedArticle= "Article with Id:{0} was added successfully!";
         public const string SuccessfullyCreatedInvoice= "Invoice with Id:{0} was created successfully";
+        public const string SuccessfullyUpdateStatusOfInvoices= "Status of invoices was updated successfully";
         public const string SuccessfullyAddedService = "Service with Id:{0} was added successfully!";
+        public const string SuccessfullyLocedkUser = "User with username: {0} was successffully locked!";
+        public const string SuccessfullyChangedPassword = "Successfuly changed password";
 
 
     }

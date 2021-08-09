@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models.Enum
 {
-    public enum HistoryEventType
+    public enum NotificationType
     {
-
-        CreateInvoice=1,
-        EditInvoice=2,
-        OverdueInvoice=3,
-
+        SendAutomaticGeneratedEmail=1,
+        Paid=2,
+        Overdue=3
     }
 }

@@ -17,6 +17,10 @@ namespace InvoiceGenerator.Data.Models
 
         public int DefaultPaymentTerm { get; set; }
 
+        public bool SendAutomaticGeneratedEmails { get; set; }
+
+        public int PeriodInDaysBetweenTwoRepatedEmails { get; set; }
+
         public LanguageOfInvoice DefaultLanguage { get; set; }
 
         

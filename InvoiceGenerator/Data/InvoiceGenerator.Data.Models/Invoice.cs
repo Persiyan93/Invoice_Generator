@@ -16,6 +16,7 @@ namespace InvoiceGenerator.Data.Models
             this.Articles = new HashSet<InvoiceToArticle>();
             this.Services = new HashSet<InvoiceToService>();
             this.History = new HashSet<InvoiceHistoryEvent>();
+            this.Notifications = new HashSet<Notification>();
         }
         public string Id { get; set; }
 
@@ -47,8 +48,6 @@ namespace InvoiceGenerator.Data.Models
 
         public decimal VatValue { get; set; }
 
-        
-
         public int PaymentPeriod { get; set; }
 
        [ForeignKey("User")]
@@ -67,6 +66,8 @@ namespace InvoiceGenerator.Data.Models
         public ICollection<InvoiceHistoryEvent> History { get; set; }
 
         public ICollection<InvoiceToService> Services { get; set; }
+
+        public ICollection<Notification> Notifications { get; set; }
 
 
 
