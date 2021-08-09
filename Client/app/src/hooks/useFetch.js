@@ -4,27 +4,30 @@ import * as dataService from '../services/dataService'
 import * as globalServices from '../services/globalServices'
 
 // 
-const useFetch = (endpoint, triger,method='GET', data ) => {
-    const [response, setResponse] = useState();
+const useFetch = (endpoint, triger, setTriger, setResult, method = 'GET', data) => {
+    const [errors, setErrors] = useState();
+
 
     let history = useHistory();
-
+    console.log(triger);
     useEffect(() => {
-        if (triger != '') {
-            console.log(triger)
-            console.log(method)
+        if (triger) {
+
             if (method == 'POST') {
+                console.log(endpoint)
+                console.log(data);
                 console.log('Inside post')
                 dataService.post(data, endpoint)
                     .then(res => res.json())
                     .then(res => {
                         if (res.status == "Unsuccessful") {
-                            console.log('Unsuccessful status ')
-                            console.log(res);
+
                         }
                         else {
+
                             let id = globalServices.getIdFromResponse(res.message);
-                            setResponse(id)
+                            // setResult(id)
+                            setTriger(false)
                         }
 
                     })
@@ -35,7 +38,7 @@ const useFetch = (endpoint, triger,method='GET', data ) => {
 
             }
             else {
-                console.log(endpoint)
+
                 dataService.get(endpoint)
                     .then(res => res.json())
                     .then(res => {
@@ -44,16 +47,23 @@ const useFetch = (endpoint, triger,method='GET', data ) => {
                             console.log(res);
                         }
                         else {
-                            console.log(res)
-                            setResponse(res)
+
+                            //setResponse(res)
+
+                            setResult(res)
+                            setTriger(false);
+
+
+
                         }
 
                     })
                     .catch(err => {
-                        
+
                         console.log(err)
                         history.push('/Errors/ConnectionError')
                     })
+
             }
         }
 
@@ -61,7 +71,7 @@ const useFetch = (endpoint, triger,method='GET', data ) => {
 
 
 
-    return [response];
+    return [errors];
 
 
 }
