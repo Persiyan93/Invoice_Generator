@@ -11,7 +11,7 @@ if (cookieValue) {
 export function post(data, endpoint) {
 
 console.log(endpoint)
-console.log(data)
+
     return fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -28,7 +28,7 @@ console.log(data)
 };
 
 export function get(endpoint) {
-    console.log(endpoint)
+  
     return fetch(endpoint, {
         method: 'GET',
         headers: {
@@ -38,5 +38,24 @@ export function get(endpoint) {
     )
    
 }
+
+export function put(data, endpoint) {
+
+    
+        return fetch(endpoint, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': cookieValue
+    
+            },
+            body: JSON.stringify(data)
+    
+        })
+            
+    
+    
+    };
+
 
 

@@ -14,9 +14,9 @@ function descendingComparator(a, b, orderBy) {
     return 0;
 }
 
-export function stableSort(clients, comparator) {
-
-    const stabilizedThis = clients.map((el, index) => [el, index]);
+export function stableSort(elements, comparator) {
+  
+    const stabilizedThis = elements.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order != 0) return order;

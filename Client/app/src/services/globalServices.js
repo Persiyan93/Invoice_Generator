@@ -54,3 +54,26 @@ export function unitTypeFormater(unitType) {
     }
     return result;
 }
+
+export function invoiceStatusConverter(invoiceStatus) {
+    let result = '';
+    switch (invoiceStatus) {
+        case 'Overdue':
+            result = 'Просрочена'
+            break;
+        case 'WaitingForPayment':
+            result = 'За плащане'
+            break;
+        case 'Paid':
+            result = 'Платена'
+            break;
+        case 'Locked':
+            result = 'Заключена'
+            break;
+
+
+        default:
+            break;
+    }
+    return result;
+}
