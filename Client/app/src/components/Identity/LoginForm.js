@@ -1,90 +1,126 @@
-import React from "react";
-import TextField from '@material-ui/core/TextField';
-import { Button } from "@material-ui/core";
-import { withStyles } from '@material-ui/core/styles';
+import { useState, useContext } from 'react';
+import {
+    Paper, makeStyles, IconButton, Button, Typography,
+    TableRow, TableBody, TableCell, Table, TableHead, TableContainer, InputAdornment, Checkbox, Grid, TextField, ThemeProvider, FormControl
+    , FormControlLabel, FormLabel,
+} from '@material-ui/core'
 import * as identityService from '../../services/identityService';
-import Cookies from 'universal-cookie';
+import * as  cookieService from '../../services/cookieService'
+import IdentityContext from '../../Context/IdentityContext'
+import NotificationContext from '../../Context/NotificationContext';
+const useStyles = makeStyles(theme => ({
 
-
-
-const useStyles = (thema => ({
     root: {
         '& .MuiFormControl-root': {
-            width: '90%',
-            margin: thema.spacing(1)
-
+            width: '80%',
+            margin: theme.spacing(2),
         }
+    },
+    pageContent: {
+        //backgroundColor:'#EAE8EE',
+        marginLeft: '25%',
+        width: '50%',
+        height: '350px',
+        borderRadius: 10,
+        margin: theme.spacing(3),
+        padding: theme.spacing(3)
+    },
+    button: {
+        margin: theme.spacing(3),
+        marginBottom: theme.spacing(3),
+        marginLeft: '40%'
+    },
+    title: {
+        marginBottom: theme.spacing(3)
     }
+
+
 }))
 
-class Login extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            username: '',
-            password: ''
-        }
-        this.changeHandler = this.changeHandler.bind(this);
-        this.submitHandler = this.submitHandler.bind(this);
+const userDataInitialValues = {
+    userName: '',
+    password: ''
+}
+export default function LoginForm(props) {
+    const {setUser}=useContext(IdentityContext)
+    const {setNotification}=useContext(NotificationContext)
+    const [userData, setUserData] = useState(userDataInitialValues)
 
-    }
-    changeHandler(event) {
+
+
+    function changeHandler(event) {
         const target = event.target;
         const value = target.value;
         const name = target.name;
-        this.setState({ [name]: value });
+        setUserData(prevState => ({ ...prevState, [name]: value }))
     }
-
-    submitHandler(event) {
+    function submitHandler(event) {
         event.preventDefault();
 
-        var user = { ...this.state };
-        var response = identityService.login(user)
+        var user = { ...userData };
+        identityService.login(user)
             .then(res => res.json())
             .then(res => {
                 if (res.status == "Unsuccessful") {
                     console.log('Unsuccessful status ')
-                    console.log(res);
+                   setNotification({isOpen:true,message:res.message}) 
                 }
                 else {
-                    let { token, expiration } = res;
-                    let expirationDate = Date.parse(expiration);
-                    let maxAgeInSeconds = (expirationDate - Date.now()) / 1000;
-                    const cookies = new Cookies();
-                    cookies.set('Bearer', token, { path:'/', maxAge: maxAgeInSeconds });
-                    this.props.history.push(`/`)
+                    console.log(res)
+                    let { token, expiration, permissions } = res
+                    cookieService.createCookie(token, expiration)
+                    setUser({isAuthenticated:true,permissions:{...permissions}})
+                    props.history.push(`/`)
                 }
 
             })
             .catch(err => {
-                this.props.history.push('/Errors/ConnectionError')
+                console.log(err)
             })
-
-        
-      
-
-
-
     }
-    render() {
-        const { username, password } = this.state;
-        const { classes } = this.props;
-        return (
-            <form className={classes.root} onSubmit={this.submitHandler}>
-                <TextField required variant="outlined" value={username} name="username" label="Потребител" onChange={this.changeHandler} />
-                <TextField required variant="outlined" value={password} name="password" label="Парола" type="password" onChange={this.changeHandler} />
+    const classes = useStyles();
+    return (
+
+        <Paper className={classes.pageContent}>
+            <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
+                Вход в системата
+            </Typography>
+            <form className={classes.root} onSubmit={submitHandler}>
+                <Grid container alignItems='center' alignContent='center' >
+                    <Grid item md={2}></Grid>
+                    <Grid
+                        item md={9}
+                    >
+                        <TextField
+                            required
+                            name='userName'
+                            onChange={changeHandler}
+                            variant='outlined'
+                            label='Потребителско име'
+                            value={userData.userName}
+
+                        />
+
+                        <TextField
+                            required
+                            type='password'
+                            name='password'
+                            onChange={changeHandler}
+                            variant='outlined'
+                            label='Парола'
+                            value={userData.password}
+
+                        />
 
 
 
-                <Button variant="contained" type="submit" color="primary">
-                    Вход
-                </Button>
 
+
+                    </Grid>
+
+                </Grid>
+                <Button variant='contained' color='primary' type='submit' className={classes.button}>Вход</Button>
             </form>
-        );
-    }
-
+        </Paper>
+    )
 }
-
-
-export default withStyles(useStyles)(Login);
