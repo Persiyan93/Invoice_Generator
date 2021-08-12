@@ -64,5 +64,13 @@ namespace InvoiceGenerator.Web.Controllers
 
             return this.Ok(article);
         }
+        [HttpPut("{articleId}")]
+        public async Task<IActionResult> UpdateArticle(ArticleUpdateModel input,string articleId)
+        {
+            var user = await userManager.FindByNameAsync(this.User.Identity.Name);
+            var article = await articleService.UpdateArticle(input,articleId,user.Id)
+          
+            return this.Ok(article);
+        }
     }
 }

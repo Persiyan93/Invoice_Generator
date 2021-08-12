@@ -14,6 +14,10 @@ namespace InvoiceGenerator.Data.Configurations
         public void Configure(EntityTypeBuilder<Invoice> builder)
         {
 
+            builder.HasOne(x => x.Seller)
+                .WithMany(s => s.Invoices)
+                .HasForeignKey(x => x.SellerId);
+
             builder.HasMany(x => x.Articles)
                 .WithOne(a => a.Invoice)
                 .OnDelete(DeleteBehavior.Cascade);

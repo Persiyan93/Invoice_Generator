@@ -23,9 +23,11 @@ namespace InvoiceGenerator.Data.Models
 
         public string Name { get; set; }
 
+        public ProductStatus Status { get; set; }
+
         public ArticleUnitType UnitType { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal UnitPrice { get; set; }
 
         public double Quantity { get; set; }
 

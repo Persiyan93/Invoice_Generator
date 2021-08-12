@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models.Enum
 {
-    public enum HistoryEventType
+    public enum ProductStatus
     {
-
-        CreateInvoice=1,
-        EditInvoice=2,
-        OverdueInvoice=3,
-        EditArticle=4,
-        AddNewArticle=5
-
+        Active=1,
+        Blocked=2,
     }
 }

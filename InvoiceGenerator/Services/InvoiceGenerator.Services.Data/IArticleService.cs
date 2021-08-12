@@ -11,6 +11,8 @@ namespace InvoiceGenerator.Services.Data
     {
         public Task<string> AddArticle(ArticleInputModel inputModel,string companyId);
 
+        public Task UpdateArticle(UpdateArticleModel inputModel, string articleId,string userId);
+
         public Task<ICollection<T>> GetAllArticlesByCompanyId<T>(string companyId);
 
         public Task<T> GetArticleById<T>(string articleId);

@@ -1,6 +1,7 @@
 ﻿using InvoiceGenerator.Common;
 using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.Articles;
 using Microsoft.EntityFrameworkCore;
@@ -69,6 +70,28 @@ namespace InvoiceGenerator.Services.Data
             return article;
         }
 
-        
+        public async  Task UpdateArticle(UpdateArticleModel inputModel, string articleId,string userId)
+        {
+            var article = await context.Articles.FirstOrDefaultAsync(x => x.Id == articleId);
+            article.UnitPrice = inputModel.UnitPrice;
+            article.Quantity = inputModel.Quantity;
+            article.Status = inputModel.Status;
+            article.VatRate = inputModel.VatRate;
+
+            var historyEvent = new ArticleHistoryEvent
+            {
+                DateOfEvent = DateTime.Now,
+                EventType = HistoryEventType.EditArticle,
+                ArticleId = article.Id,
+                UserId = userId,
+                AdditionalText = inputModel.AdditionalText
+            };
+
+            await context.HistoryEvents.AddAsync(historyEvent);
+            await context.SaveChangesAsync();
+
+
+
+        }
     }
 }

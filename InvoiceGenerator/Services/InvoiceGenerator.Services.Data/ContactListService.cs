@@ -29,7 +29,7 @@ namespace InvoiceGenerator.Services.Data
             {
                 throw new InvalidUserDataException(ErrorMessages.IncorectData);
             }
-            var client = context.Clients
+            var client = await context.Clients
                 .FirstOrDefaultAsync(x => x.Id == inputModel.ClientId);
             if (client==null)
             {
