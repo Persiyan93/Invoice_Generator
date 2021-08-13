@@ -10,7 +10,6 @@ namespace InvoiceGenerator.Web.Models.AccessAreas
     {
         public bool InvoiceAccess { get; set; }
         
-
         public bool ProductsAccess { get; set; }
 
         public bool EmailAccess { get; set; }

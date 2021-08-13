@@ -1,4 +1,5 @@
-﻿using InvoiceGenerator.Data.Models.Enum;
+﻿using AutoMapper;
+using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.Address;
 using InvoiceGenerator.Web.Models.Invoices;
@@ -11,11 +12,14 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Client
 {
-   public  class ClientViewModel:IMapFrom<InvoiceGenerator.Data.Models.Client>
+   public  class ClientViewModel:IMapFrom<InvoiceGenerator.Data.Models.Client>,IHaveCustomMappings
     {
         public string Name { get; set; }
 
         public string VatNumber { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public ClientStatus Status { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public TypeOfCompany CompanyType { get; set; }
@@ -31,8 +35,14 @@ namespace InvoiceGenerator.Web.Models.Client
 
         public int CountOfOverdueInvoices { get; set; }
 
-
-
-        
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration.CreateMap<InvoiceGenerator.Data.Models.Client, ClientViewModel>()
+                .ForMember(x => x.CountOfAllInvoices,
+                        opt => opt.MapFrom(c => c.Invoices.Count()))
+                .ForMember(x => x.CountOfOverdueInvoices,
+                        opt => opt.MapFrom(x => x.Invoices.Where(i => i.Status == InvoiceStatus.Overdue).Count()));
+                    
+        }
     }
 }

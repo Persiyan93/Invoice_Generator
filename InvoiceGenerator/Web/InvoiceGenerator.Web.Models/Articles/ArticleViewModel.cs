@@ -15,6 +15,8 @@ namespace InvoiceGenerator.Web.Models.Articles
     {
         public string Id { get; set; }
 
+        public int ArticleNumber { get; set; }
+
         public string Name { get; set; }
 
         public string UnitPrice { get; set; }
@@ -26,11 +28,14 @@ namespace InvoiceGenerator.Web.Models.Articles
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ArticleUnitType UnitType { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public ProductStatus Status { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Article, ArticleViewModel>()
               .ForMember(x => x.UnitPrice, opt =>
-                     opt.MapFrom(y => y.Price));
+                     opt.MapFrom(y => y.UnitPrice));
              
         }
     }

@@ -25,7 +25,7 @@ namespace InvoiceGenerator.Web.Models.WordModels
                 .ForMember(x => x.Name, opt =>
                                opt.MapFrom(i => i.Article.Name))
                 .ForMember(x => x.UnitPrice, opt =>
-                               opt.MapFrom(i => i.Article.Price))
+                               opt.MapFrom(i => i.Article.UnitPrice))
                 .ForMember(x => x.UnitType, opt =>
                                opt.MapFrom(i => i.ArticlePrice.ToString()));
 

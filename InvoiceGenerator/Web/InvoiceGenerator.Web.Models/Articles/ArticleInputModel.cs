@@ -21,6 +21,9 @@ namespace InvoiceGenerator.Web.Models.Articles
         public ArticleUnitType UnitType { get; set; }
 
         [Required]
+        public int ArticleNumber { get; set; }
+
+        [Required]
         public double  VatRate { get; set; }
 
         [Required]
@@ -28,6 +31,11 @@ namespace InvoiceGenerator.Web.Models.Articles
 
         [Required]
         public double Quantity { get; set; }
+
+        [Required]
+        public bool QuantityMonitoring { get; set; }
+
+        public double QuantityLoweLimit { get; set; }
 
 
 
