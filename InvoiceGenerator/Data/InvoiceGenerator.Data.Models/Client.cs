@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InvoiceGenerator.Data.Models.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,14 @@ namespace InvoiceGenerator.Data.Models
 
             this.ContactList = new HashSet<ContactPerson>();
             this.Invoices = new HashSet<Invoice>();
+            this.Status = ClientStatus.Active;
 
 
         }
 
         public RegisteredCompany Seller { get; set; }
+
+        public ClientStatus Status { get; set; }
 
         public string SellerId { get; set; }
 

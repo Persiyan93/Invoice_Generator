@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvoiceGenerator.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210807192154_RemoveDateNullValues")]
-    partial class RemoveDateNullValues
+    [Migration("20210813070611_AddNotifications")]
+    partial class AddNotifications
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,11 +155,20 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
+
+                    b.Property<double>("QuantityLoweLimit")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("QuantityMonitoring")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UnitType")
                         .HasColumnType("int");
@@ -268,6 +277,12 @@ namespace InvoiceGenerator.Data.Migrations
 
                     b.Property<int>("DefaultPaymentTerm")
                         .HasColumnType("int");
+
+                    b.Property<int>("PeriodInDaysBetweenTwoRepatedEmails")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("SendAutomaticGeneratedEmails")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -432,6 +447,54 @@ namespace InvoiceGenerator.Data.Migrations
                     b.ToTable("InvoiceToService");
                 });
 
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.Notification", b =>
+                {
+                    b.Property<string>("NotificationId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TypeOfNotification")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("Notifications");
+
+                    b.HasDiscriminator<string>("TypeOfNotification").HasValue("Notification");
+                });
+
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.NotificationToUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NotificationId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("NotificationToUser");
+                });
+
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Service", b =>
                 {
                     b.Property<string>("Id")
@@ -445,6 +508,9 @@ namespace InvoiceGenerator.Data.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<double>("VatRate")
                         .HasColumnType("float");
@@ -590,6 +656,9 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<string>("SellerId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasIndex("MailingAddressId");
 
                     b.HasIndex("SellerId");
@@ -636,6 +705,30 @@ namespace InvoiceGenerator.Data.Migrations
                     b.HasIndex("InvoiceId");
 
                     b.HasIndex("UserId");
+
+                    b.HasDiscriminator().HasValue("InvoiceHistoryEvent");
+                });
+
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.ArticleNotification", b =>
+                {
+                    b.HasBaseType("InvoiceGenerator.Data.Models.Notification");
+
+                    b.Property<string>("ArticleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasDiscriminator().HasValue("ArticleHistoryEvent");
+                });
+
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.InvoiceNotification", b =>
+                {
+                    b.HasBaseType("InvoiceGenerator.Data.Models.Notification");
+
+                    b.Property<string>("InvoiceId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("InvoiceId");
 
                     b.HasDiscriminator().HasValue("InvoiceHistoryEvent");
                 });
@@ -752,6 +845,21 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Navigation("Invoice");
 
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.NotificationToUser", b =>
+                {
+                    b.HasOne("InvoiceGenerator.Data.Models.Notification", "Notification")
+                        .WithMany("ReadFromCollection")
+                        .HasForeignKey("NotificationId");
+
+                    b.HasOne("InvoiceGenerator.Data.Models.ApplicationUser", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Notification");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Service", b =>
@@ -879,6 +987,24 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.ArticleNotification", b =>
+                {
+                    b.HasOne("InvoiceGenerator.Data.Models.Article", "Article")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ArticleId");
+
+                    b.Navigation("Article");
+                });
+
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.InvoiceNotification", b =>
+                {
+                    b.HasOne("InvoiceGenerator.Data.Models.Invoice", "Invoice")
+                        .WithMany("Notifications")
+                        .HasForeignKey("InvoiceId");
+
+                    b.Navigation("Invoice");
+                });
+
             modelBuilder.Entity("InvoiceGenerator.Data.Models.ApplicationUser", b =>
                 {
                     b.Navigation("ArticleHistoryEvents");
@@ -889,6 +1015,8 @@ namespace InvoiceGenerator.Data.Migrations
 
                     b.Navigation("Logins");
 
+                    b.Navigation("Notifications");
+
                     b.Navigation("Roles");
                 });
 
@@ -897,6 +1025,8 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Navigation("History");
 
                     b.Navigation("Invoices");
+
+                    b.Navigation("Notifications");
                 });
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Country", b =>
@@ -910,7 +1040,14 @@ namespace InvoiceGenerator.Data.Migrations
 
                     b.Navigation("History");
 
+                    b.Navigation("Notifications");
+
                     b.Navigation("Services");
+                });
+
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.Notification", b =>
+                {
+                    b.Navigation("ReadFromCollection");
                 });
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Service", b =>

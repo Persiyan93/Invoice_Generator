@@ -23,6 +23,10 @@ namespace InvoiceGenerator.Data.Models
 
         public string Name { get; set; }
 
+        public bool QuantityMonitoring { get; set; }
+
+        public double QuantityLoweLimit { get; set; }
+
         public ProductStatus Status { get; set; }
 
         public ArticleUnitType UnitType { get; set; }
@@ -40,6 +44,7 @@ namespace InvoiceGenerator.Data.Models
         public RegisteredCompany Company { get; set; }
 
         public ICollection<ArticleHistoryEvent> History { get; set; }
+        public ICollection<ArticleNotification> Notifications { get; set; }
 
     }
 }
