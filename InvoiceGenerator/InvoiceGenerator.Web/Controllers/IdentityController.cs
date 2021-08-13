@@ -2,7 +2,9 @@
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Web.Models;
+using InvoiceGenerator.Web.Models.AccessAreas;
 using InvoiceGenerator.Web.Models.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,17 +24,20 @@ namespace InvoiceGenerator.Web.Controllers
     [ApiController]
     public class IdentityController : ControllerBase
     {
+        private readonly RoleManager<ApplicationRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
         private readonly IIdentityService identityService;
 
         public IdentityController
             (
+            RoleManager<ApplicationRole> roleManager,
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration,
             IIdentityService identityService
             )
         {
+            this.roleManager = roleManager;
             this.userManager = userManager;
             this.configuration = configuration;
             this.identityService = identityService;
@@ -43,7 +48,9 @@ namespace InvoiceGenerator.Web.Controllers
         {
 
             var user = await userManager.FindByNameAsync(inputModel.UserName);
-            if (user != null && await userManager.CheckPasswordAsync(user, inputModel.Password))
+            var isLocked = userManager.IsLockedOutAsync(user);
+            var isPasswordCorrect = await userManager.CheckPasswordAsync(user, inputModel.Password);
+            if (user != null && isPasswordCorrect && !isLocked.Result) 
             {
 
                 var userRoles = await userManager.GetRolesAsync(user);
@@ -73,15 +80,22 @@ namespace InvoiceGenerator.Web.Controllers
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
-
-
+                var userPermissions =await getUserPermissins(user);
+             
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
+                    expiration = token.ValidTo,
+                    permissions=userPermissions
+
                 });
             }
-            return Unauthorized();
+            return Ok(new ResponseViewModel
+            {
+                Status = "Unsuccessful",
+                Message = "Wrong password or username"
+            });
+            
 
         }
 
@@ -98,6 +112,65 @@ namespace InvoiceGenerator.Web.Controllers
 
             return this.Ok(response);
         }
+
+
+        [HttpGet]
+        [Route("GetUserRoles")]
+        [Authorize]
+        public async Task<IActionResult> GetPermissions()
+        {
+            var user = await userManager.FindByNameAsync(this.User.Identity.Name);
+            if (user==null)
+            {
+                new ResponseViewModel
+                {
+                    Status = "Unsuccessful",
+                    Message = ErrorMessages.UserNotLoggedIn
+
+                };
+
+            }
+
+
+            var userPermissions = await getUserPermissins(user);
+
+            return this.Ok(userPermissions);
+        }
+
+
+        private async Task<AccessAreaModel> getUserPermissins(ApplicationUser user)
+        {
+            var userRoles = await userManager.GetRolesAsync(user);
+            var userPermission = new AccessAreaModel();
+            foreach (var userRole in userRoles)
+            {
+                switch (userRole)
+                {
+                    case GlobalConstants.EmailAccessRole:
+                        userPermission.EmailAccess = true;
+                        break;
+                    case GlobalConstants.InvoiceAccessRole:
+                        userPermission.InvoiceAccess = true;
+                        break;
+                    case GlobalConstants.ProductsAccessRole:
+                        userPermission.ProductsAccess = true;
+                        break;
+                    case GlobalConstants.UsersAccessRole:
+                        userPermission.UsersAccess = true;
+                        break;
+                    default:
+                        userPermission.EmailAccess = true;
+                        userPermission.InvoiceAccess = true;
+                        userPermission.ProductsAccess = true;
+                        userPermission.UsersAccess = true;
+                        break;
+                }
+
+            }
+            return userPermission;
+
+        }
+       
     }
 
 }
