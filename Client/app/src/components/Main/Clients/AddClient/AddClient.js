@@ -52,41 +52,25 @@ export default function AddClient(props) {
         const target = event.target;
         const value = target.value;
         const name = target.name;
+        console.log(value +'     '+name);
+
         if (name == 'addressText' || name == 'town' || name == 'country') {
 
-            setClientData(prevState => ({ ...prevState, address: { ...prevState.address }, [name]: value }))
-            // this.setState({
-            //     address:
-            //         { ...this.state.address, [name]: value }
-            // });
+            setClientData(prevState => ({ ...prevState, address: { ...prevState.address , [name]: value }}))
+            console.log(clientData)
         }
         else {
             setClientData(prevState => ({ ...prevState, [name]: value }))
-            // this.setState({ [name]: value });
+           
         }
     }
 
     function submitHandler(event) {
         event.preventDefault();
 
-        // clientService.addNewClient({ ...this.state })
-        //     .then(res => res.json())
-        //     .then(res => {
-        //         if (res.status == "Unsuccessful") {
-        //             console.log('Unsuccessful status ')
-        //             console.log(res);
-        //         }
-        //         else {
-        //             let clientId = getIdFromResponse(res.message);
-        //             props.history.push(`/Clients/ClientInfo/${clientId}`);
-        //         }
-
-        //     })
-        //     .catch(err => {
-        //         this.props.history.push('/Errors/ConnectionError')
-        //     })
+  
     }
-    const { companyName, companyType, vatNumber, accontablePersonName, uniqueIdentificationNumber, address: { town, country, addressText } } = clienDataInitialValues
+    const { companyName, companyType, vatNumber, accontablePersonName, uniqueIdentificationNumber, address  } = clientData
     return (
 
         <Paper className={classes.pageContent}>
@@ -141,19 +125,19 @@ export default function AddClient(props) {
                             required
                             variant="outlined"
                             name="country"
-                            value={country}
+                            value={address.country}
                             label="Държава на регистрация"
                             onChange={changeHandler} />
 
                         <TextField
                             required variant="outlined"
                             name="town"
-                            value={town}
+                            value={address.town}
                             label="Град"
                             onChange={changeHandler} />
                         <TextField
                             required variant="outlined"
-                            value={addressText}
+                            value={address.addressText}
                             name="addressText"
                             label="Адрес"
                             onChange={changeHandler} />
