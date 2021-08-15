@@ -61,7 +61,7 @@ const useFetch = (endpoint, triger, setTriger, setResult, method = 'GET', data) 
                     .catch(err => {
 
                         console.log(err)
-                        history.push('/Errors/ConnectionError')
+                        //history.push('/Errors/ConnectionError')
                     })
 
             }

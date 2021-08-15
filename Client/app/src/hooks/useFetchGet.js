@@ -12,18 +12,19 @@ const useFetchGet = (endpoint, setResult, triger, setTriger) => {
 
     useEffect(() => {
         if (triger) {
-            console.log(endpoint)
+            console.log('Endpoint            '+endpoint)
 
             dataService.get(endpoint)
                 .then(res => res.json())
                 .then(res => {
-               
+                    console.log(res)
                     if (res.Status == "Unsuccessful") {
                         console.log('Unsuccessful status ')
                         console.log(res);
                     }
                     else  {
-                        console.log(res)
+
+                        console.log( 'Response'+res)
                         setResult(res)
                         setTriger(false);
 

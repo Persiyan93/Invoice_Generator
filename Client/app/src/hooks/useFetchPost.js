@@ -16,9 +16,12 @@ const useFetchPost = (endpoint,data, triger, setTriger, actionAfterSuccessfullOp
                 .then(res => res.json())
                 .then(res => {
                     if (res.status == "Unsuccessful") {
+                        console.log(res)
                         setErrors([res.message]);
                     }
                     else {
+                            console.log(res)
+                            console.log('successfull')
 
                         let id = globalServices.getIdFromResponse(res.message);
                         // setResult(id)
