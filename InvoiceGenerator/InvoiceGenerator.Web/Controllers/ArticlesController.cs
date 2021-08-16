@@ -4,7 +4,7 @@ using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Web.Models;
 using InvoiceGenerator.Web.Models.Articles;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -37,7 +37,7 @@ namespace InvoiceGenerator.Web.Controllers
             {
                 return this.BadRequest();
             }
-            var articleId = await articleService.AddArticle(inputModel,companyId);
+            var articleId = await articleService.AddArticle(inputModel,companyId,user.Id);
 
             return this.Ok(
                 new ResponseViewModel
@@ -68,9 +68,33 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> UpdateArticle(ArticleUpdateModel input,string articleId)
         {
             var user = await userManager.FindByNameAsync(this.User.Identity.Name);
-            var article = await articleService.UpdateArticle(input,articleId,user.Id)
-          
-            return this.Ok(article);
+            await articleService.UpdateArticle(input, articleId, user.Id);
+
+            var response = new ResponseViewModel
+               {
+                    Status = "Successful",
+                    Message = string.Format(SuccessMessages.SuccessfullyUpdateArticle, articleId)
+                };
+            return this.Ok(response);
+
         }
+
+
+        [HttpPut]
+        [Route("ArticleQuantity/{articleid}")]
+        public async Task<IActionResult> UpdateArticleQuantity(UpdateArticleQuantityModel input, string articleId)
+        {
+            var user = await userManager.FindByNameAsync(this.User.Identity.Name);
+            await articleService.UpdateArticleQuantity(articleId, input.Quantity, user.Id);
+            var response = new ResponseViewModel
+            {
+                Status = "Successful",
+                Message = string.Format(SuccessMessages.SuccessfullyUpdateArticleQuantity)
+            };
+            return this.Ok(response);
+
+        }
+
+
     }
 }
