@@ -7,10 +7,14 @@ import { useHistory } from 'react-router-dom'
 import getResultAfterPagingAndSorting from '../../../services/sortingService';
 import ProgressIndicator from '../ProgressIndicator'
 const useStyles = makeStyles(theme => ({
-
+    paper:{
+    //  padding:theme.spacing(3),
+    //  marginRight:theme.spacing(3)
+     
+    },
     table: {
-
-
+       //width:'90%',
+      
         '& thead th': {
             fontWeight: '550',
 
@@ -60,40 +64,40 @@ const TableWithServerSidePagingAndSorting = (props) => {
         <>
             <ProgressIndicator
                 isLoading={isLoading} />
-
-            <Table className={classes.table} style={isLoading ? { opacity: '0.6' } : { opacity: '1.0' }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        {
-
-
-                            headCells.map(headCell => (
-                                <TableCell align="right" key={headCell.id}>
-                                    {headCell.disableSorting ? headCell.title :
-                                        <TableSortLabel
-                                            active={pagingAndSorting.orderBy == headCell.id}
-                                            direction={pagingAndSorting.orderBy == headCell.id ? pagingAndSorting.order : 'asc'}
-                                            onClick={() => (handleSortRequest(headCell.id))}
-
-                                        >
-                                            {headCell.title}
-                                        </TableSortLabel>
-                                    }
-                                </TableCell>
-
-                            ))
-
-                        }
-
-                    </TableRow>
-                </TableHead>
-
-                {props.children}
+            <TableContainer component={Paper}   className={classes.paper} >
+                <Table className={classes.table} style={isLoading ? { opacity: '0.6' } : { opacity: '1.0' }} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            {
 
 
+                                headCells.map(headCell => (
+                                    <TableCell align="right" key={headCell.id}>
+                                        {headCell.disableSorting ? headCell.title :
+                                            <TableSortLabel
+                                                active={pagingAndSorting.orderBy == headCell.id}
+                                                direction={pagingAndSorting.orderBy == headCell.id ? pagingAndSorting.order : 'asc'}
+                                                onClick={() => (handleSortRequest(headCell.id))}
 
-            </Table >
+                                            >
+                                                {headCell.title}
+                                            </TableSortLabel>
+                                        }
+                                    </TableCell>
 
+                                ))
+
+                            }
+
+                        </TableRow>
+                    </TableHead>
+
+                    {props.children}
+
+
+
+                </Table >
+            </TableContainer>
 
         </>
     );

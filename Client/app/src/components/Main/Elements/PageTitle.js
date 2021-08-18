@@ -4,6 +4,9 @@ import { Paper, Card,Typography, makeStyles, colors } from '@material-ui/core/';
 const useStyles=makeStyles(theme=>({
     root:{
         //backgroundColor:'black'
+        width:'80%',
+        marginLeft:theme.spacing(10),
+        borderRadius:10
     },
     pageHeader:{
         padding:theme.spacing(4),
