@@ -7,26 +7,27 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models
 {
-    public class Notification
+    public  class Notification
     {
         public Notification()
         {
-            this.Id = Guid.NewGuid().ToString();
-            this.ReadFromCollection = new HashSet<ApplicationUser>();
+            this.NotificationId = Guid.NewGuid().ToString();
+            this.ReadFromCollection = new HashSet<NotificationToUser>();
+            this.Date = DateTime.UtcNow;
         }
-        public string Id { get; set; }
+        public string CompanyId { get; set; }
 
-        public string InvoiceId{ get; set; }
+        public RegisteredCompany Company { get; set; }
 
-        public Invoice Invoice { get; set; }
+        public string NotificationId { get; set; }
 
-        public NotificationType Type { get; set; }
+         public NotificationType Type { get; set; }
 
         public string Message { get; set; }
 
         public DateTime Date { get; set; }
 
-        public ICollection<ApplicationUser> ReadFromCollection { get; set; }
+        public ICollection<NotificationToUser> ReadFromCollection { get; set; }
 
 
     }

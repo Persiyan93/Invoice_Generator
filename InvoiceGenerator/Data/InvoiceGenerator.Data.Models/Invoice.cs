@@ -16,7 +16,7 @@ namespace InvoiceGenerator.Data.Models
             this.Articles = new HashSet<InvoiceToArticle>();
             this.Services = new HashSet<InvoiceToService>();
             this.History = new HashSet<InvoiceHistoryEvent>();
-            this.Notifications = new HashSet<InvoiceNotification>();
+            this.Notifications = new HashSet<Notification>();
         }
         public string Id { get; set; }
 
@@ -67,7 +67,7 @@ namespace InvoiceGenerator.Data.Models
 
         public ICollection<InvoiceToService> Services { get; set; }
 
-        public ICollection<InvoiceNotification> Notifications { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
 
 
 

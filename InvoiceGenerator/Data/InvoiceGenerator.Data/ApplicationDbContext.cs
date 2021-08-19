@@ -13,6 +13,8 @@ namespace InvoiceGenerator.Data
         {
 
         }
+        
+        
         public DbSet<Service> Services { get; set; }
 
         public DbSet<Notification> Notifications { get; set; }
@@ -33,9 +35,13 @@ namespace InvoiceGenerator.Data
 
         public DbSet<Town> Towns { get; set; }
 
+        public DbSet<HomePageContent> HomePageContents { get; set; }
+
         public DbSet<DefaultInvoiceOptions> DefaultInvoiceOptions { get; set; }
 
-        public DbSet<HistoryEvent> HistoryEvents { get; set; }
+        public DbSet<Email> Emails { get; set; }
+        public DbSet<ArticleHistoryEvent> ArticleHistoryEvents { get; set; }
+        public DbSet<InvoiceHistoryEvent> InvoiceHistoryEvents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

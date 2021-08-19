@@ -13,7 +13,8 @@ namespace InvoiceGenerator.Data.Models.Enum
         EditInvoice=2,
         OverdueInvoice=3,
         EditArticle=4,
-        AddNewArticle=5
+        AddNewArticle=5,
+        ArticleDelivery=6
 
     }
 }

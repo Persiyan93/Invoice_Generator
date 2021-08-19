@@ -23,6 +23,10 @@ namespace InvoiceGenerator.Data.Models
 
         public LanguageOfInvoice DefaultLanguage { get; set; }
 
-        
+        public bool BlockClientWhenReachMaxCountOfUnpaidInvoices { get; set; }
+
+        public int MaxCountOfUnPaidInvoices { get; set; }
+
+
     }
 }

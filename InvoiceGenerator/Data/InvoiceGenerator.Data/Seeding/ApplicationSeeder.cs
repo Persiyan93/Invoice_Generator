@@ -13,7 +13,8 @@ namespace InvoiceGenerator.Data.Seeding
         {
             var seeders = new List<ISeeder>
             {
-                new RoleSeeder()
+                new RoleSeeder(),
+                new HomePageContentSeeder()
             };
             foreach ( var seeder in seeders)
             {

@@ -19,5 +19,7 @@ namespace InvoiceGenerator.Data.Models
         {
             this.Id = Guid.NewGuid().ToString();
         }
+
+       
     }
 }

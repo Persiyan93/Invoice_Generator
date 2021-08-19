@@ -21,11 +21,11 @@ namespace InvoiceGenerator.Data.Models
 
         public string Name { get; set; }
 
-        public ProductStatus  Status { get; set; }
+        public ProductStatus Status { get; set; }
 
         public decimal DefaultPriceWithoutVat { get; set; }
 
-       public double VatRate { get; set; }
+        public double VatRate { get; set; }
 
         public ICollection<InvoiceToService> Invoices { get; set; }
 

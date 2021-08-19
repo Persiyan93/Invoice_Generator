@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models.Enum
 {
-    public enum NotificationType
+    public enum HomePageContentTypes
     {
-        SendAutomaticGeneratedEmail=1,
-        Paid=2,
-        Overdue=3,
-        Warning=4
+        Chart=1,
+        Table=2
 
     }
 }

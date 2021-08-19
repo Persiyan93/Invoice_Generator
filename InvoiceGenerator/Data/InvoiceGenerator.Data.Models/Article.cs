@@ -25,7 +25,7 @@ namespace InvoiceGenerator.Data.Models
 
         public bool QuantityMonitoring { get; set; }
 
-        public double QuantityLoweLimit { get; set; }
+        public double QuantityLowerLimit { get; set; }
 
         public ProductStatus Status { get; set; }
 
@@ -44,7 +44,7 @@ namespace InvoiceGenerator.Data.Models
         public RegisteredCompany Company { get; set; }
 
         public ICollection<ArticleHistoryEvent> History { get; set; }
-        public ICollection<ArticleNotification> Notifications { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
 
     }
 }

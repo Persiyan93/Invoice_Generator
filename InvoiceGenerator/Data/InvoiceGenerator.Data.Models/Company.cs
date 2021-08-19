@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models
 {
-    public abstract class Company
+    public  class Company
     {
         public Company()
         {
@@ -35,6 +35,7 @@ namespace InvoiceGenerator.Data.Models
         public string VatNumber { get; set; }
 
         public string UniqueIdentificationNumber { get; set; }
+
 
 
 

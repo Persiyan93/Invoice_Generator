@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models
 {
-    public abstract class HistoryEvent
+    public  class HistoryEvent
     {
         public HistoryEvent()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.DateOfEvent = DateTime.UtcNow;
         }
         public string Id { get; set; }
 
@@ -21,9 +22,15 @@ namespace InvoiceGenerator.Data.Models
 
         public string AdditionalText { get; set; }
 
+        public string BulgarianMessage { get; set; }
+
         public string UserId { get; set; }
 
         public ApplicationUser User { get; set; }
+
+        public string CompanyId { get; set; }
+
+        public RegisteredCompany Company { get; set; }
 
     }
 }
