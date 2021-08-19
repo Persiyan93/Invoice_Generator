@@ -1,10 +1,13 @@
-import React, { Component } from 'react'
-import { TextField, withStyles, Button } from '@material-ui/core/';
+import { useEffect, useState } from 'react'
+import useFetchPost from '../../../../../hooks/useFetchPost'
+import apiEndpoints from '../../../../../services/apiEndpoints';
+import { TextField, makeStyles, Button } from '@material-ui/core/';
 import * as clientService from '../../../../../services/clientsService';
 import * as globalService from '../../../../../services/globalServices'
+import { useGridContainerProps } from '@material-ui/data-grid';
 
 
-const useStyles = (theme => ({
+const useStyles = makeStyles(theme => ({
     root: {
         '& .MuiFormControl-root': {
             width: '80%',
@@ -12,62 +15,63 @@ const useStyles = (theme => ({
             display: 'flex'
 
         },
-       
+
     },
-   
+
 
 
 }))
 
-export class ContactPersonForm extends Component {
-    constructor(props) {
-        super(props)
-        this.state={
-            id:'',
-            name:'',
-            email:'',
-            phoneNumber:''
-        }
-        this.onSubmitHandler=this.onSubmitHandler.bind(this);
-        this.onChangeHandler=this.onChangeHandler.bind(this);
-    }
-    onSubmitHandler(event){
-        event.preventDefault();
-        let clientId=this.props.clientId;
-        var person={...this.state,clientId};
-        console.log(person)
-        clientService.addContactPerson(person)
-            .then(res=>res.json())
-            .then(res=>{
-                console.log(res);
-                let contactPersonId=globalService.getIdFromResponse(res.message); 
-                console.log(contactPersonId)
-            });
-
-            this.props.addContactPerson({...this.state});
-            this.props.setOpenPopup();
-
-    }
-
-    onChangeHandler(event){
-        let name=event.target.name;
-        let value=event.target.value;
-        this.setState({[name]:value})
-    }
-
-    
-    render() {
-        const{name,email,phoneNumber}=this.state
-        const{classes}=this.props
-        return (
-            <form className={classes.root} onSubmit={this.onSubmitHandler} >
-                <TextField className={classes.inputField} name="name" value={name} required label="Име" onChange={this.onChangeHandler} />
-                <TextField className={classes.inputField} name="email" value={email} required label="Имейл адрес" onChange={this.onChangeHandler} />
-                <TextField className={classes.inputField} name="phoneNumber" value={phoneNumber} required label="Телефонен номер" onChange={this.onChangeHandler} />
-                <Button variant="outlined" color="primary" type="submit" >  Добави</Button>
-            </form>
-        )
-    }
+const initialPersonvalues = {
+    id: '',
+    name: '',
+    email: '',
+    phoneNumber: ''
 }
 
-export default withStyles(useStyles)(ContactPersonForm)
+export default function ContactPersonForm(props) {
+    let { clientId,setContactList,setOpenPopup } = props
+    const [contactPerson, setContactPerson] = useState(initialPersonvalues);
+
+    const [postContactPersonTriger,setPostContactPersonTriger]=useState(false);
+    useFetchPost(apiEndpoints.contactList,{...contactPerson,clientId},postContactPersonTriger
+        ,setPostContactPersonTriger,actionAfterSuccessfulyAddedContactPerson)
+
+
+    function actionAfterSuccessfulyAddedContactPerson(){
+        console.log('after successfuull')
+        setContactList(prevState=>([...prevState,contactPerson]))
+        setOpenPopup(false)
+    }
+
+    function onSubmitHandler(event) {
+        console.log('Inside submit handler')
+        event.preventDefault();
+        setPostContactPersonTriger(true);
+
+       
+    }
+
+    function onChangeHandler(event) {
+        let name = event.target.name;
+        let value = event.target.value;
+        setContactPerson(prevState => ({ ...prevState, [name]: value }))
+    }
+
+    const classes = useStyles();
+
+    const { name, email, phoneNumber } = contactPerson
+   
+    return (
+        <form className={classes.root} onSubmit={onSubmitHandler} >
+            <TextField className={classes.inputField} name="name" value={name} required label="Име" onChange={onChangeHandler} />
+            <TextField className={classes.inputField} name="email" value={email} required label="Имейл адрес" onChange={onChangeHandler} />
+            <TextField className={classes.inputField} name="phoneNumber" value={phoneNumber} required label="Телефонен номер" onChange={onChangeHandler} />
+            <Button variant="outlined" color="primary" type="submit" >  Добави</Button>
+        </form>
+    )
+
+}
+
+
+

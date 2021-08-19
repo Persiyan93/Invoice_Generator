@@ -109,6 +109,7 @@ export default function ClientList(props) {
                 setPagingAndSorting={setPagingAndSorting}
                 headCells={headCells}
                 isLoading={false}
+                tableContainer={Paper}
             >
 
                 <TableBody>

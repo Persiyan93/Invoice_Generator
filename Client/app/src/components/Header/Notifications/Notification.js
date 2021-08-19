@@ -12,7 +12,7 @@ export default function Notification(props) {
 
   const [selectedNotificationId, selectNotificationId] = useState();
 
-  const [updateNotificationStatusTriger, setUpdateNotificationStatusTriger] = useState('false');
+  const [updateNotificationStatusTriger, setUpdateNotificationStatusTriger] = useState(false);
   let updateNotificationStatusUrl = apiEndpoints.updateNotificationStatus + `/${selectedNotificationId}`
 
   useFetchPut(updateNotificationStatusUrl, updateNotificationStatusTriger,

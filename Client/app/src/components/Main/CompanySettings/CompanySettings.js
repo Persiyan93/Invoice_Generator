@@ -29,11 +29,17 @@ const useStyles = makeStyles(theme => ({
 
 
 }))
-
+const companySettingsInitialValue={
+    defaultPaymentTerm:0,
+    sendAutomaticGeneratedEmails:false,
+    blockClient:false,
+    periodInDaysBetweenTwoRepatedEmails:5,
+    maxCountOfUnPaidInvoices:10
+}
 
 export default function CompanySettings(props) {
 
-    const [ companySettings, setCompanySettings ] = useState({sendAutomaticGeneratedEmails:false,blockClient:false});
+    const [ companySettings, setCompanySettings ] = useState(companySettingsInitialValue);
 
 
     // UpdateCompanySettings
@@ -64,7 +70,7 @@ export default function CompanySettings(props) {
             }
 
         }
-    console.log(companySettings)
+   
 
     }
     function onSubmitHandler(e) {
