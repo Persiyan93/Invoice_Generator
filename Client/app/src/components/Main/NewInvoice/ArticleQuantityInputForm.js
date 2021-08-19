@@ -24,7 +24,7 @@ export default function ArticleQuantityInputForm(props) {
     const { quantity, discount, additionalInfo } = productsInfo
     function submitHandler(e) {
         e.preventDefault()
-        console.log(productsInfo)
+      
         let newProducts = selectedProductsFromLeftTable.map(x =>
         ({
             id: x.id,
@@ -39,18 +39,18 @@ export default function ArticleQuantityInputForm(props) {
         setProductsInRightTable(prevState => ([...prevState, ...newProducts]));
         selectProductFromLeftTable([])
 
-        setProductsInLeftTable((prevState) => ([...prevState.map(x => {
+        // setProductsInLeftTable((prevState) => ([...prevState.map(x => {
 
-            if (newProducts.map(p => p.id).includes(x.id)) {
-                x.quantity = x.quantity - quantity;
-                console.log(x)
-                return x;
-            }
-            else {
-                return x
-            }
+        //     if (newProducts.map(p => p.id).includes(x.id)) {
+        //         x.quantity = x.quantity - quantity;
+        //         console.log(x)
+        //         return x;
+        //     }
+        //     else {
+        //         return x
+        //     }
 
-        })]))
+        // })]))
         setOpenPopup(false);
 
     }

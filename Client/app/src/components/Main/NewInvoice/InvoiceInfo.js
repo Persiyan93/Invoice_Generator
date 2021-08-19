@@ -1,6 +1,4 @@
-import React from 'react'
-import {  makeStyles,TextField,Checkbox } from '@material-ui/core';
-import { Check } from '@material-ui/icons';
+import {  makeStyles,TextField } from '@material-ui/core';
 const useStyles=makeStyles({
     
 
@@ -9,14 +7,6 @@ divInvoiceInfo: {
     height: 300,
     display: 'block',
     marginLeft: '90px',
-  
-    // pading: '0 15px',
-    // //borderRadius: 10,
-    // background: '#E6EAE9'
-
-
-
-
   },
     textField: {
     marginTop:20 ,
@@ -25,15 +15,29 @@ divInvoiceInfo: {
 
   },
 })
-export default function InvoiceInfo() {
+export default function InvoiceInfo(props) {
     const classes = useStyles();
+    let {issueDate,dateOfTaxEvent,setInvoiceDetails}=props
+    function dateOfIssueChangeHandler(e){
+       let value=e.target.value
+        setInvoiceDetails(prevState=>({...prevState,issueDate:value}))
+    }
+    function dateOfTaxEventChangeHandler(e){
+        let value=e.target.value;
+        console.log(e.target.name)
+       
+   
+        setInvoiceDetails(prevState=>({...prevState,dateOfTaxEvent:value}))
+    }
     return (
         <div className={classes.divInvoiceInfo}>
             <TextField
+                name='issueDate'
                 label="Дата на издаване"
                 type="date"
-                defaultValue={new Date().toJSON().slice(0,10).replace(/-/g,'/')}
+                value={issueDate}
                 className={classes.textField}
+                onChange={dateOfIssueChangeHandler}
                 size='medium'
                 InputLabelProps={{
                     shrink: true,
@@ -44,8 +48,9 @@ export default function InvoiceInfo() {
              <TextField
                 label="Дата на данъчното събитие"
                 type="date"
-                defaultValue={new Date().toJSON().slice(0,10).replace(/-/g,'/')}
+                value={dateOfTaxEvent}
                 className={classes.textField}
+                onChange={dateOfTaxEventChangeHandler}
                 size='medium'
                 InputLabelProps={{
                     shrink: true,
