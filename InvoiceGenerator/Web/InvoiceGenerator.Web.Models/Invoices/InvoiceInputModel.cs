@@ -1,6 +1,7 @@
 ﻿using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Web.Models.Articles;
 using InvoiceGenerator.Web.Models.JsonConverters;
+using InvoiceGenerator.Web.Models.OfferedService;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,14 +20,11 @@ namespace InvoiceGenerator.Web.Models.Invoices
         [Required]
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime IssueDate { get; set; }
-
-
         public int PaymentPeriod { get; set; }
-
 
         public ICollection<ArticleToInvoiceInputModel> Articles { get; set; }
 
-
+        public ICollection<ServiceToInvoiceInputModel> Services { get; set; }
         [Required]
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime DateOfTaxEvent { get; set; }

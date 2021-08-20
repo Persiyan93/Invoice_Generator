@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Users
 {
-    public class UserInputModel
+    public class UserModel
     {
         public string UserName { get; set; }
 
@@ -15,6 +15,6 @@ namespace InvoiceGenerator.Web.Models.Users
 
         public string Email { get; set; }
 
-        public AccessAreaModel AccessAreas  { get; set; }
+        public UserAccessModel AccessAreas  { get; set; }
     }
 }

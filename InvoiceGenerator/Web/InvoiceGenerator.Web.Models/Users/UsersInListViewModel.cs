@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Users
@@ -18,12 +19,15 @@ namespace InvoiceGenerator.Web.Models.Users
 
         public string Email { get; set; }
 
-        public int CountOfGeneratedInvoice { get; set; }
+        public int CountOfGeneratedInvoices { get; set; }
 
         public double SumOfAllInvoices { get; set; }
 
         public int CountOfOverduedInvoices { get; set; }
 
-       
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public UserStatus Status { get; set; }
+
+
     }
 }

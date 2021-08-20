@@ -4,6 +4,7 @@ using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.Articles;
 using InvoiceGenerator.Web.Models.JsonConverters;
+using InvoiceGenerator.Web.Models.OfferedService;
 using System;
 using System.Collections.Generic;
 
@@ -19,6 +20,8 @@ namespace InvoiceGenerator.Web.Models.Invoices
 
         public string ClientId { get; set; }
 
+        public int InvoiceNumber { get; set; }
+
         public string ContactPersonId { get; set; }
 
         public decimal VatValue { get; set; }
@@ -33,6 +36,8 @@ namespace InvoiceGenerator.Web.Models.Invoices
 
         public ICollection<ArticleViewModelInInvoice> Articles { get; set; }
 
+        public ICollection<ServiceInInvoiceViewModel> Services { get; set; }
+
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime? DateOfTaxEvent { get; set; }
 
@@ -41,8 +46,6 @@ namespace InvoiceGenerator.Web.Models.Invoices
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public LanguageOfInvoice Language { get; set; }
-
-        
 
         public int PaymentPeriod { get; set; }
 

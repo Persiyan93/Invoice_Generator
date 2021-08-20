@@ -6,14 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Notifications
 {
-    public class NotificationViewModel :IMapFrom<InvoiceNotification> ,IHaveCustomMappings
+    public class NotificationViewModel :IMapFrom<Notification> ,IHaveCustomMappings
     {
         public string Id { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public NotificationType Type { get; set; }
 
         public string Message { get; set; }
@@ -22,7 +24,9 @@ namespace InvoiceGenerator.Web.Models.Notifications
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            
+            configuration.CreateMap<Notification, NotificationViewModel>()
+                .ForMember(x => x.Id, opt =>
+                               opt.MapFrom(x => x.NotificationId));
         }
     }
 }
