@@ -25,6 +25,8 @@ namespace InvoiceGenerator.Data.Models
 
         public string Message { get; set; }
 
+        public string BulgarianMessage { get; set; }
+
         public DateTime Date { get; set; }
 
         public ICollection<NotificationToUser> ReadFromCollection { get; set; }

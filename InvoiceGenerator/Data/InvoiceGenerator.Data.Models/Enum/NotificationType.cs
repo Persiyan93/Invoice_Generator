@@ -8,10 +8,10 @@ namespace InvoiceGenerator.Data.Models.Enum
 {
     public enum NotificationType
     {
-        SendAutomaticGeneratedEmail=1,
-        Paid=2,
-        Overdue=3,
-        Warning=4
+        Info = 1,
+        Warning = 2,
+        Error = 3,
+        SendAutomaticGeneratedEmail=4
 
     }
 }

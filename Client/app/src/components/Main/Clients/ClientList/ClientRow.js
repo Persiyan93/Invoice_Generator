@@ -58,8 +58,9 @@ class ClientRow extends React.Component {
     render() {
         const { open } = this.state
         const { classes } = this.props;
-        const { name, vatNumber, countOfInvoices, countOfOverdueInvoices, invoices,
-             companyType, valueSumOfAllUnPaidInvoices, status,blockClientHandler,id,activateClientHandler } = this.props
+        const { name, vatNumber, countOfOverdueInvoices, invoices,
+             companyType, valueSumOfAllUnPaidInvoices, status
+             ,blockClientHandler,id,activateClientHandler, countOfUnPaidInvoices,priceOfAllOverdueInvoices } = this.props
         return (
             <React.Fragment>
                 <TableRow className={classes.root} onClick={this.clickHandler}>
@@ -75,9 +76,12 @@ class ClientRow extends React.Component {
                     <TableCell align="center">{vatNumber}</TableCell>
                     <TableCell align="center" style={{ color: status == 'Blocked' ? '#FF0000' : '#0AE209' }}>
                     {clientStatusFormater(status)}</TableCell>
-                    <TableCell align="center">{countOfInvoices}</TableCell>
-                    <TableCell align="center">{countOfOverdueInvoices}</TableCell>
+                    <TableCell align="center">{countOfUnPaidInvoices}</TableCell>
                     <TableCell align="center">{currencyFormater(valueSumOfAllUnPaidInvoices)}</TableCell>
+                    
+                    <TableCell align="center">{countOfOverdueInvoices}</TableCell>
+                    <TableCell align="center">{currencyFormater(priceOfAllOverdueInvoices)}</TableCell>
+                  
                     <TableCell align="right">
                         <Link to={`/Clients/ClientInfo/${this.props.id}`}   style={{ textDecoration: 'none' }}>
                             <IconButton size="small" >
@@ -112,12 +116,12 @@ class ClientRow extends React.Component {
                 </TableRow>
                 <TableRow >
 
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box margin={1}>
                                 <Typography variant="h6" gutterBottom component="div" style={{ textAlign: 'center' }} >
                                     {
-                                        invoices.length != 0 ? "Последни фактури" : "Все още няма издадени фактури"
+                                        invoices.length != 0 ? "Последни 5 фактури" : "Все още няма издадени фактури"
                                     }
 
                                 </Typography>
@@ -128,7 +132,7 @@ class ClientRow extends React.Component {
                                             <TableCell>Дата на издаване</TableCell>
                                             <TableCell>Дата на падеж</TableCell>
                                             <TableCell>Статус</TableCell>
-                                            <TableCell>Цена </TableCell>
+                                            <TableCell>Стойност </TableCell>
 
                                         </TableRow>
                                     </TableHead>

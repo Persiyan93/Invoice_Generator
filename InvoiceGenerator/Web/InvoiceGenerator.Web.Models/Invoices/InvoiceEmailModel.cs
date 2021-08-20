@@ -13,6 +13,8 @@ namespace InvoiceGenerator.Web.Models.Invoices
     {
         public string Id { get; set; }
 
+        public string ClientName { get; set; }
+
         public string ClientEmailAddress { get; set; }
 
         public string SellerName { get; set; }
@@ -24,6 +26,8 @@ namespace InvoiceGenerator.Web.Models.Invoices
         public DateTime DateOfIssue { get; set; }
 
         public DateTime PaymentDueDate { get; set; }
+
+        public string SellerId { get; set; }
 
         public int PaymenTerm { get; set; }
 

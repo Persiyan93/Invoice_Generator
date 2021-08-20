@@ -20,9 +20,10 @@ const headCells = [
     { id: 'Name', title: 'Име на фирмата' },
     { id: 'VatNumber', title: 'ДДС Номер' },
     { id: 'Status', title: 'Статус' },
-    { id: 'CountOfInvoices', title: 'Брой на всички фактури' },
-    { id: 'CountOfOverdueInvoices', title: 'Брой на просрочени фактури' },
+    { id: 'CountOfUnPaidInvoices', title: 'Брой на неплатените фактури' },
     { id: 'ValueSumOfAllUnPaidInvoices', title: 'Стойност на неплатените фактури' },
+    { id: 'CountOfOverdueInvoices', title: 'Брой на просрочени фактури' },
+    { id: 'PriceOfAllOverdueInvoices', title: 'Стойност на просрочените фактури' },
     { id: 5, title: 'Действие', disableSorting: 'true' },
 
 ]
@@ -33,10 +34,10 @@ export default function ClientList(props) {
     const [paging, setPaging] = useState({ page: 0, rowsPerPage: 10 })
     const [filterString, setFilterString] = useState('')
     const [pagingAndSorting, setPagingAndSorting] = useState({ order: 'asc', orderBy: '' })
-    const [clients, setClients] = useState([])
+    const [clients, setClients] = useState({filteredClients:[],countOfClients:0})
     const [selectedUserId, selectUserId] = useState('');
     const [clientNewStatus, setClientNewStatus] = useState('')
-
+    
 
     //Get clients
     const [getClientsTringer, setGetClientsTriger] = useState(true)
@@ -91,6 +92,7 @@ export default function ClientList(props) {
     function searchHandler(event) {
         setFilterString(event.target.value)
     }
+    const {filteredClients,countOfClients}=clients;
     return (
         <>
 
@@ -114,7 +116,7 @@ export default function ClientList(props) {
 
                 <TableBody>
 
-                    {clients.map((client) => (
+                    {filteredClients.map((client) => (
                         <ClientRow
                             key={client.id}
                             {...client}
@@ -133,7 +135,7 @@ export default function ClientList(props) {
                 component="div"
                 rowsPerPageOptions={pages}
                 rowsPerPage={paging.rowsPerPage}
-                count={clients.length}
+                count={countOfClients}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={trowsPerPageHandle}
             />
@@ -144,7 +146,7 @@ export default function ClientList(props) {
                 openPopup={openConfirmationPopup}
                 title='Блокиране на клиента'
                 //disableUserPutTriger={disableUserPutTriger}
-                question={`Сигурни ли сте че искате да ограничите продажбите за ${clients.find(x => x.id === selectedUserId)?.name}`}
+                question={`Сигурни ли сте че искате да ограничите продажбите за ${filteredClients.find(x => x.id === selectedUserId)?.name}`}
             />
         </>
     )

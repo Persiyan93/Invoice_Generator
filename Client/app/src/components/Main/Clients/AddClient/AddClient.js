@@ -9,6 +9,8 @@ import {
 import { getIdFromResponse } from '../../../../services/globalServices'
 import useFetchPost from '../../../../hooks/useFetchPost';
 import apiEndpoints from '../../../../services/apiEndpoints';
+import PageTitle from '../../Elements/PageTitle';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 const useStyles = makeStyles(theme => ({
 
     root: {
@@ -52,127 +54,136 @@ export default function AddClient(props) {
         const target = event.target;
         const value = target.value;
         const name = target.name;
-        console.log(value +'     '+name);
+        console.log(value + '     ' + name);
 
         if (name == 'addressText' || name == 'town' || name == 'country') {
 
-            setClientData(prevState => ({ ...prevState, address: { ...prevState.address , [name]: value }}))
+            setClientData(prevState => ({ ...prevState, address: { ...prevState.address, [name]: value } }))
             console.log(clientData)
         }
         else {
             setClientData(prevState => ({ ...prevState, [name]: value }))
-           
+
         }
     }
 
     function submitHandler(event) {
         event.preventDefault();
 
-  
+
     }
-    const { companyName, companyType, vatNumber, accontablePersonName, uniqueIdentificationNumber, address  } = clientData
+    const { companyName, companyType, vatNumber, accontablePersonName, uniqueIdentificationNumber, address } = clientData
     return (
+        <>
+            <PageTitle
+                title="Нов клиент"
+                icon={<GroupAddIcon fontSize='large'/>}
+                subTitle="Test2"
 
-        <Paper className={classes.pageContent}>
-            <form className={classes.root} onSubmit={submitHandler}>
-                <Grid container >
-                    <Grid
-                        item md={6}
-                    >
+            >
 
-                        <TextField
-                            required
-                            variant="outlined"
-                            value={companyName}
-                            name="companyName"
-                            label="Име на фирмата"
-                            onChange={changeHandler} />
+            </PageTitle>
+            <Paper className={classes.pageContent}>
+                <form className={classes.root} onSubmit={submitHandler}>
+                    <Grid container >
+                        <Grid
+                            item md={6}
+                        >
 
-
-
-
-                        <TextField
-                            required variant="outlined"
-                            name="vatNumber"
-                            value={vatNumber}
-                            label="ДДС номер"
-                            onChange={changeHandler} />
-
-
-                        <TextField
-                            variant="outlined"
-                            value={accontablePersonName}
-                            name="accontablePersonName"
-                            label="Материално отговорно лице "
-                            onChange={changeHandler} />
-
-                        <TextField
-                            required variant="outlined"
-                            value={uniqueIdentificationNumber}
-                            name="uniqueIdentificationNumber" label="ЕИК"
-                            onChange={changeHandler} />
+                            <TextField
+                                required
+                                variant="outlined"
+                                value={companyName}
+                                name="companyName"
+                                label="Име на фирмата"
+                                onChange={changeHandler} />
 
 
 
+
+                            <TextField
+                                required variant="outlined"
+                                name="vatNumber"
+                                value={vatNumber}
+                                label="ДДС номер"
+                                onChange={changeHandler} />
+
+
+                            <TextField
+                                variant="outlined"
+                                value={accontablePersonName}
+                                name="accontablePersonName"
+                                label="Материално отговорно лице "
+                                onChange={changeHandler} />
+
+                            <TextField
+                                required variant="outlined"
+                                value={uniqueIdentificationNumber}
+                                name="uniqueIdentificationNumber" label="ЕИК"
+                                onChange={changeHandler} />
+
+
+
+
+
+                        </Grid>
+                        <Grid
+                            item md={5}
+
+                        >
+                            <TextField
+                                required
+                                variant="outlined"
+                                name="country"
+                                value={address.country}
+                                label="Държава на регистрация"
+                                onChange={changeHandler} />
+
+                            <TextField
+                                required variant="outlined"
+                                name="town"
+                                value={address.town}
+                                label="Град"
+                                onChange={changeHandler} />
+                            <TextField
+                                required variant="outlined"
+                                value={address.addressText}
+                                name="addressText"
+                                label="Адрес"
+                                onChange={changeHandler} />
+
+
+                            <FormControl className={classes.formControl} >
+                                <InputLabel>Вид на компанията</InputLabel>
+                                <Select
+                                    name="companyType"
+                                    value={companyType}
+                                    onChange={changeHandler}
+                                    className={classes.selectEmpty}
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    <MenuItem value="SoleТrader">ЕТ</MenuItem>
+                                    <MenuItem value="LtdWithOneOwner">ЕООД</MenuItem>
+                                    <MenuItem value="Ltd">ООД</MenuItem>
+                                    <MenuItem value="JoinStockCompany">АД</MenuItem>
+                                </Select>
+                                <FormHelperText>Required</FormHelperText>
+                            </FormControl>
+
+
+
+
+
+                        </Grid>
 
 
                     </Grid>
-                    <Grid
-                        item md={5}
-
-                    >
-                        <TextField
-                            required
-                            variant="outlined"
-                            name="country"
-                            value={address.country}
-                            label="Държава на регистрация"
-                            onChange={changeHandler} />
-
-                        <TextField
-                            required variant="outlined"
-                            name="town"
-                            value={address.town}
-                            label="Град"
-                            onChange={changeHandler} />
-                        <TextField
-                            required variant="outlined"
-                            value={address.addressText}
-                            name="addressText"
-                            label="Адрес"
-                            onChange={changeHandler} />
-
-
-                        <FormControl className={classes.formControl} >
-                            <InputLabel>Вид на компанията</InputLabel>
-                            <Select
-                                name="companyType"
-                                value={companyType}
-                                onChange={changeHandler}
-                                className={classes.selectEmpty}
-                            >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value="SoleТrader">ЕТ</MenuItem>
-                                <MenuItem value="LtdWithOneOwner">ЕООД</MenuItem>
-                                <MenuItem value="Ltd">ООД</MenuItem>
-                                <MenuItem value="JoinStockCompany">АД</MenuItem>
-                            </Select>
-                            <FormHelperText>Required</FormHelperText>
-                        </FormControl>
-
-                      
-
-
-
-                    </Grid>
-                  
-
-                </Grid>
-                <Button variant='contained' color='primary' type='submit' className={classes.button}>Добави</Button>
-            </form>
-        </Paper>
+                    <Button variant='contained' color='primary' type='submit' className={classes.button}>Добави</Button>
+                </form>
+            </Paper>
+        </>
     )
 }
 

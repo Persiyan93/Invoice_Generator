@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import React from 'react'
+import { useHistory } from 'react-router';
 import { makeStyles, Paper, TablePagination, TextField, Button, Typography, TableRow, TableBody, TableCell, Table, TableHead, TableContainer, InputAdornment, Checkbox } from '@material-ui/core';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import SearchIcon from '@material-ui/icons/Search';
@@ -7,9 +7,9 @@ import useFetchGet from '../../../hooks/useFetchGet';
 import apiEndpoints from '../../../services/apiEndpoints';
 import Popup from '../Popup';
 import AddClientForm from '../Clients/AddClient/AddClient';
-import EmptyTableBody from '../../EmptyTableBody';
+import queryString from "query-string";
 import SearchBar from '../Elements/SearchBar';
-import TableWithPagingAndSorting from '../Elements/TableWithPagingAndSorting'
+import TableWithServerSidePagingAndSorting from '../Elements/TableWithServerSidePagingAndSorting';
 import { convertCompanyName, currencyFormater, clientStatusFormater } from '../../../services/globalServices'
 import getResultAfterPagingAndSorting from '../../../services/sortingService'
 
@@ -52,46 +52,43 @@ const useStyles = makeStyles({
 
 const headCells = [
 
-    { id: 'selector', title: '' },
-    { id: 'name', title: 'Име на фирмата' },
-    { id: 'vatNumber', title: 'ДДС Номер' },
-    { id: 'status', title: 'Статус' },
-    { id: 'countOfOverdueInvoices', title: 'Брой на просрочени фактури', disableSorting: 'true' },
-    { id: 'priceOfAllOverdueInvoices', title: 'Обща стойност на просрочените фактури' },
-    { id: 'countOfUnPaidInvoices', title: '  Брой на неплатените фактури' },
-    { id: 'valueSumOfAllUnPaidInvoices', title: 'Обща стойност на неплатените фактури' },
+    { id: 'selector', title: '', disableSorting: 'true' },
+    { id: 'Name', title: 'Име на фирмата' },
+    { id: 'VatNumber', title: 'ДДС Номер' },
+    { id: 'Status', title: 'Статус' },
+    { id: 'CountOfUnPaidInvoices', title: 'Брой на неплатените фактури' },
+    { id: 'ValueSumOfAllUnPaidInvoices', title: 'Стойност на неплатените фактури' },
+    { id: 'CountOfOverdueInvoices', title: 'Брой на просрочени фактури' },
+    { id: 'PriceOfAllOverdueInvoices', title: 'Стойност на просрочените фактури' },
 
 ]
 const pages = [5, 10]
 export default function ClientListInInvoice(props) {
-
+    const history = useHistory();
     //States related with paging and sorting 
-    const [filterString, setFilterString] = useState('');
-    const [sorting, setSorting] = useState({ order: 'asc', orderBy: '' })
+
     const [paging, setPaging] = useState({ page: 0, rowsPerPage: 10 })
+    const [filterString, setFilterString] = useState('')
+    const [pagingAndSorting, setPagingAndSorting] = useState({ order: 'asc', orderBy: '' })
     const [isLoading, setIsLoading] = useState(false);
-    const [filterFunc, setFilterFunc] = useState({ func: (clients) => { return (clients) } })
+
 
 
     const [isOpenPopup, setOpenPopup] = useState(false);
-    const [clients, setClients] = useState([])
+    const [clients, setClients] = useState({ filteredClients: [], countOfClients: 0 })
     const [isClientSelected, selectClient] = useState(false);
     const [clientId, setClientId] = useState('')
 
 
     //Get Clients
-    const [clientsGetTrieger, setClientsGetTriger] = useState(true);
-    useFetchGet(apiEndpoints.allClients, setClients, clientsGetTrieger, setClientsGetTriger);
-
-    function clientsAfterPagingAndSorting(event) {
-        const { order, orderBy } = sorting
-        const { page, rowsPerPage } = paging
-        return getResultAfterPagingAndSorting(filterFunc.func(clients), order, orderBy)
-            .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
-    }
+    const [getClientsTringer, setGetClientsTriger] = useState(true)
+    var getClientsUrl = apiEndpoints.allClients + history.location.search
+    useFetchGet(getClientsUrl, setClients, getClientsTringer, setGetClientsTriger)
 
 
 
+
+    //Functions rlated with paging and sorting
     function handleChangePage(event, newPage) {
         setPaging(prevState => ({ ...prevState, page: newPage }));
 
@@ -100,25 +97,25 @@ export default function ClientListInInvoice(props) {
         setPaging({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
 
     }
-    function searchHandler(event) {
-        let target = event.target;
-        setFilterString(target.value)
-        setFilterFunc({
-            func: clients => {
-                if (target.value == '') {
-                    return clients
-                }
-                else {
-
-                    return clients
-                        .filter(x => x.name.toLowerCase().includes(target.value.toLowerCase()) ||
-                            x.vatNumber.includes(target.value))
+    const { orderBy, order } = pagingAndSorting;
+    const { page, rowsPerPage } = paging;
+    useEffect(() => {
+        history.replace({
+            search: `?${queryString.stringify({
+                page: page ? page : undefined,
+                rowsPerPage: rowsPerPage === 10 ? undefined : rowsPerPage,
+                order: order == 'asc' ? undefined : order,
+                orderBy: orderBy ? orderBy : undefined,
+                filterString: filterString ? filterString : undefined
 
 
-                }
-            }
+            })}`
         })
-    }
+        setGetClientsTriger(true)
+    }, [order, orderBy, page, rowsPerPage, filterString])
+
+
+
     function changeHandler(event) {
 
         if (isClientSelected) {
@@ -131,7 +128,7 @@ export default function ClientListInInvoice(props) {
             setClientId(clientId)
         }
     }
-  
+
     function confirmClientHandler(event) {
 
         props.setInvoiceDetails(prevState => ({ ...prevState, clientId: clientId }))
@@ -139,6 +136,9 @@ export default function ClientListInInvoice(props) {
         props.setClientInfoGetTriger(true);
 
     }
+
+    const { filteredClients, countOfClients } = clients
+
     const classes = useStyles();
     return (
         <>
@@ -149,31 +149,32 @@ export default function ClientListInInvoice(props) {
                 searchbarLabel='Намери Клиент'
                 placeholder='Име на клиента или ДДС номер'
                 filterString={filterString}
-                searchHandler={searchHandler}
+
             />
 
 
 
-            <TableWithPagingAndSorting
+            <TableWithServerSidePagingAndSorting
+                pagingAndSorting={pagingAndSorting}
+                setPagingAndSorting={setPagingAndSorting}
                 headCells={headCells}
-                pagingAndSorting={sorting}
-                setPagingAndSorting={setSorting}
-                isLoading={isLoading}
+                isLoading={false}
+                tableContainer={Paper}
 
             >
 
                 <TableBody className={classes.body}>
                     {
 
-                        clientsAfterPagingAndSorting().map((client) => (
+                        filteredClients.map((client) => (
 
                             < TableRow key={client.id} hover={true} className={classes.row}>
                                 {
                                     <TableCell component="th" scope="row" padding="checkbox">
                                         <Checkbox
                                             id={client.id}
-                                            disabled={(!(!isClientSelected || (clientId === client.id) )|| client.status === 'Blocked')}
-                                           // disabled={(!(!isClientSelected || (clientId === client.id) )|| client.statys === 'Blocked')}
+                                            disabled={(!(!isClientSelected || (clientId === client.id)) || client.status === 'Blocked')}
+                                            // disabled={(!(!isClientSelected || (clientId === client.id) )|| client.statys === 'Blocked')}
                                             color="primary"
                                             onChange={changeHandler}
 
@@ -183,18 +184,18 @@ export default function ClientListInInvoice(props) {
 
 
 
-                                <TableCell>{convertCompanyName(client)}</TableCell>
-                                <TableCell align="right">{client.vatNumber}</TableCell>
-                                <TableCell align="center"
-                                    style={{ color: client.status == 'Blocked' ? '#FF0000' : '#0AE209' }}
-                                >{clientStatusFormater(client.status)}
+                                <TableCell component="th" scope="row">
+                                    {convertCompanyName({ ...client })}
                                 </TableCell>
 
-
-                                <TableCell align="center">{(client.countOfOverdueInvoices)}</TableCell>
-                                <TableCell align="right">{currencyFormater(client.priceOfAllOverdueInvoices)}</TableCell>
-                                <TableCell align="right">{client.countOfUnPaidInvoices}</TableCell>
+                                <TableCell align="center">{client.vatNumber}</TableCell>
+                                <TableCell align="center" style={{ color: client.status == 'Blocked' ? '#FF0000' : '#0AE209' }}>
+                                    {clientStatusFormater(client.status)}</TableCell>
+                                <TableCell align="center">{client.countOfUnPaidInvoices}</TableCell>
                                 <TableCell align="center">{currencyFormater(client.valueSumOfAllUnPaidInvoices)}</TableCell>
+
+                                <TableCell align="center">{client.countOfOverdueInvoices}</TableCell>
+                                <TableCell align="center">{currencyFormater(client.priceOfAllOverdueInvoices)}</TableCell>
                             </TableRow>
                         ))
                     }
@@ -222,14 +223,14 @@ export default function ClientListInInvoice(props) {
                 </TableBody>
 
 
-            </TableWithPagingAndSorting>
+            </TableWithServerSidePagingAndSorting>
 
             <TablePagination
                 page={paging.page}
                 component="div"
                 rowsPerPageOptions={pages}
                 rowsPerPage={paging.rowsPerPage}
-                count={clients.length}
+                count={countOfClients}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={rowsPerPageHandler}
             />

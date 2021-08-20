@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,14 @@ namespace InvoiceGenerator.Web.Controllers
     {
         private readonly IArticleService articleService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IMemoryCache cache;
+      
 
-        public ArticlesController(IArticleService articleService,UserManager<ApplicationUser> userManager)
+        public ArticlesController(IArticleService articleService,UserManager<ApplicationUser> userManager,IMemoryCache cache)
         {
             this.articleService = articleService;
             this.userManager = userManager;
+            this.cache = cache;
         }
 
         [HttpPost]
@@ -64,6 +68,7 @@ namespace InvoiceGenerator.Web.Controllers
 
             return this.Ok(article);
         }
+
         [HttpPut("{articleId}")]
         public async Task<IActionResult> UpdateArticle(ArticleUpdateModel input,string articleId)
         {
@@ -84,6 +89,7 @@ namespace InvoiceGenerator.Web.Controllers
         [Route("ArticleQuantity/{articleid}")]
         public async Task<IActionResult> UpdateArticleQuantity(UpdateArticleQuantityModel input, string articleId)
         {
+         
             var user = await userManager.FindByNameAsync(this.User.Identity.Name);
             await articleService.UpdateArticleQuantity(articleId, input.Quantity, user.Id);
             var response = new ResponseViewModel
@@ -92,6 +98,29 @@ namespace InvoiceGenerator.Web.Controllers
                 Message = string.Format(SuccessMessages.SuccessfullyUpdateArticleQuantity)
             };
             return this.Ok(response);
+
+        }
+
+
+        [HttpGet]
+        [Route("TopTenArticles")]
+        public async Task<IActionResult> GetTopArticles()
+        {
+            ICollection<ArticleViewModelInTop10ArticlesList> articles;
+
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
+            var cacheKey = "Top10Articles" + companyId;
+
+            if (!this.cache.TryGetValue(cacheKey, out articles))
+            {
+                articles = await articleService.GetTop10CompanyArticlesAsync<ArticleViewModelInTop10ArticlesList>(companyId);
+                this.cache.Set(cacheKey, articles, TimeSpan.FromHours(24));
+            }
+
+          
+            
+           
+            return this.Ok(articles);
 
         }
 

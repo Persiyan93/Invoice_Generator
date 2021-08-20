@@ -196,6 +196,8 @@ export default function ConfirmedArticlesInInvoice(props) {
                 setOpenPopup={setOpenConfirmPopup}
                 openPopup={isOpenConfirmPopup}
                 actionAfterConfirmation={deleteArticle}
+                title='Премахване на артикул'
+                question='Сигурни ли сте че искате да премахнете артикула'
             >
 
             </ConfirmPopup>

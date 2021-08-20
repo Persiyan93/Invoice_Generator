@@ -1,6 +1,7 @@
 ﻿using InvoiceGenerator.Data.Models.Enum;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,12 +25,13 @@ namespace InvoiceGenerator.Data.Models
 
         public string BulgarianMessage { get; set; }
 
+        [ForeignKey("User")]
         public string UserId { get; set; }
 
         public ApplicationUser User { get; set; }
-
+        [ForeignKey("Company")]
         public string CompanyId { get; set; }
-
+     
         public RegisteredCompany Company { get; set; }
 
     }

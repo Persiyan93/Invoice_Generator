@@ -1,36 +1,56 @@
-import React from "react";
-import { withStyles, Grid, Typography } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import { getClientInfo } from "../../../../services/clientsService";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import DeleteIcon from '@material-ui/icons/Delete';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import EditIcon from '@material-ui/icons/Edit';
-import { ClientProvider } from "../../../Context";
-import { Button } from "@material-ui/core";
+
+import { useState } from "react";
+import { Grid, Typography, makeStyles, Button, Paper } from '@material-ui/core';
+import { convertCompanyName } from '../../../../services/globalServices'
+import apiEndpoints from "../../../../services/apiEndpoints";
+import useFetchGet from "../../../../hooks/useFetchGet";
 import AddressCard from './AddressCard'
-import PrintIcon from '@material-ui/icons/Print';
+import ImportExportIcon from '@material-ui/icons/ImportExport';
 import ContactList from './ContactList'
 import AdditionalClientInfo from "./AddtionalClientInfo";
 
-
-
-const useStyles = (theme => ({
+import { clientStatusFormater } from '../../../../services/globalServices'
 
 
 
-    hideElement: {
-        display: 'none',
+import useFetch from "../../../../hooks/useFetch";
+import ClientInvoices from "./ClientInvoices";
+
+
+const useStyles = makeStyles(theme => ({
+
+    header: {
+        textAlign: 'center',
+        // backgroundColor: '#EAF0E3',
+        // /backgroundColor: '#D3D9CC',
+        backgroundColor: '#BBC1B4',
+        borderRadius: 10,
+        display: 'flex'
+    }
+    , container: {
+        // height: '300px',
+        // width: '650px'
+        marginTop: theme.spacing(10)
+    },
+    body: {
+        padding: theme.spacing(3),
+        backgroundColor: '#F1F3EF'
     },
 
-    root: {
+
+    title: {
         minWidth: '100%',
         minHeight: '100px',
-        backgroundColor: '#DFC8C3',
+        backgroundColor: '#D9D9D9',
         borderRadius: 10
+    },
+    contactList: {
+        minWidth: '100%',
+        minHeight: '100px',
+        backgroundColor: '#D9D9D9',
+        borderRadius: 10,
+        padding: theme.spacing(3),
+        marginTop: theme.spacing(20)
     },
 
     controls: {
@@ -42,104 +62,68 @@ const useStyles = (theme => ({
 
 
     },
-    additionalInfo: {
-        backgroundColor: '#DFC8C3',
-        borderRadius: 10,
-        marginTop: '0%'
-    }
+    pageContent: {
+        margin: theme.spacing(3),
+        padding: theme.spacing(3)
+    },
+    // additionalInfo: {
+    //     backgroundColor: '#DFC8C3',
+    //     borderRadius: 10,
+    //     marginTop: '0%'
+    // }
 
 
 }))
 
 
-class ClientInfo extends React.Component {
+export default function ClientInfo(props) {
+    const clientId = props.match.params['clientId']
 
-    constructor(props) {
-        super(props)
+    const [clientInfo, setClientInfo] = useState({});
+    const [showAdditionalInfo, setShowAdditionalInfo] = useState(false)
+    const [showContactList, setShowContactList] = useState(false)
+    const [showInvoices, setShowInvoices] = useState(true)
 
-        this.state = {
-            clientId: this.props.match.params['clientId'],
-            name: '',
-            companyType: '',
-            vatNumber: '',
-            uniqueIdentificationNumber: '',
-            countOfAllInvoices:0,
-            countOfOverdueInvoices:0,
-            invoices: [{ id: 10, number: 243, price: 450.00, dateOfIssue: '20.04.2021', maturityDate: '30.04.2021', createBy: 'Георги Георгиев', status: 'w' }],
-            displayAdditionalInfo: false,
-            displayContactList: false,
-            
-            
-        };
-        this.showAdditionalInfo = this.showAdditionalInfo.bind(this);
-        this.showContactList = this.showContactList.bind(this);
+
+    const [getClientInfoTriger, setgetClientInfoTriger] = useState(true)
+    let getClientInfoUrl = apiEndpoints.getClientInfo + `/${clientId}`;
+    useFetchGet(getClientInfoUrl, setClientInfo, getClientInfoTriger, setgetClientInfoTriger);
+
+
+    function showAdditionalInfoHandler(e) {
+        setShowAdditionalInfo(prevState => (!prevState));
     }
-
-    componentDidMount() {
-
-        var response = getClientInfo(this.props.match.params['clientId'])
-            .then(resp => {
-
-                if (resp.status != 200) {
-                    console.log(resp);
-
-                }
-                else {
-                    resp.json()
-                        .then(clientInfo => {
-                            this.setState({ ...clientInfo });
-
-
-                        })
-                        .catch(err => console.log(err))
-                }
-            })
-            .catch(err => console.log(err))
-
-
-
-
+    function showInvoicesHandler(e) {
+        setShowInvoices(prevState => (!prevState));
     }
 
 
-    showAdditionalInfo(event) {
-        this.setState((state) => ({ displayAdditionalInfo: !state.displayAdditionalInfo }))
-
+    function showContactListHandler(e) {
+        setShowContactList(prevState => (!prevState));
     }
-
-    showContactList(event) {
-        this.setState((state) => ({ displayContactList: !state.displayContactList }))
-    }
-
-
-
-
-
-
-    render() {
-        let { clientId, displayAdditionalInfo, displayContactList } = this.state;
-        const { classes } = this.props;
-
-
-        return (
-            <>
-                <div className={classes.root}>
+    console.log(showContactList)
+    const classes = useStyles();
+    return (
+        <>
+            <Paper className={classes.pageContent}>
+                <div className={classes.title}>
                     <Grid container >
                         <Grid item md={12} align="center" >
                             <Typography variant='h4'>Данни на фирмата </Typography>
                         </Grid>
-                     </Grid>
-                    
+                    </Grid>
 
-                    <Grid container alignItems="center">
-                        <Grid item md={2} />
+
+                    <Grid container alignItems="center" justifyContent={true}>
+                        <Grid item md={1} />
+
                         <Grid item md={2}>
 
                             <Typography variant='h6'>
                                 Име на фирмата
                             </Typography>
                             <Typography color="textSecondary">
-                               {this.state.name}
+                                {convertCompanyName(clientInfo)}
                             </Typography>
                         </Grid>
                         <Grid item md={1}></Grid>
@@ -149,46 +133,118 @@ class ClientInfo extends React.Component {
                                 Просрочени фактури
                             </Typography>
                             <Typography color="textSecondary">
-                               {this.state.countOfOverdueInvoices}
+                                {clientInfo.countOfOverdueInvoices}
+                            </Typography>
+                        </Grid>
+                        <Grid item md={1} />
+                        <Grid item md={1}>
+                            <Typography variant='h8'>
+                                Статус
+                            </Typography>
+                            <Typography color="textSecondary">
+                                {clientStatusFormater(clientInfo.status)}
                             </Typography>
                         </Grid>
                         <Grid item md={1} />
                         <Grid item md={1}>
 
                             <Typography variant='h8'>
-                                Всички фактури
+                                Неплатени фактури
                             </Typography>
                             <Typography color="textSecondary">
-                                {this.state.countOfAllInvoices}
+                                {clientInfo.countOfUnpaidInvoices}
                             </Typography>
                         </Grid>
                         <Grid item md={1} />
-                        <Grid item md={2}>
+                        <Grid item md={1}>
 
                             <Typography variant='h6'>
                                 ДДС Номер
                             </Typography>
                             <Typography color="textSecondary">
-                                {this.state.vatNumber}
+                                {clientInfo.vatNumber}
                             </Typography>
                         </Grid>
                     </Grid>
 
                 </div>
-                <div className={classes.controls} >
 
-                    <Button variant="contained" size="small" color="primary" onClick={this.showAdditionalInfo}>
-                        Допълнителна информация
-                    </Button>
-                    <Button variant="contained" size="small" color="primary" onClick={this.showContactList}>
-                        Контактен лист
-                    </Button>
+{/* 
+                        Invoices */}
+                <div className={classes.container}>
+                    <div className={classes.header}>
+                        <Grid container align='center'>
+                            <Grid item md={11}>
+                                <Typography variant='h4'>Фактури на клиента</Typography>
+                            </Grid>
+                            <Grid item align='right'>
+                                <ImportExportIcon
+                                    style={{ width: "100%", cursor: "pointer", float: "right" }}
+                                    onClick={showInvoicesHandler}
+                                />
+                            </Grid>
+                        </Grid>
+                    </div>
+
+                    <div className={classes.body}>
+                        {
+                            showInvoices &&
+                            <ClientInvoices
+                             clientId={clientId}
+                             history={props.history}
+                              ></ClientInvoices>
+                        }
+
+                    </div>
                 </div>
-                <div className={`${classes.additionalInfo} ${!displayAdditionalInfo && classes.hideElement}`}>
-                    <AdditionalClientInfo clientId={clientId} ></AdditionalClientInfo>
+                {/* Contact list */}
+                <div className={classes.container}>
+                    <div className={classes.header}>
+                        <Grid container align='center'>
+                            <Grid item md={11}>
+                                <Typography variant='h4'>Лица за контакт</Typography>
+                            </Grid>
+                            <Grid item align='right'>
+                                <ImportExportIcon
+                                    style={{ width: "100%", cursor: "pointer", float: "right" }}
+                                    onClick={showContactListHandler}
+                                />
+                            </Grid>
+                        </Grid>
+                    </div>
+
+                    <div className={classes.body}>
+                        {
+                            showContactList &&
+                            <ContactList clientId={clientId}  ></ContactList>
+                        }
+
+                    </div>
                 </div>
-                <div className={`${classes.additionalInfo} ${!displayContactList && classes.hideElement}`}>
-                    <ContactList clientId={clientId} ></ContactList>
+
+                {/* Additional Info */}
+                <div className={classes.container}>
+                    <div className={classes.header}>
+                        <Grid container align='center'>
+                            <Grid item md={11}>
+                                <Typography variant='h4'>Допълнителна информация</Typography>
+                            </Grid>
+                            <Grid item align='right'>
+                                <ImportExportIcon
+                                    style={{ width: "100%", cursor: "pointer", float: "right" }}
+                                    onClick={showAdditionalInfoHandler}
+                                />
+                            </Grid>
+                        </Grid>
+                    </div>
+
+                    <div className={classes.body}>
+                        {
+                            showAdditionalInfo &&
+                            <AdditionalClientInfo clientId={clientId} ></AdditionalClientInfo>
+                        }
+
+                    </div>
                 </div>
 
 
@@ -196,10 +252,27 @@ class ClientInfo extends React.Component {
 
 
 
-            </>
 
-        )
-    }
 
+
+
+
+
+
+
+
+
+
+
+         
+
+
+
+
+            </Paper>
+
+
+        </>
+
+    )
 }
-export default withStyles(useStyles)(ClientInfo);

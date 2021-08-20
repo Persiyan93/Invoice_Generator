@@ -40,6 +40,8 @@ namespace InvoiceGenerator.Data
         public DbSet<DefaultInvoiceOptions> DefaultInvoiceOptions { get; set; }
 
         public DbSet<Email> Emails { get; set; }
+
+        public DbSet<HistoryEvent> HistoryEvents { get; set; }
         public DbSet<ArticleHistoryEvent> ArticleHistoryEvents { get; set; }
         public DbSet<InvoiceHistoryEvent> InvoiceHistoryEvents { get; set; }
 

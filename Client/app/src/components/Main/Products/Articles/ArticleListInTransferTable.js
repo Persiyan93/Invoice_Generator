@@ -112,7 +112,7 @@ export default function ArticleListInTransferTable(props) {
                                 <Checkbox
                                     id={article.id}
                                     checked={selectedProductsFromLeftTable.some(x=>x.id==article.id)}
-                                     disabled={productsFromRightTable.some(x=>x.id==article.id)||article.quantity==0}
+                                     disabled={productsFromRightTable.some(x=>x.id==article.id)||article.quantity==0||article.status=='Blocked'}
                                     color="primary"
                                     onChange={changeHandler}
                                 
