@@ -48,12 +48,38 @@ namespace InvoiceGenerator.Web.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetAllClients()
+        public async Task<IActionResult> GetAllClients( string orderBy = "Name", string order = "asc",
+                                                    int page = 0, int rowsPerPage = 10, string filterString = "")
+        {
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
+            var clients = await clientService.GetAllClientsAsync<ClientInListViewModel>( companyId,
+                                                   orderBy,  order , filterString );
+            var clientsCount = clients.Count;
+            clients=clients
+                 .Skip(rowsPerPage * (page))
+                .Take(rowsPerPage)
+                .ToList();
+
+
+            return this.Ok(new { FilteredClients =clients, CountOfClients = clientsCount });
+           
+        }
+
+        [Authorize]
+        [HttpPut]
+        [Route("UpdateClientStatus")]
+        public async Task<IActionResult> UpdateClientStatus(ClientStatusUpdateModel input)
         {
             var user = await userManager.FindByNameAsync(this.User.Identity.Name);
             var companyId = user.CompanyId;
-            var clients = await clientService.GetAllClientsAsync<ClientInListViewModel>(companyId);
-            return this.Ok(clients);
+            await clientService.UpdateClientStatusAsync(input);
+            var response = new ResponseViewModel
+            {
+                Status = "Successful",
+                Message = string.Format(SuccessMessages.SuccessfullyUpdateStatusOfClient, input.ClientId)
+
+            };
+            return this.Ok(response);
         }
 
 
