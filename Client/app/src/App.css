@@ -3,9 +3,9 @@
   background-color: black;
   
 } */
-.Navigation-Menu{
+/* .Navigation-Menu{
   color: black;
-  width: 99%;
+  width: 100%;
   padding-top:2%;
   padding-inline-start: 1%;
   background-color: rgb(10, 105, 89);
@@ -14,11 +14,14 @@
   align-items: flex-end;
   margin: auto;
   
-} 
+}  */
 
  .Container{
-   padding-top: 3%;
-   height: 400 ;
+    /* position: relative; */
+   padding-top: 2%;
+   min-height: 100%;
+  height:91vh;
+   background-Color: #CBD3EA;
    width: 100%;
 } 
 

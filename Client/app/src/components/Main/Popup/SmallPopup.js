@@ -1,7 +1,8 @@
 import React from 'react'
 import { Dialog, DialogTitle, DialogContent, Typography, IconButton, withStyles } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import PeopleIcon from '@material-ui/icons/People';
+import BasePopup from './BasePopup';
+
 
 const useStyles = (thema => ({
     root: {
@@ -14,12 +15,13 @@ const useStyles = (thema => ({
 
     },
     button: {
-        marginLeft: '74%',
+        marginRight: '2px',
+         marginLeft: '14%'
         
     }
    
 }))
-class Popup extends React.Component {
+class SmallPopup extends React.Component {
     constructor(props) {
         super(props)
         this.clickHandler=this.clickHandler.bind(this);
@@ -30,19 +32,19 @@ class Popup extends React.Component {
 
 
     render() {
-        const { title, children, openPopup, setOpenPopup, width, classes,icon } = this.props;
+        const { title, children, openPopup,  width, classes,icon } = this.props
         return (
-            <Dialog open={openPopup} maxWidth={width} fullWidth={true}   >
-                <DialogTitle disableTypography={true} style={{backgroundColor:'#379683'}}>
+            <Dialog  open={openPopup} maxWidth='xs' fullWidth={true} >
+                <DialogTitle style={{backgroundColor:'#379683',display:'inlineBlock' ,alignItems:'center'}}  >
                
-                    <Typography variant="h6">
-                     <   IconButton  color="default" size='large' >
+                    <Typography variant="h8">
+                     {/* <   IconButton  color="default" size='small' >
                             {icon}
-                        </IconButton>
+                        </IconButton> */}
                         {title}
                        
-                        <IconButton  color="default" className={classes.button} onClick={this.clickHandler}>
-                            <CloseIcon color="default" />
+                        <IconButton  color="default" className={classes.button} onClick={this.clickHandler} size="small">
+                            <CloseIcon color="default" size="small" />
                         </IconButton>
                     </Typography>
                    
@@ -57,4 +59,4 @@ class Popup extends React.Component {
 }
 
 
-export default withStyles(useStyles)(Popup)
+export default withStyles(useStyles)(SmallPopup)
