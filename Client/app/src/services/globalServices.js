@@ -10,6 +10,7 @@ export function getIdFromResponse(responseMessage) {
 }
 
 export function convertCompanyName(company) {
+  
     const { name, companyType } = company;
     let typeBg = ''
     switch (companyType) {
@@ -55,6 +56,38 @@ export function unitTypeFormater(unitType) {
     return result;
 }
 
+export function productStatusFormater(productStatus) {
+    let result = ''
+    if (productStatus == 'Blocked') {
+        result = 'Блокиран'
+    }
+    else if (productStatus == 'Active') {
+        result = 'Активен'
+    }
+    return result
+}
+export function clientStatusFormater(clientStatus) {
+    let result = ''
+    if (clientStatus == 'Blocked') {
+        result = 'Блокиран'
+    }
+    else if (clientStatus == 'Active') {
+        result = 'Активен'
+    }
+    return result
+}
+
+export function userStatusFormater(userStatus) {
+    let result = ''
+    if (userStatus == 'Blocked') {
+        result = 'Блокиран'
+    }
+    else if (userStatus == 'Active') {
+        result = 'Активен'
+    }
+    return result
+}
+
 export function invoiceStatusConverter(invoiceStatus) {
     let result = '';
     switch (invoiceStatus) {
@@ -76,4 +109,55 @@ export function invoiceStatusConverter(invoiceStatus) {
             break;
     }
     return result;
+}
+
+export function eventTypeConverter(eventType) {
+    var result = '';
+   
+    switch (eventType) {
+        case 'CreateInvoice':
+            result = 'Нова фактура'
+            break;
+
+        case 'EditInvoice':
+            result = 'Промяна по фактурата'
+            break;
+        case 'EditArticle':
+            result = 'Промяна по артикула'
+            break;
+        case 'AddNewArticle':
+            result = 'Добавен Нов артикул'
+            break;
+        case 'ArticleDelivery':
+            result = 'Заприхождаване на бройки'
+            break;
+
+        default:
+            break;
+    }
+    return result
+}
+
+export function convertNotificationDate() {
+    //   timeStamp => {
+    //         const d = new Date(timeStamp * 1000);
+    //         const n = d.getDate();
+    //         const m = d.getMonth();
+    //         const monthNames = [
+    //           "JAN",
+    //           "FEB",
+    //           "MAR",
+    //           "APR",
+    //           "MAY",
+    //           "JUN",
+    //           "JUL",
+    //           "AUG",
+    //           "SEP",
+    //           "OCT",
+    //           "NOV",
+    //           "DEC"
+    //         ];
+    //         return { date: `${n} ${monthNames[m]}`, time: timeStamp };
+    //       };
+
 }

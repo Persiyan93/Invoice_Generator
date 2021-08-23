@@ -55,7 +55,7 @@ namespace Invoice_Generator.Services.Tests.Services
         }
 
         [Fact]
-        public async Task GetContactListShoulReturnContactList<T>()
+        public async Task GetContactListShoulReturnContactList()
         {
             //Arrange
             var contactListService = new ContactListService(this.DbContext);

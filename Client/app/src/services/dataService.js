@@ -1,17 +1,21 @@
 
-
-var cookieValue = document.cookie
-    .split('; ')
-    .find(row => row.startsWith('Bearer'))
-if (cookieValue) {
-    cookieValue = cookieValue.replace('=', ' ');
-}
+import * as  cookieService from './cookieService'
 
 
-export function post(data, endpoint) {
+let cookieValue =  cookieService.getCookieValue();
 
-console.log(endpoint)
 
+
+
+
+
+
+
+
+export  async function  post(data, endpoint) {
+
+ 
+  
     return fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -22,13 +26,13 @@ console.log(endpoint)
         body: JSON.stringify(data)
 
     })
-        
+
 
 
 };
 
 export function get(endpoint) {
-  
+    console.log(cookieValue)
     return fetch(endpoint, {
         method: 'GET',
         headers: {
@@ -36,26 +40,48 @@ export function get(endpoint) {
         }
     }
     )
-   
+
 }
 
 export function put(data, endpoint) {
 
-    
-        return fetch(endpoint, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': cookieValue
-    
-            },
-            body: JSON.stringify(data)
-    
-        })
-            
-    
-    
-    };
+ 
+
+    return fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': cookieValue
+
+        },
+        body: JSON.stringify(data)
+
+    })
+
+
+
+};
+
+
+export function delteData(data, endpoint) {
+
+
+
+    return fetch(endpoint, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': cookieValue
+
+        },
+        body: JSON.stringify(data)
+
+    })
+
+
+
+};
+
 
 
 

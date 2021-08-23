@@ -15,17 +15,17 @@ function descendingComparator(a, b, orderBy) {
 }
 
 export function stableSort(elements, comparator) {
-  
     const stabilizedThis = elements.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order != 0) return order;
         return a[1] - b[1];
     });
+
     return stabilizedThis.map((el) => el[0]);
 }
 
 
-export default function getResultAfterPagingAndSorting(elementsAfterFiltering ,order,orderBy){
-    return stableSort(elementsAfterFiltering,getComperator(order,orderBy))
+export default function getResultAfterPagingAndSorting(elementsAfterFiltering, order, orderBy) {
+    return stableSort(elementsAfterFiltering, getComperator(order, orderBy))
 }
