@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Articles
 {
-    public class ArticleInputModel 
+    public class ArticleInputModel :IValidatableObject
     {
 
         [Required]
@@ -35,13 +35,15 @@ namespace InvoiceGenerator.Web.Models.Articles
         [Required]
         public bool QuantityMonitoring { get; set; }
 
-        public double QuantityLoweLimit { get; set; }
+        public double QuantityLowerLimit { get; set; }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (QuantityMonitoring&&QuantityLowerLimit==0)
+            {
+                yield return new ValidationResult("Quantity lower limit is required !");
+            }
 
-
-
-
-
-
+        }
     }
 }

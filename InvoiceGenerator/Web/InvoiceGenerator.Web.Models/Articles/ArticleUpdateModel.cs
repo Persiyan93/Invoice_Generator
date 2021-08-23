@@ -18,7 +18,7 @@ namespace InvoiceGenerator.Web.Models.Articles
 
         public bool QuantityMonitoring { get; set; }
 
-        public double QuantityLoweLimit { get; set; }
+        public double QuantityLowerLimit { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ProductStatus   Status { get; set; }

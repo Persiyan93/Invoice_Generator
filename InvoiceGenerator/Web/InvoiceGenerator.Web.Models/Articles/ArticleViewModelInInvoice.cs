@@ -13,8 +13,6 @@ namespace InvoiceGenerator.Web.Models.Articles
     {
         public string Id { get; set; }
 
-        
-
         public string Name { get; set; }
 
         public double Quantity { get; set; }

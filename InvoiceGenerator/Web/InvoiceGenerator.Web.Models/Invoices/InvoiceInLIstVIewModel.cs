@@ -18,8 +18,8 @@ namespace InvoiceGenerator.Web.Models.Invoices
 
         public int InvoiceNumber { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public InvoiceStatus Status { get; set; }
+       
+        public string Status { get; set; }
 
         public decimal PriceWithVat { get; set; }
 

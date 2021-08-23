@@ -10,7 +10,7 @@ namespace InvoiceGenerator.Web.Models.Address
        
 
      
-
+        
         public void CreateMappings(IProfileExpression configuration)
         {
           

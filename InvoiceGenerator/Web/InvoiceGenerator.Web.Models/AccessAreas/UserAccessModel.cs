@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.AccessAreas
 {
-    public class AccessAreaModel
+    public class UserAccessModel
     {
+       
+
+        
         public bool InvoiceAccess { get; set; }
         
         public bool ProductsAccess { get; set; }
