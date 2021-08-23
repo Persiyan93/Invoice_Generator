@@ -10,8 +10,10 @@ namespace InvoiceGenerator.Services.Data
     public interface IOfferedService
     {
 
-        Task<string> AddService(ServiceInputModel inputModel,string companyId);
+        Task<string> AddServiceAsync(ServiceInputModel inputModel,string companyId);
 
-        Task<ICollection<T>> GetAllServices<T>(string companyId);
+        Task<ICollection<T>> GetAllServicesAsync<T>(string companyId);
+
+        Task UpdateStatusOfServiceAsync(ServiceUpdateModel input,string serviceId, string companyId);
     }
 }
