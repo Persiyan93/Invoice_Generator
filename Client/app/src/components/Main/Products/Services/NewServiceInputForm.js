@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useContext } from 'react';
+import { useHistory } from 'react-router';
 import { TextField, Button, makeStyles, FormControl, MenuItem, Select, InputLabel, FormHelperText, Paper, FormControlLabel, Checkbox } from '@material-ui/core/';
 import apiEndpoints from '../../../../services/apiEndpoints';
 import useFetchPut from '../../../../hooks/useFetchPut';
 import useFetchPost from '../../../../hooks/useFetchPost';
 import * as productsService from '../../../../services/productsService'
+import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
+import NotificationContext from '../../../../Context/NotificationContext'
+import PageTitle from '../../Elements/PageTitle'
 const useStyles = makeStyles(theme => ({
     root: {
         '& .MuiFormControl-root': {
@@ -34,6 +38,8 @@ const serviceInitialValues = {
 }
 
 export default function NewServiceInputForm(props) {
+    const {setNotification}=useContext(NotificationContext)
+    const history=useHistory();
    const [service,setService] = useState(serviceInitialValues)
 
 
@@ -42,10 +48,14 @@ export default function NewServiceInputForm(props) {
     //Add new article
     const [postServiceTriger, setPostServiceTriger] = useState(false);
      useFetchPost(apiEndpoints.addNewService, { ...service }, postServiceTriger, setPostServiceTriger);
+     function actionAfterSuccessffullyCreatedService(){
+        setNotification({isOpen:true,message:'Услугата беше добавена успешно', severity:'success'})
+        history.push('/Products/All')
+     }
 
    
 
-  
+    
     function changeHandler(event) {
         let name = event.target.name;
         let value = event.target.value;
@@ -64,6 +74,13 @@ export default function NewServiceInputForm(props) {
     const { name,  vatRate, serviceNumber,  defaultPrice } = service
     const classes = useStyles();
     return (
+        <>
+        <PageTitle
+            title="Услуги"
+            icon={<SettingsOutlinedIcon fontSize='large' />}
+            subTitle="Нова Услуга"
+
+        />
         <Paper variant="outlined" className={classes.pageContent} elevation={30}>
             <form className={classes.root} onSubmit={submitHandler}>
 
@@ -71,7 +88,7 @@ export default function NewServiceInputForm(props) {
                 <TextField required variant="outlined" value={name} name="name" label="Име на усллугата" onChange={changeHandler} />
 
                 <TextField required variant="outlined" name="vatRate" value={vatRate} label="ДДС Ставка" onChange={changeHandler} />
-            <TextField required variant="outlined" value={defaultPrice} name="defaultPrice" label="Цена по подразбиране" onChange={changeHandler} />
+                <TextField required variant="outlined" value={defaultPrice} name="defaultPrice" label="Цена по подразбиране" onChange={changeHandler} />
                 <TextField required variant="outlined" value={serviceNumber} name="serviceNumber" label="Номер на услугата" onChange={changeHandler} />
 
 
@@ -86,5 +103,6 @@ export default function NewServiceInputForm(props) {
 
             </form>
         </Paper>
+        </>
     )
 }

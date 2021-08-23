@@ -162,6 +162,7 @@ export default function OfferedServicesTable(props) {
                 pagingAndSorting={sorting}
                 setPagingAndSorting={setSorting}
                 isLoading={isLoading}
+                tableContainer={Paper}
 
             >
                 <TableBody>
