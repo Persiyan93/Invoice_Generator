@@ -27,7 +27,7 @@ namespace InvoiceGenerator.Web.Controllers
         [Authorize]
         public async Task<IActionResult> AddContactPerson(ContactPersonInputModel inputModel)
         {
-            var contactPersonId = await contactListService.AddContactPerson(inputModel);
+            var contactPersonId = await contactListService.AddContactPersonAsync(inputModel);
             return this.Ok(
                 new ResponseViewModel
                 {
@@ -40,7 +40,7 @@ namespace InvoiceGenerator.Web.Controllers
         [Authorize]
         public async Task<IActionResult> GetContactList(string clientId)
         {
-            var contactList = await contactListService.GetContactList<ContactPersonViewModel>(clientId);
+            var contactList = await contactListService.GetContactListAsync<ContactPersonViewModel>(clientId);
             return this.Ok(contactList);
         }
     }

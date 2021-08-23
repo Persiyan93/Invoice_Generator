@@ -6,9 +6,9 @@ namespace InvoiceGenerator.Services.Data
 {
    public  interface IContactListService
     {
-        Task<string> AddContactPerson(ContactPersonInputModel inputModel);
+        Task<string> AddContactPersonAsync(ContactPersonInputModel inputModel);
 
-        Task<ICollection<T>> GetContactList<T>(string clientId);
+        Task<ICollection<T>> GetContactListAsync<T>(string clientId);
 
     }
 }

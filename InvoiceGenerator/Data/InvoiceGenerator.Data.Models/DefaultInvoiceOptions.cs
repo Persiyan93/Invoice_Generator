@@ -9,6 +9,10 @@ namespace InvoiceGenerator.Data.Models
 {
     public class DefaultInvoiceOptions
     {
+        public DefaultInvoiceOptions()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
         public string Id { get; set; }
 
         public RegisteredCompany Company { get; set; }

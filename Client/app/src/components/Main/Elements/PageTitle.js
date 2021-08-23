@@ -3,7 +3,7 @@ import { Paper, Card,Typography, makeStyles, colors } from '@material-ui/core/';
 
 const useStyles=makeStyles(theme=>({
     root:{
-        //backgroundColor:'black'
+       
         width:'80%',
         marginLeft:theme.spacing(10),
         borderRadius:10
@@ -40,6 +40,12 @@ export default function PageTitle(props) {
                     component="div"
                     >
                         {title}
+                    </Typography>
+                    <Typography
+                    variant="subtitle2"
+                    component="div"
+                    >
+                        {subTitle}
                     </Typography>
                 </div>
             </div>  

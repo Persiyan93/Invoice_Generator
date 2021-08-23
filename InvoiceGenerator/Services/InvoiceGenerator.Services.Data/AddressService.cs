@@ -25,8 +25,8 @@ namespace InvoiceGenerator.Services.Data
 
         public async  Task<string> AddFullAddressAsync(Web.Models.Address.AddressModel inputmodel)
         {
-            var countryId =  await AddCountry(inputmodel.Country);
-            var townId = await AddTown(inputmodel.Town, countryId);
+            var countryId =  await AddCountryAsync(inputmodel.Country);
+            var townId = await AddTownAsync(inputmodel.Town, countryId);
             var address = new InvoiceGenerator.Data.Models.Address
             {
                 TownId = townId,
@@ -73,9 +73,10 @@ namespace InvoiceGenerator.Services.Data
             return addressInfo;
         }
 
-        private async Task<int> AddCountry(string countryName)
+        private async Task<int> AddCountryAsync(string countryName)
         {
-            var country = await context.Countries.FirstOrDefaultAsync(x => x.Name.ToUpper() == countryName.ToUpper());
+            var country = await context.Countries
+                .FirstOrDefaultAsync(x => x.Name.ToUpper() == countryName.ToUpper());
             if (country != null)
             {
                 return country.Id;
@@ -86,7 +87,7 @@ namespace InvoiceGenerator.Services.Data
             return country.Id;
         }
 
-        private async Task<int> AddTown(string townName, int countryid)
+        private async Task<int> AddTownAsync(string townName, int countryid)
         {
             var town = await context.Towns.FirstOrDefaultAsync(x => x.Name.ToUpper() == townName.ToUpper());
             if (town != null)

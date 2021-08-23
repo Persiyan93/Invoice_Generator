@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 
 }))
 const TableWithPagingAndSorting = (props) => {
-    const { headCells, pagingAndSorting, setPagingAndSorting, isLoading, } = props
+    const { headCells, pagingAndSorting, setPagingAndSorting, isLoading,tableContainer } = props
 
     function handleSortRequest(cellId) {
         console.log('Inside sorting');
@@ -55,7 +55,7 @@ const TableWithPagingAndSorting = (props) => {
         <>
             <ProgressIndicator
                 isLoading={isLoading} />
-            <TableContainer component={Paper} className={classes.paper} >
+            <TableContainer component={tableContainer} className={classes.paper} >
                 <Table className={classes.table} style={isLoading ? { opacity: '0.6' } : { opacity: '1.0' }} aria-label="simple table">
                     <TableHead>
                         <TableRow>

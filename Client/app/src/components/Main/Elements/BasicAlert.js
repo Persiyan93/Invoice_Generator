@@ -3,23 +3,26 @@ import { makeStyles, Button, } from '@material-ui/core/';
 import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
-  root:style=>(  {
-    
-    display:'',
-    position: style.position ? style.position:'relative',
+  root: style => ({
+
+
+    position: style.position ? style.position : 'fixed',
     display: 'center',
     width: '100%',
-   
+    zIndex: 1201
+
 
   }),
-  notification:{
-    margin:theme.spacing(2)
+  notification: {
+    margin: theme.spacing(2),
+    marginTop:0
   }
 }));
-// 
+
 export default function SimpleAlerts(props) {
   const { notification, setNotification } = props
-  const { isOpen,position,severity="warning" } = notification
+  const { isOpen, position, severity = "warning", message } = notification
+  console.log(notification)
   useEffect(() => {
     setTimeout(closeNotification, 5000)
   }, [notification.isOpen])
@@ -28,20 +31,21 @@ export default function SimpleAlerts(props) {
   function closeNotification() {
     setNotification(prevState => ({ ...prevState, isOpen: false }))
   }
-  const classes = useStyles({position});
+  const classes = useStyles({ position });
   return (
-    
+
     <div className={classes.root}>
-      {notification.messages?.map((message) => (
-        
-          isOpen &&
-        <Alert className={classes.notification}  key ={message}variant="filled" severity={severity} onClose={closeNotification}>{message}</Alert>
 
-        
+      {
+        isOpen &&
+        <Alert className={classes.notification} key={message} variant="filled" severity={severity} onClose={closeNotification}>
 
-      ))}
+          {message}</Alert>
 
 
+
+
+      }
     </div>
   );
 }

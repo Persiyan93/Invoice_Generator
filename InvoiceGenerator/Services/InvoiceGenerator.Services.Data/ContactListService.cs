@@ -20,14 +20,14 @@ namespace InvoiceGenerator.Services.Data
         {
             this.context = context;
         }
-        public async Task<string> AddContactPerson(ContactPersonInputModel inputModel)
+        public async Task<string> AddContactPersonAsync(ContactPersonInputModel inputModel)
         {
             var contactactPerson = await context.ContactPeople
                 .FirstOrDefaultAsync(x => x.PhoneNumber == inputModel.PhoneNumber ||
                                            x.Email == inputModel.Email);
             if (contactactPerson != null)
             {
-                throw new InvalidUserDataException(ErrorMessages.IncorectData);
+                throw new InvalidUserDataException(string.Format(ErrorMessages.PersonWithSuchEmailAlreadyExist,inputModel.Email));
             }
             var client = await context.Clients
                 .FirstOrDefaultAsync(x => x.Id == inputModel.ClientId);
@@ -52,7 +52,7 @@ namespace InvoiceGenerator.Services.Data
 
         }
 
-        public async Task<ICollection<T>> GetContactList<T>(string clientId)
+        public async Task<ICollection<T>> GetContactListAsync<T>(string clientId)
         {
             var contactList = await context.ContactPeople
                     .Where(x => x.ClientId == clientId)
