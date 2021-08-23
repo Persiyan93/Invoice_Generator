@@ -17,6 +17,7 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ClientsController : ControllerBase
     {
         private readonly IClientService clientService;
@@ -28,12 +29,12 @@ namespace InvoiceGenerator.Web.Controllers
             this.userManager = userManager;
         }
 
-        [Authorize]
+      
         [HttpPost]
         public async Task<IActionResult> AddClient(ClientInputModel inputModel)
         {
-            var user = await userManager.FindByNameAsync(this.User.Identity.Name);
-            var companyId = user.CompanyId;
+          
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
             var clientId = await clientService.CreateClientAsync(inputModel, companyId);
 
             return this.Ok(
@@ -46,7 +47,7 @@ namespace InvoiceGenerator.Web.Controllers
 
         }
 
-        [Authorize]
+      
         [HttpGet]
         public async Task<IActionResult> GetAllClients( string orderBy = "Name", string order = "asc",
                                                     int page = 0, int rowsPerPage = 10, string filterString = "")
@@ -65,7 +66,7 @@ namespace InvoiceGenerator.Web.Controllers
            
         }
 
-        [Authorize]
+        
         [HttpPut]
         [Route("UpdateClientStatus")]
         public async Task<IActionResult> UpdateClientStatus(ClientStatusUpdateModel input)
@@ -84,7 +85,7 @@ namespace InvoiceGenerator.Web.Controllers
 
 
 
-        [Authorize]
+     
         [HttpGet("{clientId}")]
         public async Task<IActionResult> GetClientInfo(string clientId)
         {
@@ -94,7 +95,7 @@ namespace InvoiceGenerator.Web.Controllers
 
         }
 
-        [Authorize]
+       
         [HttpGet]
         [Route("additionalInfo/{clientId}")]
         public async Task<IActionResult> GetAdditionalClientInfo(string clientId)

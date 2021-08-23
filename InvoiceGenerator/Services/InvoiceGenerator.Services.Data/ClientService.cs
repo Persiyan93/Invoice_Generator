@@ -1,6 +1,7 @@
 ﻿using InvoiceGenerator.Common;
 using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.Address;
 using InvoiceGenerator.Web.Models.Client;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Services.Data
 {
+    
     public class ClientService:IClientService
     {
         private readonly ApplicationDbContext context;
@@ -50,11 +52,9 @@ namespace InvoiceGenerator.Services.Data
                 CompanyType = inputModel.CompanyType,
                 SellerId = companyId,
                 UniqueIdentificationNumber = inputModel.UniqueIdentificationNumber ,
-                AccontablePersonName=inputModel.AccontablePersonName??null
-                
-
-                
-            };
+                AccontablePersonName=inputModel.AccontablePersonName??null,
+                Status=ClientStatus.Active
+             };
             var addressId = await addressService.AddFullAddressAsync(inputModel.Address);
             client.AddressId = addressId;
             await context.Clients.AddAsync(client);
@@ -70,7 +70,10 @@ namespace InvoiceGenerator.Services.Data
                  .To<T>()
                  .FirstOrDefaultAsync();
 
-
+            if (client==null)
+            {
+                throw new InvalidUserDataException(string.Format(ErrorMessages.ClientDoesNotExist));
+            }
             return client;
                 
         }
@@ -115,14 +118,28 @@ namespace InvoiceGenerator.Services.Data
             
         }
 
-        public async Task<ICollection<T>> GetAllClientsAsync<T>(string registeredCompanyId)
+        public async Task<ICollection<T>> GetAllClientsAsync<T>(string companyId, string orderBy , string order , string filterString )
         {
+            var ordebyDesc = order == "desc";
             var clients = await context.Clients
-                     .Where(x => x.SellerId == registeredCompanyId && x.IsActive==true)
+                     .Where(x => x.SellerId == companyId && x.IsActive==true)
+                     .ContainsText(x=>x.Name, filterString)
                      .To<T>()
-                     .ToListAsync();
+                     .CustomOrderBy(orderBy, ordebyDesc)
+                      .ToListAsync();
 
             return clients;
+        }
+
+        public async Task UpdateClientStatusAsync(ClientStatusUpdateModel input)
+        {
+            var client =await context.Clients.FirstOrDefaultAsync(x => x.Id == input.ClientId);
+            if (client==null)
+            {
+                throw new InvalidUserDataException(ErrorMessages.ClientDoesNotExist);
+            }
+            client.Status = input.Status;
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ServicesController : ControllerBase
@@ -32,12 +32,9 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> AddService(ServiceInputModel inputModel)
         {
             var user = await userManager.FindByNameAsync(this.User.Identity.Name);
-            var companyId = user.CompanyId;
-            if (companyId == null)
-            {
-                return this.BadRequest();
-            }
-            var serviceId = await offeredService.AddService(inputModel, companyId);
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
+
+            var serviceId = await offeredService.AddServiceAsync(inputModel, companyId);
 
             return this.Ok(
                 new ResponseViewModel
@@ -52,11 +49,27 @@ namespace InvoiceGenerator.Web.Controllers
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
 
-            var services = await offeredService.GetAllServices<ServiceViewModel>(companyId);
+            var services = await offeredService.GetAllServicesAsync<ServiceViewModel>(companyId);
 
 
             return this.Ok(services);
-                
+
+        }
+
+        [HttpPut("{serviceId}")]
+        public async Task<IActionResult> UpdateServiceStatus(ServiceUpdateModel input,string serviceId)
+        {
+            
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
+
+             await offeredService.UpdateStatusOfServiceAsync(input, serviceId, companyId);
+
+            return this.Ok(
+                new ResponseViewModel
+                {
+                    Status = "Successful",
+                    Message = string.Format(SuccessMessages.SuccessfullyUpdateServiceStatus, serviceId)
+                });
         }
     }
 }

@@ -14,11 +14,13 @@ namespace InvoiceGenerator.Services.Data
 
         Task<string> CreateClientAsync(ClientInputModel inputModel,string companyId);
 
-        Task<ICollection<T>> GetAllClientsAsync<T>(string registeredCompanyId);
+        Task<ICollection<T>> GetAllClientsAsync<T>(string companyId,string orderBy , string order  , string filterString );
 
         Task<T> GetClientByIdAsync<T>(string clientId);
 
         Task EditClientInfoAsync(EditClientInputModel inputModel,string clientId);
+
+        Task UpdateClientStatusAsync(ClientStatusUpdateModel input);
 
       
 

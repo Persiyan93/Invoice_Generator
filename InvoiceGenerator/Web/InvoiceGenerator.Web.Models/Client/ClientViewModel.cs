@@ -28,18 +28,17 @@ namespace InvoiceGenerator.Web.Models.Client
 
         public AddressViewModel Address { get; set; }
 
-
         public ICollection<InvoiceInClientViewModel> LastTenInvoices { get; set; }
 
-        public int CountOfAllInvoices { get; set; }
+        public int CountOfUnpaidInvoices{ get; set; }
 
         public int CountOfOverdueInvoices { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<InvoiceGenerator.Data.Models.Client, ClientViewModel>()
-                .ForMember(x => x.CountOfAllInvoices,
-                        opt => opt.MapFrom(c => c.Invoices.Count()))
+                .ForMember(x => x.CountOfUnpaidInvoices,
+                        opt => opt.MapFrom(c => c.Invoices.Where(x=>x.Status==InvoiceStatus.WaitingForPayment).Count()))
                 .ForMember(x => x.CountOfOverdueInvoices,
                         opt => opt.MapFrom(x => x.Invoices.Where(i => i.Status == InvoiceStatus.Overdue).Count()));
                     

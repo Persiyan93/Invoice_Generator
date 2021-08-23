@@ -9,7 +9,7 @@ using AutoMapper;
 
 namespace InvoiceGenerator.Web.Models.Invoices
 {
-    public class InvoiceInClientViewModel:IMapFrom<Invoice>,IHaveCustomMappings
+    public class InvoiceInClientViewModel
     {
         public string Id { get; set; }
 
@@ -23,17 +23,8 @@ namespace InvoiceGenerator.Web.Models.Invoices
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime PaymentDueDate { get; set; }
 
+       
+        public string   Status { get; set; }
 
-        public InvoiceStatus   Status { get; set; }
-
-        public void CreateMappings(IProfileExpression configuration)
-        {
-            configuration.CreateMap<Invoice, InvoiceInClientViewModel>()
-                .ForMember(x => x.PaymentDueDate, opt =>
-                           opt.MapFrom(i => i.PaymentDueDate))
-                .ForMember(x => x.PriceWithVat, opt =>
-                              opt.MapFrom(i => i.PriceWithoutVat + i.VatValue));
-
-        }
     }
 }
