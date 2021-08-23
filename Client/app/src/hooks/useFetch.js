@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, } from 'react-router'
 import * as dataService from '../services/dataService'
 import * as globalServices from '../services/globalServices'
 
@@ -21,7 +21,15 @@ const useFetch = (endpoint, triger, setTriger, setResult, method = 'GET', data) 
                     .then(res => res.json())
                     .then(res => {
                         if (res.status == "Unsuccessful") {
-
+                            if (res.status === "Unsuccessful") {
+                                if (res.message) {
+                                    history.push('/Identity/Login')
+                                }
+                                else {
+                                    setErrors([res.message]);
+                                }
+                            }
+    
                         }
                         else {
 
@@ -43,8 +51,15 @@ const useFetch = (endpoint, triger, setTriger, setResult, method = 'GET', data) 
                     .then(res => res.json())
                     .then(res => {
                         if (res.status == "Unsuccessful") {
-                            console.log('Unsuccessful status ')
-                            console.log(res);
+                            if (res.status === "Unsuccessful") {
+                                if (res.message) {
+                                    history.push('/Identity/Login')
+                                }
+                                else {
+                                    setErrors([res.message]);
+                                }
+                            }
+    
                         }
                         else {
 
