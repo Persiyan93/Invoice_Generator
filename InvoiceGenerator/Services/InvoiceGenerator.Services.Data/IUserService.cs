@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InvoiceGenerator.Web.Models.AccessAreas;
+using InvoiceGenerator.Web.Models.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,15 +10,19 @@ namespace InvoiceGenerator.Services.Data
 {
     public interface IUserService
     {
-        Task CreateUser();
+        public  Task<ICollection<UsersInListViewModel>> GetAllUsersAsync(string companyId, DateTime startDate, DateTime endDate, string orderBy,
+                                    string order , int page , int rowsPerPage ,string filterString );
 
-        Task EditUser();
+        Task<T> GetUserHistory<T>(string userId);
 
-        Task RemoveUser();
+        Task ChangeUserStatus(UpdateUserStatusModel input);
 
-        Task AddCompany(string userId, string CompanyId);
+        Task<UserModel> GetUserInfoAsync(string userId);
 
-        public Task<string> GetUserCompanyId(string userId);
+        Task UpdateUserAccessAsync(UserAccessModel input, string userId);
+
+
+        
 
 
     }

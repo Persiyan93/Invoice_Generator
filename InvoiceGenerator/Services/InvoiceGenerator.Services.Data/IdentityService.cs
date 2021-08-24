@@ -18,14 +18,17 @@ namespace InvoiceGenerator.Services.Data
         private readonly ICompanyService companyService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public IdentityService(ApplicationDbContext context, ICompanyService companyService, UserManager<ApplicationUser> userManager)
+        public IdentityService(ApplicationDbContext context,
+                                ICompanyService companyService,
+                                UserManager<ApplicationUser> userManager )
         {
             this.context = context;
             this.companyService = companyService;
             this.userManager = userManager;
         }
-        public async  Task RegisterUserAsync(RegisterInputModel  inputModel)
+        public async  Task<string> RegisterUserAsync(RegisterInputModel  inputModel)
         {
+            string companyId = "";
             var user = await  context.Users.FirstOrDefaultAsync(u => u.Email == inputModel.Email || u.UserName == inputModel.UserName);
             if (user!=null)
             {
@@ -44,12 +47,16 @@ namespace InvoiceGenerator.Services.Data
                 Name = inputModel.UserName
             };
             var result = await userManager.CreateAsync(user, inputModel.Password);
+            await userManager.AddToRoleAsync(user, GlobalConstants.AdministratorOfCompany);
             if (result.Succeeded)
             {
-                var companyId=await companyService.CreateAsync(inputModel.CompanyDetails, user.Id);
+                companyId=await companyService.CreateAsync(inputModel.CompanyDetails, user.Id);
                 user.CompanyId = companyId;
                 await context.SaveChangesAsync();
+
             }
+
+            return companyId;
             
 
             

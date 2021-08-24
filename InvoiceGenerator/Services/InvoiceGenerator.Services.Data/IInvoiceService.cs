@@ -13,7 +13,7 @@ namespace InvoiceGenerator.Services.Data
 
         Task EditInvoiceAsync(InvoiceInputModel invoice, string userId, string invoiceId);
 
-        Task<string> AddInvoiceAsync(InvoiceInputModel inputModel, string companyId, string userId);
+        Task<string> CreateInvoiceAsync(InvoiceInputModel inputModel, string companyId, string userId);
 
         Task UpdateStatusOfInvoicesAsync(UpdateInvoiceStatusInputModel inputModel, string companyId, string userId);
 
@@ -26,6 +26,8 @@ namespace InvoiceGenerator.Services.Data
         Task UpdateStatusofOverdueInvoicesAsync();
 
         Task<ICollection<InvoiceEmailModel>> GetAllUnPaidInvoicesWhoseClientsShouldbeNotifiedAsync();
+
+        
       
 
 

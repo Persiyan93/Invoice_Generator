@@ -34,6 +34,7 @@ namespace InvoiceGenerator.Services.Data
                 var methCall = Expression.Call(propExp, methodInfo, valueExp);
                 return Expression.Lambda<Func<T, bool>>(methCall, paramExp);
             }
+         
 
         }
         public static IQueryable<T> ContainsText<T>(this IQueryable<T> source, Expression<Func<T, string>> selector, string text)
@@ -49,6 +50,24 @@ namespace InvoiceGenerator.Services.Data
             string propName = ((MemberExpression)selector.Body).Member.Name;
             return source.Where(ExpressionBuilder.ContainsText<T>(propName, text));
         }
+        public static IQueryable<T> PropertyContainsText<T>(this IQueryable<T> source, string propName, string text)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (string.IsNullOrEmpty(text))
+            {
+                return source;
+            }
+            //string propName = ((MemberExpression)selector.Body).Member.Name;
+
+            return source.Where(ExpressionBuilder.ContainsText<T>(propName, text));
+        }
+        
+
+
+
 
     }
 }

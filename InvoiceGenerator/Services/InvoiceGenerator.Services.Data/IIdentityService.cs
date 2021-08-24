@@ -9,6 +9,6 @@ namespace InvoiceGenerator.Services.Data
 {
    public  interface IIdentityService
     {
-        Task RegisterUserAsync(RegisterInputModel inputModel);
+        Task<string> RegisterUserAsync(RegisterInputModel inputModel);
     }
 }
