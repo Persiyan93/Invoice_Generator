@@ -28,7 +28,7 @@ namespace Invoice_Generator.Services.Tests.Services
 
        
 
-              [Fact]
+        [Fact]
         public async Task GetInvoiceEventsAsyncShouldReturnInvoiceEvents()
         {
             //Arrange
@@ -46,6 +46,32 @@ namespace Invoice_Generator.Services.Tests.Services
             var countOfInvoiceEvents = invoiceEvents.Count();
             var expectedCountOfInvoiceEvents = 1;
             Assert.Equal(expectedCountOfInvoiceEvents, countOfInvoiceEvents);
+        }
+
+        [Fact]
+        public async Task GetHistoryAsynShouldReturnAllEventsInCompany()
+        {
+            //Arrange
+            var invoiceId = "TestInvoiceId";
+            var historyEventService = new HistoryEventService(this.DbContext);
+            var historyEvent = new InvoiceHistoryEvent { InvoiceId = invoiceId, CompanyId = registeredCompanyId ,DateOfEvent=new DateTime(2021,7,20) };
+            await this.DbContext.InvoiceHistoryEvents.AddAsync(historyEvent);
+            await this.DbContext.SaveChangesAsync();
+
+            var userId = "";
+            var orderBy = "DateOfEvent";
+            var order = "asc";
+            var startDate = new DateTime(2021, 3, 10);
+            var endDate = DateTime.Now;
+            var eventType = "";
+            //Action
+            var events = await historyEventService.GetHistoryAsync(registeredCompanyId, startDate,
+                                     endDate, order, orderBy, eventType, userId);
+
+            //Assert
+            var countOfEvents = events.Count;
+            var expectedCountOfEvents = 1;
+            Assert.Equal(expectedCountOfEvents, countOfEvents);
         }
 
     }
