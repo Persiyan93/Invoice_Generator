@@ -22,6 +22,8 @@ namespace InvoiceGenerator.Services.Data
 
         Task UpdateClientStatusAsync(ClientStatusUpdateModel input);
 
+        Task<ICollection<TopClientsViewModel>> GetTopClientsForLastMonthAsync(string companyId);
+
       
 
         

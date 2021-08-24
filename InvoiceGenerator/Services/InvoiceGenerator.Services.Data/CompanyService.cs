@@ -26,17 +26,31 @@ namespace InvoiceGenerator.Services.Data
 
         public async Task<string> CreateAsync(CompanyInputModel inputModel ,string userId)
         {
-            
+            var companyFromDb = await context.RegisteredCompanies.FirstOrDefaultAsync(x => x.VatNumber == inputModel.VatNumber);
+            if (companyFromDb!=null)
+            {
+                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyAlreadyExist, inputModel.VatNumber));
+            }
+
             var company = new RegisteredCompany
             {
                 Name = inputModel.CompanyName,
                 VatNumber = inputModel.VatNumber,
                 CompanyType = inputModel.CompanyType,
-                AdministratorId = userId
+                AdministratorId = userId,
+                
 
                 
             };
             var addressId = await addressService.AddFullAddressAsync(inputModel.Address);
+            var defaultOptions = new DefaultInvoiceOptions
+            {
+                BlockClientWhenReachMaxCountOfUnpaidInvoices = false,
+                SendAutomaticGeneratedEmails = false,
+                DefaultPaymentTerm = 45
+            };
+            await context.DefaultInvoiceOptions.AddAsync(defaultOptions);
+            company.DefaultInvoiceOptinsId = defaultOptions.Id ;
             company.AddressId = addressId;
             await context.RegisteredCompanies.AddAsync(company);
             await context.SaveChangesAsync();

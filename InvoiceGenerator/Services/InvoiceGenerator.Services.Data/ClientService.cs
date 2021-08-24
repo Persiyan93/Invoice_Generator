@@ -141,5 +141,35 @@ namespace InvoiceGenerator.Services.Data
             client.Status = input.Status;
             await context.SaveChangesAsync();
         }
+
+        public async Task<ICollection<TopClientsViewModel>> GetTopClientsForLastMonthAsync(string companyId)
+        {
+            var today = DateTime.UtcNow;
+            var oneMonthBeforeToday = today.AddMonths(-1);
+            var events = (await context.InvoiceHistoryEvents
+                .Where(h => DateTime.Compare(h.DateOfEvent, oneMonthBeforeToday) >= 0)
+                .Include(x => x.Invoice)
+                .Include(x => x.Invoice.Client)
+                .ToListAsync())
+                .GroupBy(p =>new {Name= p.Invoice.Client.Name,CompanyType=p.Invoice.Client.CompanyType,VatNumber=p.Invoice.Client.VatNumber})
+                .Select(x => new TopClientsViewModel
+                {
+                    CompanyName = $"\"{x.Key.Name}\" {StringConverter.TranslateCompanyTypeToBulgarianLanguage(x.Key.CompanyType)}",
+                    VatNumber=x.Key.VatNumber,
+                    InvoiceCount = x.Where(e => e.EventType == HistoryEventType.CreateInvoice).Count(),
+                    IncomesFromInvoices = x
+                    .Where(e => e.EventType == HistoryEventType.CreateInvoice)
+                     .Sum(i => i.Invoice.VatValue),
+                    CountOfOverdueInvoices = x.Where(e => e.EventType == HistoryEventType.MarkInvoiceAsOverdue).Count(),
+                    CountOfPaidInvoices = x.Where(e => e.EventType == HistoryEventType.MarkInvoiceAsPaid).Count(),
+
+
+
+                })
+                .OrderByDescending(x => x.IncomesFromInvoices)
+                .ToList();
+            
+            return events;
+        }
     }
 }

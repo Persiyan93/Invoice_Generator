@@ -58,7 +58,7 @@ namespace InvoiceGenerator.Services.Data
                                 .Sum(e => e.Invoice.PriceWithoutVat + e.Invoice.VatValue),
 
                     CountOfOverduedInvoices = x.InvoiceHistoryEvents
-                                .Where(e => e.EventType == HistoryEventType.OverdueInvoice &&
+                                .Where(e => e.EventType == HistoryEventType.MarkInvoiceAsOverdue &&
                                                 DateTime.Compare(e.Invoice.IssueDate, startDate) >= 0 &&
                                                 DateTime.Compare(e.Invoice.IssueDate, endDate) <= 0)
                                 .Count(),

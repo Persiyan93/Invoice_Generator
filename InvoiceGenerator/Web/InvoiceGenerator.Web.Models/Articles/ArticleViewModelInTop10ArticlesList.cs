@@ -16,7 +16,7 @@ namespace InvoiceGenerator.Web.Models.Articles
     {
         public string Id { get; set; }
         public string Name { get; set; }    
-        public string ArticleNumber { get; set; }
+       
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ArticleUnitType UnitType { get; set; }
@@ -29,8 +29,7 @@ namespace InvoiceGenerator.Web.Models.Articles
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime DateOfLastSale { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public ProductStatus Status { get; set; }
+     
 
         public void CreateMappings(IProfileExpression configuration)
         {

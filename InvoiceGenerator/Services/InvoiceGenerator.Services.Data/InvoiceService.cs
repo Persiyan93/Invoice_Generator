@@ -18,7 +18,7 @@ namespace InvoiceGenerator.Services.Data
 
     {
         private readonly ApplicationDbContext context;
-        private readonly INotificationService invoiceNotificationService;
+       
 
         public InvoiceService(ApplicationDbContext context)
         {
@@ -288,6 +288,29 @@ namespace InvoiceGenerator.Services.Data
                     throw new InvalidUserDataException(ErrorMessages.ForeignInvoice);
                 }
                 invoice.Status = inputModel.Status;
+                if (inputModel.Status==InvoiceStatus.Paid)
+                {
+                    var notification = new Notification
+                    {
+                        CompanyId = companyId,
+                        BulgarianMessage = $"Фактура с номер {invoice.InvoiceNumber} беше платена",
+                        Type = NotificationType.Info,
+                        Message = $"Invoice with number {invoice.InvoiceNumber} was paid"
+                    };
+                   await context.Notifications.AddAsync(notification);
+                    var invoiceEvent = new InvoiceHistoryEvent
+                    {
+                        InvoiceId = invoice.Id,
+                        CompanyId = companyId,
+                        UserId = userId,
+                        EventType = HistoryEventType.MarkInvoiceAsPaid,
+                        BulgarianMessage = $"Фактура с номер {invoice.InvoiceNumber} беше маркирана като платена",
+                        AdditionalText = $"Invocie with number {invoice.InvoiceNumber} was marked as paid"
+
+                    };
+                    await context.InvoiceHistoryEvents.AddAsync(invoiceEvent);
+
+                }
             }
 
             await context.SaveChangesAsync();
@@ -320,10 +343,11 @@ namespace InvoiceGenerator.Services.Data
                 {
                     CompanyId = invoice.SellerId,
                     Message = $"Invoice {invoice.InvoiceNumber} is overdue",
-                    BulgarianMessage = $"Фактура с номер {invoice.InvoiceNumber} и стойност  е просрочена",
+                    BulgarianMessage = $"Фактура с номер {invoice.InvoiceNumber} и стойност {invoice.PriceWithoutVat+invoice.VatValue}  е просрочена",
                     Type = NotificationType.Warning
                 };
                 await context.Notifications.AddAsync(notification);
+             
             }
 
             await context.SaveChangesAsync();
@@ -334,9 +358,8 @@ namespace InvoiceGenerator.Services.Data
             var invoices = await context.Invoices
                 .Where(i => i.Status == InvoiceStatus.Overdue &&
                           i.Seller.DefaultInvoiceOptions.SendAutomaticGeneratedEmails == true &&
-                          i.Notifications.Any(n => n.Type == NotificationType.Info
-                                               && DateTime
-                                               .Compare(n.Date.AddDays(i.Seller.DefaultInvoiceOptions.PeriodInDaysBetweenTwoRepatedEmails), DateTime.Now) < 0))
+                          i.Notifications.Any(n => n.Type == NotificationType.SendAutomaticGeneratedEmail
+                                   && DateTime.Compare(n.Date.AddDays(i.Seller.DefaultInvoiceOptions.PeriodInDaysBetweenTwoRepatedEmails), DateTime.Now) < 0))
                 .Select(i => new InvoiceEmailModel
                 {
                     Id = i.Id,
@@ -363,7 +386,7 @@ namespace InvoiceGenerator.Services.Data
                     + $"факутура с номер {invoice.InvoiceNumber} издадена на {invoice.DateOfIssue} ";
                     notification.Message = $"Client {invoice.ClientName}  was notified about unpaid "
                  + $"invoice with number {invoice.InvoiceNumber} issued on {invoice.DateOfIssue} ";
-                    notification.Type = NotificationType.Info;
+                    notification.Type = NotificationType.SendAutomaticGeneratedEmail;
 
                 }
                 else
