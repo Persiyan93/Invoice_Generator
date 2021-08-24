@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\InvoiceGenerator.Data.Models\InvoiceGenerator.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\InvoiceGenerator.Data\InvoiceGenerator.Data.csproj" />
+    <ProjectReference Include="..\InvoiceGenerator.Services.CloadStorageService\InvoiceGenerator.Services.CloadStorageService.csproj" />
     <ProjectReference Include="..\InvoiceGenerator.Services.Data\InvoiceGenerator.Services.Data.csproj" />
     <ProjectReference Include="..\InvoiceGenerator.Services.Mapping\InvoiceGenerator.Services.Mapping.csproj" />
   </ItemGroup>

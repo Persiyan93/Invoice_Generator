@@ -7,9 +7,10 @@ namespace InvoiceGenerator.Services.MicrosoftWordService
 {
     public interface IDocumentService
     {
-      
 
-        void GenerateInvoice(string invoiceId,   string templatePath= "InvoiceTemplate.docx");
+        void GenerateCompanyTemplate(string companyId);
+
+      void GenerateInvoiceAsync(string invoiceId,  string companyId);
 
         FileStream GetInvoiceAsPdf(string invoiceId);
     }
