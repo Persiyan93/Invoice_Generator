@@ -59,28 +59,7 @@ namespace Invoice_Generator.Services.Tests.Services
             Assert.Equal(expectedCountOfMailingAddress, countOfMailingAddresses);
 
         }
-        [Fact]
-        public async Task GetAddressInfoAsyncShouldReturnAddressInfo()
-        {
-
-            //Arrange
-            var addressService = new AddressService(this.DbContext);
-            var address = new Address { AddressText = "Test" };
-            await this.DbContext.Addresses.AddAsync(address);
-            await this.DbContext.SaveChangesAsync();
-            var countOfAddressesInDb = this.DbContext.Addresses.Count();
-
-
-            //Action
-            var addressfromDb= await addressService.GetAddressInfoAsync<AddressViewModel>(address.Id);
-
-            //Assert
-            
-            Assert.NotNull(addressfromDb);
-            var expectedAdressText = "Test";
-            Assert.Equal(expectedAdressText, addressfromDb.Town);
-
-        }
+       
       
     
     }

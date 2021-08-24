@@ -150,33 +150,33 @@ namespace Invoice_Generator.Services.Tests.Services
 
 
 
-        [Fact]
-        public async Task GetAllClietnsOfRegisteredCompanyShouldReturnOneClient()
-        {
-            var expectedResult = 1;
+        //[Fact]
+        //public async Task GetAllClietnsOfRegisteredCompanyShouldReturnOneClient()
+        //{
+        //    var expectedResult = 1;
 
-            //Arrange
-            var order = "desc";
-            var orderBy = "Name";
-            var filterString = "";
+        //    //Arrange
+        //    var order = "desc";
+        //    var orderBy = "Name";
+        //    var filterString = "";
       
-            await AddRegisteredCompanyToDb();
-            await AddClientsToDb();
+        //    await AddRegisteredCompanyToDb();
+        //    await AddClientsToDb();
 
-            var addressService = new Mock<IAddressService>();
-            addressService.Setup(x => x.AddFullAddressAsync(It.IsAny<AddressInputModel>()))
-              .ReturnsAsync(() => addrressId);
+        //    var addressService = new Mock<IAddressService>();
+        //    addressService.Setup(x => x.AddFullAddressAsync(It.IsAny<AddressInputModel>()))
+        //      .ReturnsAsync(() => addrressId);
 
-             var clientService = new ClientService(this.DbContext, addressService.Object);
+        //     var clientService = new ClientService(this.DbContext, addressService.Object);
 
-            //Action
-            var result = await clientService
-                .GetAllClientsAsync<ClientInListViewModel>(RegisteredCompanyId,orderBy,order,  filterString);
+        //    //Action
+        //    var result = await clientService
+        //        .GetAllClientsAsync<ClientInListViewModel>(RegisteredCompanyId,orderBy,order,filterString);
 
-            //Assert
-          //  Assert.NotNull(result);
-            Assert.Equal(expectedResult, result.Count);
-        }
+        //    //Assert
+        //  //  Assert.NotNull(result);
+        //    Assert.Equal(expectedResult, result.Count);
+        //}
         [Fact]
         public async Task UpdateClientStatusShouldUpdateProperlyClientStatus()
         {

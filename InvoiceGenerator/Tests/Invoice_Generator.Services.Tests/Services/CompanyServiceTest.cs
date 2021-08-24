@@ -51,6 +51,7 @@ namespace Invoice_Generator.Services.Tests.Services
               .ReturnsAsync(() => fakeAddressId);
             var companyService = new CompanyService(this.DbContext, addressService.Object);
             await this.DbContext.RegisteredCompanies.AddAsync(new RegisteredCompany { VatNumber = "Test" });
+            await this.DbContext.SaveChangesAsync();
             var companyInputModel = new CompanyInputModel { CompanyName = "Test", VatNumber = "Test" };
 
 
