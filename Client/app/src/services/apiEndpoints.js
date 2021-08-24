@@ -1,3 +1,5 @@
+import { downloadInvoice } from "./invoiceService";
+
 const baseUrl = 'http://localhost:45163/api';
 
 export default {
@@ -48,6 +50,9 @@ export default {
     generateInvoice:`${baseUrl}/Documents`,
     getClientInvoices:`${baseUrl}/Invoices/ClientInvoices`,
     getTopArticles:`${baseUrl}/Articles/TopTenArticles`,
+    getInvoiceAsPdf:`${baseUrl}/Documents`,
+    getTopClients:`${baseUrl}/Clients/TopClients`,
+
     
 
 

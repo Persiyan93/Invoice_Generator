@@ -18,9 +18,9 @@ namespace InvoiceGenerator.Data.Seeding
             var homePageContents = new List<HomePageContent>{
                 new HomePageContent
                 {
-                    Name = GlobalConstants.InvoiceсSplitByMonthsFor12Months,
-                    BulgarainName = GlobalConstants.InvoiceсSplitByMonthsFor12MonthsBulgarianName,
-                    Type=HomePageContentTypes.Chart
+                    Name = GlobalConstants.TopClientsForLastMonth,
+                    BulgarainName = GlobalConstants.TopClientsForLastMonthBulgarianName,
+                    Type=HomePageContentTypes.Table
                 },
                 new HomePageContent
                 {

@@ -17,7 +17,7 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "AdministratorOfCompany,ProductsAccessRole")]
     public class ArticlesController : ControllerBase
     {
         private readonly IArticleService articleService;
@@ -35,13 +35,9 @@ namespace InvoiceGenerator.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddArticle(ArticleInputModel inputModel)
         {
-            var user = await userManager.FindByNameAsync(this.User.Identity.Name);
+            var user = await userManager.GetUserAsync(this.User);
             var companyId = user.CompanyId;
-            if (companyId==null)
-            {
-                return this.BadRequest();
-            }
-            var articleId = await articleService.AddArticle(inputModel,companyId,user.Id);
+         var articleId = await articleService.AddArticle(inputModel,companyId,user.Id);
 
             return this.Ok(
                 new ResponseViewModel

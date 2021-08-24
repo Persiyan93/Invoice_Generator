@@ -32,7 +32,7 @@ export  async function  post(data, endpoint) {
 };
 
 export function get(endpoint) {
-    console.log(cookieValue)
+    console.log(endpoint)
     return fetch(endpoint, {
         method: 'GET',
         headers: {

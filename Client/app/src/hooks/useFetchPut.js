@@ -8,6 +8,7 @@ import * as globalServices from '../services/globalServices'
 // 
 const useFetchPut = (endpoint,  triger, setTriger,data ,actionAfterSuccessfullOperation) => {
     const { user, setUser } = useContext(IdentityContext)
+    const {setNotification}=useContext(NotificationContext)
     const [errors, setErrors] = useState([]);
     let history = useHistory();
 
@@ -19,16 +20,17 @@ const useFetchPut = (endpoint,  triger, setTriger,data ,actionAfterSuccessfullOp
             dataService.put(data, endpoint)
                 .then(res => res.json())
                 .then(res => {
-                    if (res.status === "Unsuccessful") {
-                        if (res.message = 'Not authorized') {
+                    if (res.Status === "Unsuccessful") {
+                        console.log('insideError')
+                        if (res.Message === 'Not authorized') {
                             setUser({ isAuthenticated: false, permissions: [] })
                             history.push('/Identity/Login')
                         }
                         else {
-                            setErrors([res.message]);
+                            setNotification({ isOpen: true, message: res.Message, severity: 'error' })
                         }
 
-
+                        setTriger(false)
                     }
                     else {
 

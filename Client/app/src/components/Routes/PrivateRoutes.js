@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom'
 
              
 export default function PrivateRoutes({ component :Component, user,...rest}) {
-   
+   console.log(user)
   
   
     return (
