@@ -38,7 +38,7 @@ var initialPeriodOfStatisctic = {
 const pages = [5, 10, 15, 20]
 export default function InvoiceList(props) {
     const { invoices, filterString, history, setGetInvoicesTriger, periodOfStatistic = initialPeriodOfStatisctic } = props
-    console.log(periodOfStatistic)
+    
     const { startDate, endDate } = periodOfStatistic
 
     //States Related with Paging and sorting
@@ -108,9 +108,7 @@ export default function InvoiceList(props) {
                 props.history.push('/Errors/ConnectionError')
             })
     }
-    // function continueInvoiceHandler(e, invoiceId) {
-    //     props.history.push(`/Invoices/NewInvoice/${invoiceId}`)
-    // }
+  
     function selectInvoiceHandler(event, invoiceId) {
 
         let isInvoiceAlreadySelected = selectedInvoices.some(x => x === invoiceId);
@@ -193,7 +191,7 @@ export default function InvoiceList(props) {
                                 <IconButton size="medium" disabled={invoice.status == 'Locked'} onClick={(e) => { downloadHandler(e, invoice.id) }}>
                                     <SaveAltIcon fontSize="small" htmlColor='black' />
                                 </IconButton>
-                                <IconButton size="medium" disabled={invoice.status == 'Locked'} onClick={(e) => { previewInvoiceHandler(e, invoice.id) }}>
+                                <IconButton size="medium" disabled={invoice.status == 'Locked'} title='Преглед на фактурата'onClick={(e) => { previewInvoiceHandler(e, invoice.id) }}>
                                     <VisibilityIcon fontSize="small" htmlColor={invoice.stats != 'Locked' && 'black'} />
                                 </IconButton>
                                 {

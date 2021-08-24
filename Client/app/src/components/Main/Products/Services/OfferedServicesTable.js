@@ -21,6 +21,7 @@ import ControlPointIcon from '@material-ui/icons/ControlPoint'
 
 
 
+
 const useStyles = makeStyles(theme => ({
     tableRow: {
         borderTop: "outset",
@@ -175,16 +176,16 @@ export default function OfferedServicesTable(props) {
                                     {service.name}
                                 </TableCell>
                                 <TableCell >
-                                    {service.defaultPriceWithoutVat}
+                                    { currencyFormater(service.defaultPriceWithoutVat)}
                                 </TableCell>
                                 <TableCell>
-                                    {service.vatRate}
+                                    {service.vatRate}%
                                 </TableCell>
                                 <TableCell>
-                                    {service.dateOfLastSale}
+                                    {service.dateOfLastSale==='0001-01-01'?'-':service.dateOfLastSale}
                                 </TableCell>
                                 <TableCell>
-                                    {service.countOfSalesForCurrentMoth} %
+                                    {service.countOfSalesForCurrentMonth} 
                                 </TableCell>
 
                                 <TableCell style={{ color: service.status == 'Blocked' ? '#FF0000' : '#0AE209' }}>

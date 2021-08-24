@@ -1,10 +1,12 @@
 
 
 
-import { useState, useEffect, Fragment } from 'react'
+import { useState, useEffect} from 'react'
+
 import {
     makeStyles, Button, Checkbox, TableCell, InputBase, TableContainer, TableHead, Paper, Typography, TableRow, TableBody, Toolbar, Divider, TextField, InputAdornment, TablePagination, IconButton
 } from '@material-ui/core/';
+
 import TableWithPagingAndSorting from '../../Elements/TableWithPagingAndSorting';
 import getResultAfterPagingAndSorting from '../../../../services/sortingService'
 import useFetchGet from '../../../../hooks/useFetchGet';
@@ -199,7 +201,7 @@ export default function OffeeredServicesTableInNewInvoiceView(props) {
                                     {service.dateOfLastSale}
                                 </TableCell>
                                 <TableCell>
-                                    {service.countOfSalesForCurrentMoth}
+                                    {service.countOfSalesForCurrentMonth}
                                 </TableCell>
 
                                 <TableCell style={{ color: service.status == 'Blocked' ? '#FF0000' : '#0AE209' }}>

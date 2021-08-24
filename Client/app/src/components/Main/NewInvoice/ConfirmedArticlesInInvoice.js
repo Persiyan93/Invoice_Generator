@@ -29,7 +29,8 @@ const headElements = [
 export default function ConfirmedArticlesInInvoice(props) {
 
     const { setInvoiceDetails, articles, vatValue, priceWithoutVat, isInvoiceWithZeroVatRate, services } = props;
-
+    console.log(articles);
+    console.log(services);
     const [isOpenPopup, setOpenPopup] = useState(false)
     const [isOpenConfirmPopup, setOpenConfirmPopup] = useState(false)
     const [markedArticleIdForDeletion, selectArticleIdForDeletion] = useState('');

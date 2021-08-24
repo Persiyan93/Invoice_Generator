@@ -47,7 +47,7 @@ export default function NewServiceInputForm(props) {
    
     //Add new article
     const [postServiceTriger, setPostServiceTriger] = useState(false);
-     useFetchPost(apiEndpoints.addNewService, { ...service }, postServiceTriger, setPostServiceTriger);
+     useFetchPost(apiEndpoints.addNewService, { ...service }, postServiceTriger, setPostServiceTriger,actionAfterSuccessffullyCreatedService);
      function actionAfterSuccessffullyCreatedService(){
         setNotification({isOpen:true,message:'Услугата беше добавена успешно', severity:'success'})
         history.push('/Products/All')

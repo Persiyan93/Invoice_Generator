@@ -62,12 +62,12 @@ export default function ConfirmPopup(props) {
                 <Grid item md={2}/>
                     <Grid item md={4}>
                        
-                            <CloseIcon htmlColor='red' onClick={confirmHandler} style={{width: '100%'}} />
+                            <CloseIcon htmlColor='red' onClick={confirmHandler} style={{width: '100%' , cursor:'pointer'}} />
                         
                     </Grid>
                     <Grid item md={4}>
                         
-                            <CheckIcon htmlColor='green'  onClick={confirmHandler} style={{width: '100%'}} />
+                            <CheckIcon htmlColor='green'  onClick={confirmHandler} style={{width: '100%', cursor:'pointer'}} />
                      
                     </Grid>
                     <Grid item md={2}/>

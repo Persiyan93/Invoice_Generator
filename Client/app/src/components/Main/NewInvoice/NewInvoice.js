@@ -12,7 +12,9 @@ import { getIdFromResponse } from '../../../services/globalServices'
 import { validateInvoiceInputModel } from '../../../services/validationService'
 import NotificationContext from '../../../Context/NotificationContext'
 import queryString from "query-string";
+import ProgressIndicator from '../ProgressIndicator'
 import { saveAs } from 'file-saver';
+
 
 
 
@@ -38,7 +40,7 @@ const dateToday = new Date().toJSON().slice(0, 10)
 const NewInvoice = (props) => {
 
     const { setNotification } = useContext(NotificationContext)
-
+    const [isLoading,setLoading]=useState(false);
     const invoiceId = props.match.params['invoiceId'];
     const queryParameters = queryString.parse(props.location.search);
     const clientId = queryParameters.clientId
@@ -90,7 +92,7 @@ const NewInvoice = (props) => {
 
     let vatValue = invoiceDetails.isInvoiceWithZeroVatRate ? 0
         :
-        (articlesVatRate + servicesVatRate) * priceWithoutVat
+        (articlesVatRate + servicesVatRate)/2 * priceWithoutVat
 
       
     useEffect(() => {
@@ -123,10 +125,25 @@ const NewInvoice = (props) => {
         }
     }, [])
 
+    function downloadHandler( invoiceId) {
+        
+        invoiceService.downloadInvoice(invoiceId)
+            .then(res => res.blob())
+            .then(res => {
+                setLoading(false)
+                saveAs(res, invoiceId + '.pdf')
+                props.history.push('/Invoices/All')
+
+            })
+            .catch(err => {
+                props.history.push('/Errors/ConnectionError')
+            })
+    }
     function saveInvoiceHandler() {
+        setLoading(true);
         let errors = validateInvoiceInputModel(invoiceDetails);
         if (errors.length != 0) {
-            setNotification({ isOpen: true, messages: [...errors],position:'fixed' })
+            setNotification({ isOpen: true, message:errors[0],position:'fixed' })
         }
         else {
             invoiceService.saveInvoice({ ...invoiceDetails })
@@ -136,8 +153,8 @@ const NewInvoice = (props) => {
                         console.log(res);
                     }
                     else {
-
-                       console.log(res);
+                        let invoiceId=getIdFromResponse(res.message)
+                        downloadHandler(invoiceId)
 
                     }
 
@@ -150,6 +167,7 @@ const NewInvoice = (props) => {
 
     }
     function editInvoiceHandler() {
+        setLoading(true);
         invoiceService.editInvoice({ ...invoiceDetails }, invoiceId)
             .then(res => res.json())
             .then(res => {
@@ -157,29 +175,30 @@ const NewInvoice = (props) => {
                     console.log(res);
                 }
                 else {
-
-                    let id = getIdFromResponse(res);
+                    let invoiceId=getIdFromResponse(res.message)
+                        downloadHandler(invoiceId)
+                    
 
                 }
 
 
             })
             .catch(err => {
-                props.history.push('/Errors/ConnectionError')
+               console.log(err)
             })
     }
 
-    function validateInvoice() {
-
-    }
+    
     const classes = useStyles();
     return (
 
         <React.Fragment>
 
 
-
-            <Paper className={classes.main} elevation={5}>
+            <ProgressIndicator
+            isLoading={isLoading}
+            />
+            <Paper className={classes.main} elevation={5} style={isLoading?{opacity:'0.7'}:{opacit:'1'}}>
                 <div className={classes.title}>
                     {
                         invoiceId ?
