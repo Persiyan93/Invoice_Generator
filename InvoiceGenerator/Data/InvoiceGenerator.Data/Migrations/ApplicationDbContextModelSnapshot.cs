@@ -537,6 +537,9 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<string>("ArticleId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("BulgarianMessage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CompanyId")
                         .HasColumnType("nvarchar(450)");
 

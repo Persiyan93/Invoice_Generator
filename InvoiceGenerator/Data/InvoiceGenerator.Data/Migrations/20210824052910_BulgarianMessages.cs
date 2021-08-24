@@ -51,6 +51,12 @@ namespace InvoiceGenerator.Data.Migrations
                 newName: "IX_HistoryEvents_ArticleId");
 
             migrationBuilder.AddColumn<string>(
+                name: "BulgarianMessage",
+                table: "Notifications",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
                 name: "ApplicationUserId",
                 table: "HistoryEvents",
                 type: "nvarchar(450)",
@@ -163,6 +169,10 @@ namespace InvoiceGenerator.Data.Migrations
             migrationBuilder.DropIndex(
                 name: "IX_HistoryEvents_InvoiceHistoryEvent_ApplicationUserId",
                 table: "HistoryEvents");
+
+            migrationBuilder.DropColumn(
+                name: "BulgarianMessage",
+                table: "Notifications");
 
             migrationBuilder.DropColumn(
                 name: "ApplicationUserId",
