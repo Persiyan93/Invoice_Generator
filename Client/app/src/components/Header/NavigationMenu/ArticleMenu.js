@@ -1,4 +1,6 @@
 import React from 'react';
+import {Link} from'react-router-dom';
+
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -31,7 +33,7 @@ const StyledMenu = withStyles({
 
 const StyledMenuItem = withStyles((theme) => ({
     root: {
-        '&:focus': {
+        '&:focus':  {
             backgroundColor: theme.palette.primary.main,
             '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
                 // color: theme.palette.common.white,
@@ -41,7 +43,7 @@ const StyledMenuItem = withStyles((theme) => ({
     },
 }))(MenuItem);
 
-export default function InvoiceMenu() {
+export default function ArticleMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -58,40 +60,38 @@ export default function InvoiceMenu() {
                 aria-controls="customized-menu"
                 aria-haspopup="true"
                 variant="contained"
-                color="primary"
+                color='default'
                 onMouseOver={handleClick}
             >
-               Артикули
+             Продукти
       </Button>
-     
             <StyledMenu
                 id="customized-menu"
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
-                onMouseLeave={handleClose}
+                onClose={handleClose}
             >
-                <StyledMenuItem>
-                    
-                    <ListItemIcon>
-                        <FiberNewIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Нов артикул " />
-                   
-                </StyledMenuItem>
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <DraftsIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Всички" />
-                </StyledMenuItem>
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <InboxIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Намери артикул" />
-                </StyledMenuItem>
+                <Link to="/Products/NewProduct" style={{ textDecoration: 'none' }}>
+                    <StyledMenuItem>
+
+                        <ListItemIcon>
+                            <FiberNewIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="Нов продукт " />
+
+                    </StyledMenuItem>
+                </Link>
+                <Link to="/Products/All" style={{ textDecoration: 'none' }}>
+                    <StyledMenuItem>
+                        <ListItemIcon>
+                            <DraftsIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="Всички" />
+                    </StyledMenuItem>
+                </Link>
+              
             </StyledMenu>
-        </div>
+        </div >
     );
 }

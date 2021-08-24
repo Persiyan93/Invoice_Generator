@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -33,17 +33,17 @@ const StyledMenu = withStyles({
 
 const StyledMenuItem = withStyles((theme) => ({
     root: {
-        '&:focus':  {
+        '&:focus': {
             backgroundColor: theme.palette.primary.main,
             '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
                 // color: theme.palette.common.white,
-                color:theme.palette.common.white,
+                color: theme.palette.common.white,
             },
         },
     },
 }))(MenuItem);
 
-export default function InvoiceMenu() {
+export default function UsersMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -63,8 +63,8 @@ export default function InvoiceMenu() {
                 color='default'
                 onMouseOver={handleClick}
             >
-               Фактури
-      </Button>
+                Настройки
+            </Button>
             <StyledMenu
                 id="customized-menu"
                 anchorEl={anchorEl}
@@ -72,25 +72,40 @@ export default function InvoiceMenu() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <Link to="/Invoices/NewInvoice" style={{textDecoration: 'none' }}>
-                <StyledMenuItem>
-                    
+                <Link to="/Users/CreateUser" style={{ textDecoration: 'none' }}>
+                    <StyledMenuItem>
+
                         <ListItemIcon>
-                             <FiberNewIcon fontSize="small" />
+                            <FiberNewIcon fontSize="small" />
                         </ListItemIcon>
-                        <ListItemText primary="Добави нова фактура" / >
-                </StyledMenuItem>
+                        <ListItemText primary="Добавяне на потребител" />
+                    </StyledMenuItem>
                 </Link>
-              
-                <Link to="/Invoices/All" style={{textDecoration: 'none' }}>
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <DraftsIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Всички " />
-                </StyledMenuItem>
+
+                <Link to="/Users/All" >
+                    <StyledMenuItem>
+                        <ListItemIcon>
+                            <DraftsIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="Всички потребители " />
+                    </StyledMenuItem>
                 </Link>
-               
+                <Link to="/History" style={{ textDecoration: 'none' }}>
+                    <StyledMenuItem>
+                        <ListItemIcon>
+                            <InboxIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="История" />
+                    </StyledMenuItem>
+                </Link>
+                <Link to="/Settings" style={{ textDecoration: 'none' }}>
+                    <StyledMenuItem>
+                        <ListItemIcon>
+                            <InboxIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="Настройки на фирмата" />
+                    </StyledMenuItem>
+                </Link>
             </StyledMenu>
         </div>
     );

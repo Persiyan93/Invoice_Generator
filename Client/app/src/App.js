@@ -60,8 +60,8 @@ function App() {
       .then(res => res.json())
       .then(res => {
         console.log(res)
-        if (res.status == "Unsuccessful") {
-          if (res.message == 'Not authorized') {
+        if (res.Status == "Unsuccessful") {
+          if (res.Message == 'Not authorized') {
             setUser({ isAuthenticated: false, permissions: [] })
 
           }

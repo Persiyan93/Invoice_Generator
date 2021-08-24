@@ -1,6 +1,6 @@
 
 const Footer=()=>{
-    return(<div >
+    return(<div style={{backgroundColor:'#379683',height:'1%'}} >
 
     </div>);
 }

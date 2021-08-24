@@ -1,15 +1,10 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { withStyles, Button, Menu, MenuItem, ListItemIcon, ListItemText } from '@material-ui/core/';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import FiberNewIcon from '@material-ui/icons/FiberNew';
-import {Link} from 'react-router-dom';
-import style from './Menu.module.css';
+import { Link } from 'react-router-dom';
+
 
 const StyledMenu = withStyles({
     paper: {
@@ -33,11 +28,11 @@ const StyledMenu = withStyles({
 
 const StyledMenuItem = withStyles((theme) => ({
     root: {
-        '&:focus':  {
+        '&:focus': {
             backgroundColor: theme.palette.primary.main,
             '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
                 // color: theme.palette.common.white,
-                color:theme.palette.common.white,
+                color: theme.palette.common.white,
             },
         },
     },
@@ -60,11 +55,11 @@ export default function InvoiceMenu() {
                 aria-controls="customized-menu"
                 aria-haspopup="true"
                 variant="contained"
-                color="primary"
+                color='default'
                 onMouseOver={handleClick}
             >
-               Клиенти
-      </Button>
+                Клиенти
+            </Button>
             <StyledMenu
                 id="customized-menu"
                 anchorEl={anchorEl}
@@ -72,28 +67,23 @@ export default function InvoiceMenu() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <Link to="/Clients/NewClient" className={style.Link}>
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <FiberNewIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Добави нов клиент" />
-                </StyledMenuItem>
+                <Link to="/Clients/NewClient" style={{ textDecoration: 'none' }}>
+                    <StyledMenuItem>
+                        <ListItemIcon>
+                            <FiberNewIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="Нов клиент" />
+                    </StyledMenuItem>
                 </Link>
-                <Link to="/Clients/All" className={style.Link}>
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <DraftsIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Всички " />
-                </StyledMenuItem>
+                <Link to="/Clients/All" style={{ textDecoration: 'none' }} >
+                    <StyledMenuItem>
+                        <ListItemIcon>
+                            <DraftsIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="Всички" />
+                    </StyledMenuItem>
                 </Link>
-                <StyledMenuItem>
-                    <ListItemIcon>
-                        <InboxIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Намери клиент" />
-                </StyledMenuItem>
+
             </StyledMenu>
         </div>
     );

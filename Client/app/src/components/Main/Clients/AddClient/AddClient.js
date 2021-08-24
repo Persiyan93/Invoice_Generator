@@ -1,16 +1,16 @@
 
 
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import {
-    Paper, makeStyles, IconButton, Button, Typography,
-    TableRow, TableBody, TableCell, InputLabel, Select, MenuItem, FormHelperText, Checkbox, Grid, TextField, ThemeProvider, FormControl
-    , FormControlLabel, FormLabel,
+    Paper, makeStyles, Button,
+    InputLabel, Select, MenuItem, FormHelperText, Grid, TextField, FormControl
 } from '@material-ui/core'
-import { getIdFromResponse } from '../../../../services/globalServices'
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import useFetchPost from '../../../../hooks/useFetchPost';
 import apiEndpoints from '../../../../services/apiEndpoints';
 import PageTitle from '../../Elements/PageTitle';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import NotificationContext from '../../../../Context/NotificationContext';
+
 const useStyles = makeStyles(theme => ({
 
     root: {
@@ -44,11 +44,11 @@ const clienDataInitialValues = {
     uniqueIdentificationNumber: '',
 }
 export default function AddClient(props) {
-    const classes = useStyles();
+    const { setNotification } = useContext(NotificationContext)
     const [clientData, setClientData] = useState(clienDataInitialValues)
     const [accessAreas, setaccessAreas] = useState({})
     const [userDataPostTriger, setUserDataPostTriger] = useState(false)
-    //useFetchPost(apiEndpoints.addUser, { ...userData, accessAreas: accessAreas }, userDataPostTriger, setUserDataPostTriger);
+    useFetchPost(apiEndpoints.addNewClient, { ...clientData }, userDataPostTriger, setUserDataPostTriger, actionsAfterSuccessfullyCompletedTask);
     function changeHandler(event) {
 
         const target = event.target;
@@ -67,18 +67,23 @@ export default function AddClient(props) {
         }
     }
 
-    function submitHandler(event) {
-        event.preventDefault();
-
-
+    function actionsAfterSuccessfullyCompletedTask() {
+        setNotification({ isOpen: true, message: 'Успешно добвен клиент', severity: 'success' })
     }
+    function submitHandler(event) {
+        event.preventDefault()
+        setUserDataPostTriger(true)
+        props.history.push('/Clients/All');
+    }
+
+    const classes = useStyles();
     const { companyName, companyType, vatNumber, accontablePersonName, uniqueIdentificationNumber, address } = clientData
     return (
         <>
             <PageTitle
-                title="Нов клиент"
-                icon={<GroupAddIcon fontSize='large'/>}
-                subTitle="Test2"
+                title="Клиенти"
+                icon={<GroupAddIcon fontSize='large' />}
+                subTitle="Нов Клиент"
 
             >
 
