@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useContext } from 'react';
 import {
     Paper, makeStyles, IconButton, Button, Typography,
     TableRow, TableBody, TableCell, Table, TableHead, TableContainer, InputAdornment, Checkbox, Grid, TextField, ThemeProvider, FormControl
     , FormControlLabel, FormLabel,
 } from '@material-ui/core'
+import NotificationContext from '../../../Context/NotificationContext';
 import useFetchPost from '../../../hooks/useFetchPost';
-
+import PageTitle from '../Elements/PageTitle';
+import SettingsIcon from '@material-ui/icons/Settings';
 import apiEndpoints from '../../../services/apiEndpoints';
 import useFetchGet from '../../../hooks/useFetchGet';
 
@@ -29,22 +31,22 @@ const useStyles = makeStyles(theme => ({
 
 
 }))
-const companySettingsInitialValue={
-    defaultPaymentTerm:0,
-    sendAutomaticGeneratedEmails:false,
-    blockClient:false,
-    periodInDaysBetweenTwoRepatedEmails:5,
-    maxCountOfUnPaidInvoices:10
+const companySettingsInitialValue = {
+    defaultPaymentTerm: 0,
+    sendAutomaticGeneratedEmails: false,
+    blockClient: false,
+    periodInDaysBetweenTwoRepatedEmails: 5,
+    maxCountOfUnPaidInvoices: 10
 }
 
 export default function CompanySettings(props) {
-
-    const [ companySettings, setCompanySettings ] = useState(companySettingsInitialValue);
+    const {setNotification}=useContext(NotificationContext);
+    const [companySettings, setCompanySettings] = useState(companySettingsInitialValue);
 
 
     // UpdateCompanySettings
     const [updateCompanySettingsTriger, setCompanysSettingsUpdateTriger] = useState(false)
-    useFetchPost(apiEndpoints.updateCompanySettings, { ...companySettings }, updateCompanySettingsTriger, setCompanysSettingsUpdateTriger);
+    useFetchPost(apiEndpoints.updateCompanySettings, { ...companySettings }, updateCompanySettingsTriger, setCompanysSettingsUpdateTriger,actionAfterSuccessfullUpdatedSettings);
 
     //GetCompanySettings
     const [getCompanySettinsTriger, setGetCompanySettingsTriger] = useState(true);
@@ -63,85 +65,95 @@ export default function CompanySettings(props) {
         }
         else {
             if (companySettings[name] === true) {
-                setCompanySettings(prevState => ({ ...prevState, [name]:false }))
+                setCompanySettings(prevState => ({ ...prevState, [name]: false }))
             }
             else {
-                setCompanySettings(prevState => ({ ...prevState,  [name]: true  }))
+                setCompanySettings(prevState => ({ ...prevState, [name]: true }))
             }
 
         }
-   
+
 
     }
     function onSubmitHandler(e) {
         e.preventDefault()
         setCompanysSettingsUpdateTriger(true)
     }
+    function actionAfterSuccessfullUpdatedSettings(){
+        setNotification({isOpen:true,message:'Настройките бяха запаметени успешно',severity:'success'})
+    }
 
     const classes = useStyles();
 
     return (
-
-        <Paper className={classes.pageContent}>
-            <form className={classes.root} onSubmit={onSubmitHandler}>
-
-                <TextField
-                    type='number'
-                    required
-                    name='defaultPaymentTerm'
-                    onChange={changeHandler}
-                    variant='outlined'
-                    label='Срок за плащане по подразбиране'
-                    value={companySettings?.defaultPaymentTerm}
-
-                />
-                <FormControl>
-                    <FormControlLabel
-                        label='Изпращане на автоматични имейли при просрочване на фактура'
-                        name='sendAutomaticGeneratedEmails'
-                        checked={companySettings.sendAutomaticGeneratedEmails}
-                        onChange={changeHandler}
-                        control={<Checkbox color='primary' />} />
-
+        <>
+             
+            <PageTitle
+                title="Настройки"
+                icon={<SettingsIcon fontSize='large' />}
+                subTitle="Нстройки на фирмата"
+            />
+            <Paper className={classes.pageContent}>
+                <form className={classes.root} onSubmit={onSubmitHandler}>
 
                     <TextField
-                        disabled={!companySettings.sendAutomaticGeneratedEmails}
-                        required={companySettings.sendAutomaticGeneratedEmails}
                         type='number'
-                        name='periodInDaysBetweenTwoRepatedEmails'
-                        onChange={changeHandler}
-                        variant='outlined'
-                        label='Период между два имейла '
-                        value={companySettings?.periodInDaysBetweenTwoRepatedEmails}
-
-                    />
-                </FormControl>
-                <FormControl>
-                    <FormControlLabel
-                        label='Блокиране на клиента при достигане на определен лимит'
-                        name='blockClient'
-                        checked={companySettings.blockClient}
-                        onChange={changeHandler}
-                        control={<Checkbox color='primary' />} />
-
-
-                    <TextField
-                        disabled={!companySettings.blockClient}
                         required
-                        type='number'
-                        name='maxCountOfUnPaidInvoices'
+                        name='defaultPaymentTerm'
                         onChange={changeHandler}
                         variant='outlined'
-                        label='Максимален брой неплатени фактури'
-                        value={companySettings?.maxCountOfUnPaidInvoices}
+                        label='Срок за плащане по подразбиране'
+                        value={companySettings?.defaultPaymentTerm}
 
                     />
-                </FormControl>
+                    <FormControl>
+                        <FormControlLabel
+                            label='Изпращане на автоматични имейли при просрочване на фактура'
+                            name='sendAutomaticGeneratedEmails'
+                            checked={companySettings.sendAutomaticGeneratedEmails}
+                            onChange={changeHandler}
+                            control={<Checkbox color='primary' />} />
 
-                <Button variant='contained' color='primary' type='submit' className={classes.button}>
-                    Запази
-                </Button>
-            </form >
-        </Paper >
+
+                        <TextField
+                            disabled={!companySettings.sendAutomaticGeneratedEmails}
+                            required={companySettings.sendAutomaticGeneratedEmails}
+                            type='number'
+                            name='periodInDaysBetweenTwoRepatedEmails'
+                            onChange={changeHandler}
+                            variant='outlined'
+                            label='Период между два имейла '
+                            value={companySettings?.periodInDaysBetweenTwoRepatedEmails}
+
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormControlLabel
+                            label='Блокиране на клиента при достигане на определен лимит'
+                            name='blockClient'
+                            checked={companySettings.blockClient}
+                            onChange={changeHandler}
+                            control={<Checkbox color='primary' />} />
+
+
+                        <TextField
+                            disabled={!companySettings.blockClient}
+                            required
+                            type='number'
+                            name='maxCountOfUnPaidInvoices'
+                            onChange={changeHandler}
+                            variant='outlined'
+                            label='Максимален брой неплатени фактури'
+                            value={companySettings?.maxCountOfUnPaidInvoices}
+
+                        />
+                    </FormControl>
+
+                    <Button variant='contained' color='primary' type='submit' className={classes.button}>
+                        Запази
+                    </Button>
+                </form >
+            </Paper >
+        </>
     )
 }

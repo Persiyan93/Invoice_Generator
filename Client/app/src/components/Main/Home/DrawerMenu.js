@@ -1,21 +1,20 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import Typography from '@material-ui/core/Typography';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import FiberNewIcon from '@material-ui/icons/FiberNew';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
 const drawerWidth = 240;
 
@@ -68,34 +67,49 @@ const useStyles = makeStyles((theme) => ({
 
 function DrawerMenu(props) {
 
-    const classes=useStyles();
+    const classes = useStyles();
     return (
         <div>
-        <div className={classes.toolbar} >
-            <Typography style={{ fontWeight: '550' }} component="h5" variant="h6" align="center">
-                Бързи бутони
-            </Typography>
+            <div className={classes.toolbar} >
+                <Typography style={{ fontWeight: '550' }} component="h5" variant="h6" align="center">
+                    Бързи бутони
+                </Typography>
+
+            </div>
+            <Divider />
+            <List>
+            <Link to="/Invoices/NewInvoice" style={{ textDecoration: 'none' }}>
+                <ListItem >
+
+                    <ListItemIcon><FiberNewIcon size='large' htmlColor="black"/> </ListItemIcon>
+                    <ListItemText primary='Нова фактура' />
+                </ListItem>
+                </Link>
+                <Link to="/Clients/NewClient" style={{ textDecoration: 'none' }}>
+                <ListItem >
+                    <ListItemIcon><GroupAddIcon size='large' htmlColor="black" /></ListItemIcon>
+                    <ListItemText primary='Нов Клиент' />
+                </ListItem>
+                </Link>
+
+                <Link to="/Products/NewProduct" style={{ textDecoration: 'none' }}>
+                <ListItem >
+                    <ListItemIcon><AddCircleIcon size='large' htmlColor="black"/></ListItemIcon>
+                    <ListItemText primary='Нов Продукт' />
+                </ListItem>
+                </Link>
+
+                <Link to="/Invoices/All" style={{ textDecoration: 'none' }}>
+                <ListItem >
+                    <ListItemIcon><ListAltIcon size='large' htmlColor="black"/></ListItemIcon>
+                    <ListItemText primary='Всички фактури' />
+                </ListItem>
+                </Link>
+
+            </List>
+            <Divider />
 
         </div>
-        <Divider />
-        <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                <ListItem button key={text}>
-                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                    <ListItemText primary={text} />
-                </ListItem>
-            ))}
-        </List>
-        <Divider />
-        <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem button key={text}>
-                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                    <ListItemText primary={text} />
-                </ListItem>
-            ))}
-        </List>
-    </div>
     );
 }
 

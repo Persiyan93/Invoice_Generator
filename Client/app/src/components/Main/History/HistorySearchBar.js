@@ -9,8 +9,9 @@ import history from 'react-router-dom'
 import useFetchGet from '../../../hooks/useFetchGet';
 import apiEndpoints from '../../../services/apiEndpoints';
 import SearchIcon from '@material-ui/icons/Search';
-import { BorderStyle } from '@material-ui/icons';
+import { BorderStyle, TramOutlined, TrendingUpRounded } from '@material-ui/icons';
 import SetStatisticPeriodFrom from '../Elements/SetStatisticPeriodFrom';
+import {eventTypeConverter} from '../../../services/globalServices'
 const useStyles = makeStyles(theme => ({
     title: {
         textAlign: 'center',
@@ -68,48 +69,35 @@ const MenuProps = {
     },
 };
 
-const names = [
-    { id: 2, name: 'Oliver Hansen' },
-    { id: 3, name: 'Ivan' },
-    { id: 4, name: 'Петкан' },
-    { id: 5, name: 'Драган' },
-    { id: 6, name: 'Исмаил' },
-    { id: 7, name: 'Бочко' },
 
-];
 export default function Searchbar(props) {
     const { selectedUser, setSelectUser,
         setPeriodOfStatistic, periodOfStatistic, setUsersGetTriger, eventTypeId,
-        setEventTypeId} = props
-    const history = useHistory();
-    const [users,setUsers]=useState([]);
-    const [eventTypes,setEventTypes]=useState([])
-   
+        setEventTypeId } = props
+    const [users, setUsers] = useState([]);
+    const [eventTypes, setEventTypes] = useState([])
 
 
-    
-    const[getUsersTriger,setGetUsersTriger]=useFetchGet(true);
-    useFetchGet(apiEndpoints.users,setUsers,getUsersTriger,setGetUsersTriger) 
-    
-    const [getEventTypesTriger,setGetEventTypesTriger]=useState(true);
-    useFetchGet(apiEndpoints.getEventTypes,setEventTypes,getEventTypesTriger,setGetEventTypesTriger);
-    
-    
-        console.log(users);
-        console.log(eventTypes);
-    function searcHandler() {
-        history.push({
-            search: `?startDate=${periodOfStatistic.startDate}&endDate=${periodOfStatistic.endDate}`
-        })
-        setUsersGetTriger(true);
-    }
+
+    //GetAllUserNames
+    const [getUsersTriger, setGetUsersTriger] = useState(true);
+    useFetchGet(apiEndpoints.getUsers, setUsers, getUsersTriger, setGetUsersTriger)
+
+
+    //GetTypeofEvents
+    const [getEventTypesTriger, setGetEventTypesTriger] = useState(TrendingUpRounded);
+    useFetchGet(apiEndpoints.getEventTypes, setEventTypes, getEventTypesTriger, setGetEventTypesTriger);
+
+
 
     function filterByUserNameHandler(event) {
         const value = event.target.value;
+        console.log(value)
         setSelectUser(value)
     }
     function changeEventTypeHandler(event) {
         const value = event.target.value;
+        console.log(value)
         setEventTypeId(value)
     }
     const classes = useStyles();
@@ -130,6 +118,9 @@ export default function Searchbar(props) {
                                 onChange={filterByUserNameHandler}
                                 input={<Input />}
                             >
+                                <option value='All'>
+                                    Всички
+                                </option>
                                 {users.map((user) => (
                                     <option key={user.id} value={user.id}>
                                         {user.fullName}
@@ -153,9 +144,12 @@ export default function Searchbar(props) {
                                 onChange={changeEventTypeHandler}
                                 input={<Input />}
                             >
+                                <option value='All'>
+                                    Всички
+                                </option>
                                 {eventTypes.map((eventType) => (
-                                    <option key={eventType.id} value={eventType.name}>
-                                        {eventType.name}
+                                    <option key={eventType} value={eventType}>
+                                        {eventTypeConverter(eventType)}
                                     </option>
                                 ))}
 
@@ -172,7 +166,7 @@ export default function Searchbar(props) {
                     setPeriodOfStatistic={setPeriodOfStatistic}
                     periodOfStatistic={periodOfStatistic}
                 ></SetStatisticPeriodFrom>
-                <Button startIcon={<SearchIcon />} onClick={searcHandler} className={classes.button} size='small'>Търси</Button>
+                {/* <Button startIcon={<SearchIcon />} className={classes.button} size='small'>Търси</Button> */}
 
 
             </Toolbar>

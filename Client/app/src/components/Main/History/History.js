@@ -1,5 +1,6 @@
 import { useEffect, useState, } from 'react'
 import { Link } from 'react-router-dom'
+import { eventTypeConverter } from '../../../services/globalServices'
 
 import {
     IconButton,
@@ -10,17 +11,18 @@ import InfoIcon from '@material-ui/icons/Info';
 import useFetchGet from '../../../hooks/useFetchGet'
 import useFetchPut from '../../../hooks/useFetchPut'
 import apiEndpoints from '../../../services/apiEndpoints'
-import TableWithPagingAndSorting from '../Elements/TableWithPagingAndSorting'
+import TableWithServerSidePagingAndSorting from '../Elements/TableWithServerSidePagingAndSorting';
 import ConfirmationPopup from '../Popup/ConfirmPopup'
 import HistorySearchBar from './HistorySearchBar'
 import getResultAfterPagingAndSorting from '../../../services/sortingService';
+import queryString from "query-string";
 const headCells = [
 
-    { id: 'fullName', title: "Име на потребителя" },
-    { id: 'eventType', title: 'Вид на събитето' },
-    { id: 'dateOfEvent', title: 'Дата на събитието' },
-    { id: 'message', title: 'Съобщение' },
-    { id: 'Action', title: 'Действие', disableSorting: 'true' },
+    { id: 'UserName', title: "Име на потребителя", disableSorting: 'true' },
+    { id: 'EventType', title: 'Вид на събитето' },
+    { id: 'DateOfEvent', title: 'Дата на събитието' },
+    { id: 'Message', title: 'Съобщение' },
+    // { id: 'Action', title: 'Действие', disableSorting: 'true' },
 
 ]
 var date = new Date();
@@ -29,70 +31,97 @@ var initialPeriodOfStatisctic = {
     endDate: date.toJSON().slice(0, 10)
 }
 
-//const userId= new URLSearchParams(search).get("userId");
-//const eventType= new URLSearchParams(search).get("typeOfEvent");
+const pages = [5, 10, 15]
 export default function History(props) {
-    var search=props.location.search;
+    var search = props.location.search;
     const [openConfirmationPopup, setOpenConfirmationPopup] = useState(false);
-    const [filterFunction, setFilterFunc] = useState({ fn: (elements) => { return elements } })
-    const [pagingAndSorting, setPagingAndSorting] = useState({ order: 'asc', orderBy: '' })
+    const [paging, setPaging] = useState({ page: 0, rowsPerPage: 10 })
+    const [sorting, setSorting] = useState({ order: 'asc', orderBy: '' })
     const [periodOfStatistic, setPeriodOfStatistic] = useState(initialPeriodOfStatisctic)
-    const [selectedUserId, setSelectUserId] = useState('');
-    const [eventTypeId, setEventTypeId] = useState('');
-    const [users, setUsers] = useState([])
-    const [events, setEvents] = useState([])
+    const [selectedUserId, selectUserId] = useState('All');
+    const [eventType, setEventType] = useState('All');
+    const [events, setEvents] = useState({filteredEvents:[],countOfAllEvents:0})
+    const {filteredEvents,countOfAllEvents}=events
 
-    useEffect(()=>{
-        
-    },[])
 
-    var getEventsUrl = apiEndpoints.getHistory +
-        `?startDate=${periodOfStatistic.startDate}&endDate=${periodOfStatistic.endDate}&` +
-        `userId=${selectedUserId}&eventType=${eventTypeId}`
-    const [getEventsTriger, setGetEventsTriger] = useState(false)
-    useFetchGet(getEventsUrl, setEvents, getEventsTriger, setGetEventsTriger)
+    const { page, rowsPerPage } = paging
+    const { order, orderBy } = sorting
+    const { startDate, endDate } = periodOfStatistic
 
-    function elementsAfterPagingAndSorting() {
-        const { order, orderBy } = pagingAndSorting
-        return getResultAfterPagingAndSorting(filterFunction.fn(users), order, orderBy)
+    useEffect(() => {
+        props.history.replace({
+            search: `?${queryString.stringify({
+                page: page ? page : undefined,
+                rowsPerPage: rowsPerPage === 10 ? undefined : rowsPerPage,
+                order: order == 'asc' ? undefined : order,
+                orderBy: orderBy ? orderBy : undefined,
+                eventType: eventType === 'All' ? undefined : eventType,
+                userId: selectedUserId === 'All' ? undefined : selectedUserId,
+                startDate: startDate,
+                endDate: endDate
+            })}`
+        })
+        setGetEventsTriger(true)
+    }, [order, orderBy, page, rowsPerPage, startDate, endDate, selectedUserId, eventType])
+
+
+    function handleChangePage(event, newPage) {
+        setPaging(prevState => ({ ...prevState, page: newPage }))
+
+    }
+
+    function trowsPerPageHandle(event) {
+        setPaging(prevState => ({ page: 0, rowsPerPage: parseInt(event.target.value, 10) }))
+
 
     }
 
 
+    //Get events
+    const [getEventsTriger, setGetEventsTriger] = useState(false)
+    var getEventsUrl = apiEndpoints.getHistory + props.history.location.search
+    useFetchGet(getEventsUrl, setEvents, getEventsTriger, setGetEventsTriger)
 
+
+
+
+
+
+
+    console.log(events)
 
     return (
         <>
             <HistorySearchBar
                 selectedUser={selectedUserId}
-                setSelectUser={setSelectUserId}
+                setSelectUser={selectUserId}
                 periodOfStatistic={periodOfStatistic}
                 setPeriodOfStatistic={setPeriodOfStatistic}
-                eventTypeId={eventTypeId}
-                setEventTypeId={setEventTypeId}
+                eventTypeId={eventType}
+                setEventTypeId={setEventType}
             >
 
             </HistorySearchBar>
-            <TableWithPagingAndSorting
-                pagingAndSorting={pagingAndSorting}
-                setPagingAndSorting={setPagingAndSorting}
+            <TableWithServerSidePagingAndSorting
+                pagingAndSorting={sorting}
+                setPagingAndSorting={setSorting}
                 headCells={headCells}
                 isLoading={false}
+                tableContainer={Paper}
             >
 
                 <TableBody>
 
                     {
+                        filteredEvents.map((event) => (
 
-                        elementsAfterPagingAndSorting().map((user) => (
-
-                            <TableRow key={user.id}  >
+                            <TableRow key={event.id}  >
                                 <TableCell component="th" scope="row" >
-                                    {user.fullName}
+                                    {event.userName}
                                 </TableCell>
-                                <TableCell align="right">{user.email} </TableCell>
-                                <TableCell align="right">{user.countOfGeneratedInvoice}</TableCell>
-                                <TableCell align="right">{user.sumOfAllInvoices}</TableCell>
+                                <TableCell align="right">{eventTypeConverter(event.eventType)} </TableCell>
+                                <TableCell align="right">{event.dateOfEvent}</TableCell>
+                                <TableCell align="right">{event.bulgarianMessage}</TableCell>
 
 
                                 <TableCell align="right">
@@ -111,7 +140,16 @@ export default function History(props) {
 
 
 
-            </TableWithPagingAndSorting>
+            </TableWithServerSidePagingAndSorting>
+            <TablePagination
+                page={paging.page}
+                component="div"
+                rowsPerPageOptions={pages}
+                rowsPerPage={paging.rowsPerPage}
+                count={countOfAllEvents}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={trowsPerPageHandle}
+            />
 
             <ConfirmationPopup
                 setOpenPopup={setOpenConfirmationPopup}

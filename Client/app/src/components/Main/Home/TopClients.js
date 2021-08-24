@@ -33,24 +33,25 @@ const useStyles = makeStyles(theme => ({
 }))
 const headCells = [
 
-    { id: 'name', title: 'Име на на артикула' },
-   
-    { id: 'unitType', title: 'Мерна еденица' },
-    { id: 'countOfSales', title: 'Продадено количество' },
-    { id: 'dateOfLastSale', title: 'Дата на последна продажба' },
-    { id: 'incomes', title: 'Приходи' },
+    { id: 'name', title: 'Име на Клиент' },
+    { id: 'vatNumber', title: 'ДДС номер' },
+    { id: 'countOfIssuedInvoicesForLastMonth', title: 'Фактури за последния месец' },
+    { id: 'allIncomesFromInvoice', title: 'Всички приходи' },
+    { id: 'countOfOverduedInvocies', title: 'Брой на просрочените фактури' },
+    { id: 'countOfPaidInvocies', title: 'Брой на платените Фактури' },
 
+    
 
 
 ]
-export default function TopArticles() {
-    const [topArticles, setTopArticles] = useState([]);
+export default function TopClients() {
+    const [topClients, setTopClients] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
 
 
 
-    const [getTopArticlesTriger, setGetTopArticlesTriger] = useState(true);
-    useFetchGet(apiEndpoints.getTopArticles, setTopArticles, getTopArticlesTriger, setGetTopArticlesTriger);
+    const [getTopClientsTriger, setGetTopClientsTriger] = useState(true);
+    useFetchGet(apiEndpoints.getTopClients, setTopClients, getTopClientsTriger, setGetTopClientsTriger);
 
     const classes = useStyles();
     return (
@@ -79,28 +80,29 @@ export default function TopArticles() {
 
                     <TableBody>
                         {
-                            topArticles.map(article => (
-                                <TableRow key={article.id}>
+                            topClients.map(client => (
+                                <TableRow key={client.name}>
 
                                     <TableCell >
-                                        {article.name}
+                                        {client.name}
                                     </TableCell>
-                                  
-                                    <TableCell>
-                                        {unitTypeFormater(article.unitType)}
-                                    </TableCell>
-                                    <TableCell>
-                                        {article.sumQuantityOfAllSales}
+                                    <TableCell >
+                                        {client.vatNumber}
                                     </TableCell>
                                     <TableCell>
-                                        {article.dateOfLastSale}
+                                        {client.invoiceCount}
                                     </TableCell>
                                     <TableCell>
-                                        {currencyFormater(article.incomesFromSales)}
+                                        {currencyFormater(client.IncomesFromInvoices)}
+                                    </TableCell>
+                                    <TableCell>
+                                        {client.countOfOverdueInvoices}
+                                    </TableCell>
+                                    <TableCell>
+                                        {client.countOfPaidInvoices}
                                     </TableCell>
 
-                                  
-
+                                   
                                 </TableRow>
                             ))
                         }

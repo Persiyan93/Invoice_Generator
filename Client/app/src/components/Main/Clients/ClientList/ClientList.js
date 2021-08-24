@@ -46,7 +46,12 @@ export default function ClientList(props) {
 
     // Update client status
     const [updateClientStatusTriger, setUpdateClientStatusTriger] = useState(false);
-    useFetchPut(apiEndpoints.updateClientStatus, updateClientStatusTriger, setUpdateClientStatusTriger, { clientId:selectedUserId, status: clientNewStatus });
+    useFetchPut(apiEndpoints.updateClientStatus,
+         updateClientStatusTriger,
+          setUpdateClientStatusTriger,
+           { clientId:selectedUserId, status: clientNewStatus },
+           actionAfterSuccessfullUpdatedStatusOfClient
+           );
 
     function handleChangePage(event, newPage) {
         setPaging(prevState => ({ ...prevState, page: newPage }))
@@ -68,6 +73,9 @@ export default function ClientList(props) {
         selectUserId(clientId);
         setClientNewStatus('Active')
         setUpdateClientStatusTriger(true)
+    }
+    function actionAfterSuccessfullUpdatedStatusOfClient(){
+        setGetClientsTriger(true);
     }
 
 

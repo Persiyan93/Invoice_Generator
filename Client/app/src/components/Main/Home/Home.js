@@ -8,14 +8,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
+import TopClients from './TopClients';
 import Popup from '../Popup'
 import ListWithContentTypes from './ListWithContentTypes';
 import Typography from '@material-ui/core/Typography';
@@ -67,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 
     },
     content: {
-        display: 'block',
+        display: 'inlineBlock',
         flexGrow: 1,
         padding: theme.spacing(3),
 
@@ -76,31 +69,37 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Home(props) {
-    console.log('inside home')
     const [isOpenControlPanel, setOpenControlPanel] = useState(false);
     const [userHomePageContent, setUserHomePageContent] = useState([]);
     const [selectedContentId, selectContentId] = useState('');
 
-
+    console.log(userHomePageContent)
     const [getUserHomepageContentTriger, setGetUserHomepageContentTriger] = useState(true)
     useFetchGet(apiEndpoints.getUserHomePageContent, setUserHomePageContent, getUserHomepageContentTriger, setGetUserHomepageContentTriger);
 
     const [deleteContentFromHomePageTriger, setDeleteContentFromHomePageTriger] = useState(false);
     let deleteContentFromHomePageUrl = apiEndpoints.deleteContentFromHomePage + `/${selectedContentId}`;
-    useFetchDelete(deleteContentFromHomePageUrl, undefined, deleteContentFromHomePageTriger, setDeleteContentFromHomePageTriger,actionAfterSuccessfullyDeleteContent)
+    useFetchDelete(deleteContentFromHomePageUrl, undefined, deleteContentFromHomePageTriger, setDeleteContentFromHomePageTriger, actionAfterSuccessfullyDeleteContent)
 
-    function actionAfterSuccessfullyDeleteContent(){
-        setUserHomePageContent(prevState=>([...prevState.filter(x=>x.id!=selectedContentId)]));
-        
+    function actionAfterSuccessfullyDeleteContent() {
+        setUserHomePageContent(prevState => ([...prevState.filter(x => x.id != selectedContentId)]));
+
     }
-    function removeContentFromHomePageHandler(e,contentId){
+    function removeContentFromHomePageHandler(e, contentId) {
         selectContentId(contentId);
         setDeleteContentFromHomePageTriger(true);
     }
-    
+
     const classes = useStyles();
 
-
+    function renderSwitch(param) {
+        switch (param) {
+            case 'foo':
+                return 'bar';
+            default:
+                return 'foo';
+        }
+    }
 
     console.log(userHomePageContent)
 
@@ -125,24 +124,44 @@ function Home(props) {
                     </Hidden>
                 </nav>
                 <main className={classes.content}>
-                    <AddButton
-                        setOpenControlPanel={setOpenControlPanel}
-                    />
+
                     {
                         userHomePageContent.map((content) => (
-                            <CustomBox
-                                key={content.id}
-                                content={content}
-                                removeContentFromHomePageHandler={ removeContentFromHomePageHandler}
+                            <>
+                                {
+                                    content.bulgarianName == 'Най продавани артикули за последния месец' &&
+                                    <CustomBox
+                                        key={content.id}
+                                        content={content}
+                                        removeContentFromHomePageHandler={removeContentFromHomePageHandler}
 
-                            >
-                                <TopArticles></TopArticles>
-                            </CustomBox>
+                                    >
+                                        <TopArticles></TopArticles>
+                                    </CustomBox>
+                                }
+                                {
+                                    content.bulgarianName == 'Най-добреи клиенти за последния месец' &&
+                                    <CustomBox
+                                        key={content.id}
+                                        content={content}
+                                        removeContentFromHomePageHandler={removeContentFromHomePageHandler}
+
+                                    >
+                                        <TopClients></TopClients>
+
+                                    </CustomBox>
+                                }
+
+
+                            </>
+
 
                         ))}
 
 
-
+                    <AddButton
+                        setOpenControlPanel={setOpenControlPanel}
+                    />
 
                 </main>
             </div>
