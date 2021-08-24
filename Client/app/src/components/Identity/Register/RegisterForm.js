@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, TextField } from "@material-ui/core";
-import { withStyles } from '@material-ui/core/styles';
+import { Button, TextField, Paper, withStyles, Typography } from "@material-ui/core";
+
 import * as identityService from '../../../services/identityService.js';
 import UserDetails from "./UserDetails.js";
 import CompanyDetails from "./CompanyDetails.js";
@@ -9,15 +9,31 @@ import CompanyAddressDetails from "./CompanyAddressDetails.js";
 
 
 
-const useStyles = (thema => ({
-    root: {
-        '& .MuiFormControl-root': {
-            width: '90%',
-            margin: thema.spacing(1)
+const useStyles = themе => ({
+    pageContent: {
+        //backgroundColor:'#EAE8EE',
+        marginLeft: '25%',
+        width: '50%',
+        height: '550px',
+        borderRadius: 10,
+        margin: themе.spacing(3),
+        padding: themе.spacing(3)
+    },
+    smallPage: {
 
-        }
+        //backgroundColor:'#EAE8EE',
+        marginLeft: '25%',
+        width: '50%',
+        height: '370px',
+        borderRadius: 10,
+        margin: themе.spacing(3),
+        padding: themе.spacing(3)
+
+    },
+    title: {
+        marginBottom: themе.spacing(3)
     }
-}))
+})
 
 class RegisterForm extends React.Component {
     constructor(props) {
@@ -56,19 +72,19 @@ class RegisterForm extends React.Component {
         const value = target.value;
         const name = target.name;
         if (name == 'addressText' || name == 'town' || name == 'country') {
-            this.setState(prevState=>({
+            this.setState(prevState => ({
                 ...prevState,
-                companyDetails:{
+                companyDetails: {
                     ...prevState.companyDetails,
-                    address:{
-                        ...prevState.companyDetails.address,[name]:value
+                    address: {
+                        ...prevState.companyDetails.address, [name]: value
                     }
                 }
             }))
         }
         else if (name == 'companyName' || name == 'vatNumber'
-            || name == 'accontablePersonName' || name == 'companyEmail' || name == 'uniqueIdentificationNumber'||name == 'companyType') {
-           this.setState({
+            || name == 'accontablePersonName' || name == 'companyEmail' || name == 'uniqueIdentificationNumber' || name == 'companyType') {
+            this.setState({
                 companyDetails:
                     { ...this.state.companyDetails, [name]: value }
             });
@@ -116,35 +132,50 @@ class RegisterForm extends React.Component {
         switch (step) {
             case 1:
                 return (
-                    <UserDetails
-                        nextStep={this.nextStep}
-                        inputFields={{ ...this.state }}
-                        changeHandler={this.changeHandler}
-                    />
+                    <Paper className={classes.pageContent}>
+                        <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
+                            Регистрация
+                        </Typography>
+                        <UserDetails
+                            nextStep={this.nextStep}
+                            inputFields={{ ...this.state }}
+                            changeHandler={this.changeHandler}
+                        />
+                    </Paper>
                 )
 
             case 2:
                 return (
-                    <CompanyDetails
-                        nextStep={this.nextStep}
-                        prevStep={this.prevStep}
-                        inputFields={{ ...companyDetails }}
-                        changeHandler={this.changeHandler}
-                    >
+                    <Paper className={classes.pageContent}>
+                        <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
+                            Данни за фирмата
+                        </Typography>
+                        <CompanyDetails
+                            nextStep={this.nextStep}
+                            prevStep={this.prevStep}
+                            inputFields={{ ...companyDetails }}
+                            changeHandler={this.changeHandler}
+                        >
 
-                    </CompanyDetails>
+                        </CompanyDetails>
+                    </Paper>
                 )
 
             case 3:
                 return (
-                    <CompanyAddressDetails
-                        submitHandler={this.submitHandler}
-                        prevStep={this.prevStep}
-                        inputFields={{ ...companyDetails }}
-                        changeHandler={this.changeHandler}
-                    >
+                    <Paper className={classes.smallPage}>
+                        <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
+                            Адрес на фирмата
+                        </Typography>
+                        <CompanyAddressDetails
+                            submitHandler={this.submitHandler}
+                            prevStep={this.prevStep}
+                            inputFields={{ ...companyDetails }}
+                            changeHandler={this.changeHandler}
+                        >
 
-                    </CompanyAddressDetails>
+                        </CompanyAddressDetails>
+                    </Paper>
                 )
 
 

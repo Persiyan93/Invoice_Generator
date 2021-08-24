@@ -6,15 +6,23 @@ import * as identityService from '../../../services/identityService.js';
 
 
 
-const useStyles = (thema => ({
+const useStyles = theme => ({
     root: {
         '& .MuiFormControl-root': {
             width: '90%',
-            margin: thema.spacing(1)
+            margin: theme.spacing(1)
 
         }
+    },
+    forwordButton:{
+        marginTop:theme.spacing(3),
+        float:'right'
+    },
+    backButton:{
+        marginTop:theme.spacing(2),
+        float:'left'
     }
-}))
+})
 
 class CompanyDetails extends React.Component {
     constructor(props) {
@@ -29,13 +37,13 @@ class CompanyDetails extends React.Component {
                 <TextField required variant="outlined" value={country} name="country" label="Държава" onChange={changeHandler} />
                 <TextField required variant="outlined" value={town} name="town" label="Град" onChange={changeHandler} />
                 <TextField  required variant="outlined" value={addressText} name="addressText" label="Адрес"  onChange={changeHandler} />
-                <Button variant="contained" type="submit" color="primary">
-                    Създай профил
-                </Button>
-                <Button variant="contained" onClick={prevStep}color="primary">
+               
+                <Button className={classes.backButton} variant="contained" onClick={prevStep}color="primary">
                     Назад
                 </Button>
-
+                <Button className={classes.forwordButton}variant="contained" type="submit" color="primary">
+                    Създай профил
+                </Button>
             </form>
         );
     }

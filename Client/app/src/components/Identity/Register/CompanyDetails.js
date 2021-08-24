@@ -14,6 +14,13 @@ const useStyles = (theme => ({
 
         }
     },
+    forwordButton:{
+        float:'right'
+    },
+    backButton:{
+        float:'left'
+    },
+
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
@@ -29,10 +36,11 @@ class CompanyDetails extends React.Component {
         const { classes,  nextStep, changeHandler, inputFields,prevStep } = this.props;
         return (
             <form className={classes.root} onSubmit={nextStep}>
-                <TextField variant="outlined" value={inputFields.name} name="companyName" label="Име на фирмата" onChange={changeHandler} />
+                <TextField  required variant="outlined" value={inputFields.name} name="companyName" label="Име на фирмата" onChange={changeHandler} />
                 <FormControl  >
                 <InputLabel>Вид на компанията</InputLabel>
                     <Select
+                        required
                         name="companyType"
                         value={inputFields.companyType}
                         onChange={changeHandler}
@@ -41,23 +49,25 @@ class CompanyDetails extends React.Component {
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value="SoleProprietorship">ЕТ</MenuItem>
-                        <MenuItem value="LLC">ЕООД</MenuItem>
-                        <MenuItem value="LTD">ООД</MenuItem>
+                        <MenuItem value="SoleTrader">ЕТ</MenuItem>
+                        <MenuItem value="LtdWithOneOwner">ЕООД</MenuItem>
+                        <MenuItem value="JoinStockCompany">АД</MenuItem>
+                        <MenuItem value=" Ltd">ООД</MenuItem>
                     </Select>
                     </FormControl>
                 <TextField required variant="outlined" value={inputFields.vatNumber} name="vatNumber" label="ДДС номер" onChange={changeHandler} />
-                <TextField variant="outlined" value={inputFields.uniqueIdentificationNumber} name="uniqueIdentificationNumber" label="ЕИК"  onChange={changeHandler} />
-                <TextField  variant="outlined" value={inputFields.accontablePersonName} name="accontablePersonName" label="Материално отговорно лице"  onChange={changeHandler} />
-                <TextField  variant="outlined" value={inputFields.companyEmail} name="companyEmail" label="Имейл адрес на фирмата"  onChange={changeHandler} />
+                <TextField required variant="outlined" value={inputFields.uniqueIdentificationNumber} name="uniqueIdentificationNumber" label="ЕИК"  onChange={changeHandler} />
+                <TextField required  variant="outlined" value={inputFields.accontablePersonName} name="accontablePersonName" label="Материално отговорно лице"  onChange={changeHandler} />
+                <TextField required variant="outlined" value={inputFields.companyEmail} name="companyEmail" label="Имейл адрес на фирмата"  onChange={changeHandler} />
                 
-                <Button variant="contained" type="submit" color="primary">
+                <Button className={classes.backButton} variant="contained" onClick={prevStep}color="primary">
+                    Назад
+                </Button>
+                <Button className={classes.forwordButton} variant="contained" type="submit" color="primary">
                     Продължи
                 </Button>
 
-                <Button variant="contained" onClick={prevStep}color="primary">
-                    Назад
-                </Button>
+              
                 
 
             </form>

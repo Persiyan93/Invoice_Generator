@@ -4,6 +4,7 @@ import {
     TableRow, TableBody, TableCell, Table, TableHead, TableContainer, InputAdornment, Checkbox, Grid, TextField, ThemeProvider, FormControl
     , FormControlLabel, FormLabel,
 } from '@material-ui/core'
+import { Link } from 'react-router-dom';
 import * as identityService from '../../services/identityService';
 import * as  cookieService from '../../services/cookieService'
 import IdentityContext from '../../Context/IdentityContext'
@@ -26,12 +27,12 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(3)
     },
     button: {
-        margin: theme.spacing(3),
+      marginTop:theme.spacing(1),
         marginBottom: theme.spacing(3),
-        marginLeft: '40%'
+        marginLeft: '45%'
     },
     title: {
-        marginBottom: theme.spacing(3)
+        marginBottom: theme.spacing(2)
     }
 
 
@@ -42,8 +43,8 @@ const userDataInitialValues = {
     password: ''
 }
 export default function LoginForm(props) {
-    const {setUser}=useContext(IdentityContext)
-    const {setNotification}=useContext(NotificationContext)
+    const { setUser } = useContext(IdentityContext)
+    const { setNotification } = useContext(NotificationContext)
     const [userData, setUserData] = useState(userDataInitialValues)
 
 
@@ -62,20 +63,19 @@ export default function LoginForm(props) {
             .then(res => res.json())
             .then(res => {
                 if (res.status == "Unsuccessful") {
-                    console.log('Unsuccessful status ')
-                   setNotification({isOpen:true,message:res.message}) 
+
+                    setNotification({ isOpen: true, message: res.message })
                 }
                 else {
-                    console.log(res)
                     let { token, expiration, permissions } = res
                     cookieService.createCookie(token, expiration)
-                    setUser({isAuthenticated:true,permissions:{...permissions}})
+                    setUser({ isAuthenticated: true, permissions: { ...permissions } })
                     props.history.push(`/`)
                 }
 
             })
             .catch(err => {
-                console.log(err)
+
             })
     }
     const classes = useStyles();
@@ -119,6 +119,11 @@ export default function LoginForm(props) {
                     </Grid>
 
                 </Grid>
+                <Link to="/Identity/Register" >
+                <Typography className={classes.title} component="h1" variant="subtitle2" gutterBottom={false} align="center">
+                    Регистрация
+                </Typography>
+                </Link>
                 <Button variant='contained' color='primary' type='submit' className={classes.button}>Вход</Button>
             </form>
         </Paper>
