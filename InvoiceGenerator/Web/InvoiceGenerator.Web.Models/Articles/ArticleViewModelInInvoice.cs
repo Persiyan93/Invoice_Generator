@@ -27,7 +27,7 @@ namespace InvoiceGenerator.Web.Models.Articles
         {
             configuration.CreateMap<InvoiceToArticle, ArticleViewModelInInvoice>()
              .ForMember(x => x.UnitPrice, opt =>
-                    opt.MapFrom(y => y.ArticlePrice))
+                    opt.MapFrom(y =>y.ArticlePrice))
              .ForMember(x => x.Name, opt =>
                        opt.MapFrom(y => y.Article.Name))
               .ForMember(x => x.VatRate, opt =>

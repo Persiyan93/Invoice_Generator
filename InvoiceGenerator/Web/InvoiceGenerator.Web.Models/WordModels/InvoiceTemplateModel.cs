@@ -57,6 +57,8 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
 
         public string CreatedBy { get; set; }
 
+        public ICollection<ServiceToInvoiceTemplateModel> Services { get; set; }
+
         public ICollection<ArticleToInvoiceTemplateModel> Articles { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
@@ -90,7 +92,11 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
                        // .ForMember(x => x.SellerUniqueIdentificationNumber, opt =>
                        //          opt.MapFrom(y => y.Seller.UniqueIdentificationNumber))
                        .ForMember(x => x.InvoicePrice, opt =>
-                              opt.MapFrom(y => ((double)y.PriceWithoutVat + (double)y.VatValue).ToString("F2")));
+                              opt.MapFrom(y => ((double)y.PriceWithoutVat + (double)y.VatValue).ToString("F2")))
+                       .ForMember(x => x.CreatedBy, opt =>
+                                       opt.MapFrom(i => i.User.Name));
+
+                    
                       //.ForMember(x => x.SellerAddress, opt =>
                       //        opt.MapFrom(y => y.Seller.Address.Town.Country.Name + " , " + y.Seller.Address.Town.Name + " , " + y.Seller.Address.AddressText));
 

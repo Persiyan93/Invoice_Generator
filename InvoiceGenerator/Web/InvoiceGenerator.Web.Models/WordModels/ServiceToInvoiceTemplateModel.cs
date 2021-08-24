@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using InvoiceGenerator.Data.Models;
-using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.WordModels
 {
-    public class ArticleToInvoiceTemplateModel : IMapFrom<InvoiceToArticle>, IHaveCustomMappings
+    public class ServiceToInvoiceTemplateModel :IMapFrom<InvoiceToService>,IHaveCustomMappings
     {
         public string Name { get; set; }
 
@@ -22,19 +21,15 @@ namespace InvoiceGenerator.Web.Models.WordModels
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<InvoiceToArticle, ArticleToInvoiceTemplateModel>()
+            configuration.CreateMap<InvoiceToService, ServiceToInvoiceTemplateModel>()
                 .ForMember(x => x.Name, opt =>
-                               opt.MapFrom(i => i.Article.Name))
-                .ForMember(x => x.UnitPrice, opt =>
-                               opt.MapFrom(i => i.Article.UnitPrice))
-                .ForMember(x => x.UnitType, opt =>
-                               opt.MapFrom(i => i.Article.UnitType == ArticleUnitType.Count ? "Бр." : "Кг."));
-
-
-
-
-
-
+                           opt.MapFrom(s => s.Service.Name))
+                 .ForMember(x => x.Quantity, opt =>
+                           opt.MapFrom(s => s.Quantity))
+                  .ForMember(x => x.UnitPrice, opt =>
+                           opt.MapFrom(s => s.PriceWithoutVat))
+                   .ForMember(x => x.UnitType, opt =>
+                           opt.MapFrom(s => "Бр."));
 
         }
     }

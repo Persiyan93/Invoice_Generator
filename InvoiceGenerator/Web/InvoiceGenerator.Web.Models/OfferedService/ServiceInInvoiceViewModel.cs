@@ -29,7 +29,9 @@ namespace InvoiceGenerator.Web.Models.OfferedService
                 .ForMember(x => x.Name, opt =>
                        opt.MapFrom(s => s.Service.Name))
                 .ForMember(x => x.VatRate, opt =>
-                       opt.MapFrom(s => s.Service.VatRate));
+                       opt.MapFrom(s => s.Service.VatRate))
+                .ForMember(x => x.Id, opt =>
+                               opt.MapFrom(s => s.ServiceId));
         }
     }
 }
