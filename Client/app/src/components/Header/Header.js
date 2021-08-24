@@ -34,19 +34,19 @@ const Header = (props) => {
     const [notifications, setNotifications] = useState([]);
 
 
-    const [getNotificationsTriger, setGetNotificationsTriger] = useState(true);
-    useFetchGet(apiEndpoints.getUnreadNotifications, setNotifications, getNotificationsTriger, setGetNotificationsTriger);
+    // const [getNotificationsTriger, setGetNotificationsTriger] = useState(true);
+    // useFetchGet(apiEndpoints.getUnreadNotifications, setNotifications, getNotificationsTriger, setGetNotificationsTriger);
 
 
-    useEffect(() => {
-        const id = setInterval(() => {
+    // useEffect(() => {
+    //     const id = setInterval(() => {
             
-            setGetNotificationsTriger(true)
-        }
-            , 200000);
+    //         setGetNotificationsTriger(true)
+    //     }
+    //         , 200000);
 
-        return () => clearInterval(id);
-    }, []);
+    //     return () => clearInterval(id);
+    // }, []);
 
 
 

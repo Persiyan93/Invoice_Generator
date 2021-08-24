@@ -12,7 +12,7 @@ import TopClients from './TopClients';
 import Popup from '../Popup'
 import ListWithContentTypes from './ListWithContentTypes';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme,Grid  } from '@material-ui/core/';
 import AddButton from './AddButton';
 import CustomBox from './CustomBox';
 import DrawerMenu from './DrawerMenu'
@@ -100,8 +100,9 @@ function Home(props) {
                 return 'foo';
         }
     }
-
-    console.log(userHomePageContent)
+    function clickHandler(){
+        setOpenControlPanel(true)
+    }
 
 
     return (
@@ -119,49 +120,50 @@ function Home(props) {
                             variant="permanent"
                             open
                         >
-                            <DrawerMenu />
+                            <DrawerMenu clickHandler={clickHandler} />
                         </Drawer>
                     </Hidden>
                 </nav>
                 <main className={classes.content}>
 
-                    {
-                        userHomePageContent.map((content) => (
-                            <>
-                                {
-                                    content.bulgarianName == 'Най продавани артикули за последния месец' &&
-                                    <CustomBox
-                                        key={content.id}
-                                        content={content}
-                                        removeContentFromHomePageHandler={removeContentFromHomePageHandler}
 
-                                    >
-                                        <TopArticles></TopArticles>
-                                    </CustomBox>
-                                }
-                                {
-                                    content.bulgarianName == 'Най-добреи клиенти за последния месец' &&
-                                    <CustomBox
-                                        key={content.id}
-                                        content={content}
-                                        removeContentFromHomePageHandler={removeContentFromHomePageHandler}
+                    <>
+                        <Grid container>
+                            <Grid item md={6}>
+                                <CustomBox
+                            
+                                    content='Най продавани артикули за последния месец'
+                                    removeContentFromHomePageHandler={removeContentFromHomePageHandler}
 
-                                    >
-                                        <TopClients></TopClients>
+                                >
+                                    <TopArticles></TopArticles>
+                                </CustomBox>
+                            </Grid>
+                            {/* <Grid  item md={6}>
+                                <CustomBox
+                                    content='Най-добри клиенти за последния месец'
+                                    removeContentFromHomePageHandler={removeContentFromHomePageHandler}
 
-                                    </CustomBox>
-                                }
+                                >
+                                    <TopClients></TopClients>
+
+                                </CustomBox>
+                            </Grid> */}
 
 
-                            </>
+                        </Grid>
+
+                    
 
 
-                        ))}
+                    </>
 
 
-                    <AddButton
+
+
+                    {/* <AddButton
                         setOpenControlPanel={setOpenControlPanel}
-                    />
+                    /> */}
 
                 </main>
             </div>

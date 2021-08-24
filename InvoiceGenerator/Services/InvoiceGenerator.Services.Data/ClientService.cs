@@ -154,6 +154,7 @@ namespace InvoiceGenerator.Services.Data
                 .GroupBy(p =>new {Name= p.Invoice.Client.Name,CompanyType=p.Invoice.Client.CompanyType,VatNumber=p.Invoice.Client.VatNumber})
                 .Select(x => new TopClientsViewModel
                 {
+                    
                     CompanyName = $"\"{x.Key.Name}\" {StringConverter.TranslateCompanyTypeToBulgarianLanguage(x.Key.CompanyType)}",
                     VatNumber=x.Key.VatNumber,
                     InvoiceCount = x.Where(e => e.EventType == HistoryEventType.CreateInvoice).Count(),
@@ -167,6 +168,7 @@ namespace InvoiceGenerator.Services.Data
 
                 })
                 .OrderByDescending(x => x.IncomesFromInvoices)
+                .Take(5)
                 .ToList();
             
             return events;

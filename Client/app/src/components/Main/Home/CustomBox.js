@@ -40,7 +40,7 @@ function closeBodyHandler(){
 
                     <Grid item md={11}>
                         <Typography component="h5" variant="h6">
-                            {content.bulgarianName}
+                            {content}
                         </Typography>
                     </Grid>
                     <Grid item>

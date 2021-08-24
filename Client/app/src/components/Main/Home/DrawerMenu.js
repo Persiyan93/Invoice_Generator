@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DrawerMenu(props) {
-
+    let{clickHandler}=props;
     const classes = useStyles();
     return (
         <div>
@@ -78,36 +78,46 @@ function DrawerMenu(props) {
             </div>
             <Divider />
             <List>
-            <Link to="/Invoices/NewInvoice" style={{ textDecoration: 'none' }}>
-                <ListItem >
+                <Link to="/Invoices/NewInvoice" style={{ textDecoration: 'none' }}>
+                    <ListItem >
 
-                    <ListItemIcon><FiberNewIcon size='large' htmlColor="black"/> </ListItemIcon>
-                    <ListItemText primary='Нова фактура' />
-                </ListItem>
+                        <ListItemIcon><FiberNewIcon size='large' htmlColor="black" /> </ListItemIcon>
+                        <ListItemText primary='Нова фактура' />
+                    </ListItem>
                 </Link>
                 <Link to="/Clients/NewClient" style={{ textDecoration: 'none' }}>
-                <ListItem >
-                    <ListItemIcon><GroupAddIcon size='large' htmlColor="black" /></ListItemIcon>
-                    <ListItemText primary='Нов Клиент' />
-                </ListItem>
+                    <ListItem >
+                        <ListItemIcon><GroupAddIcon size='large' htmlColor="black" /></ListItemIcon>
+                        <ListItemText primary='Нов Клиент' />
+                    </ListItem>
                 </Link>
 
                 <Link to="/Products/NewProduct" style={{ textDecoration: 'none' }}>
-                <ListItem >
-                    <ListItemIcon><AddCircleIcon size='large' htmlColor="black"/></ListItemIcon>
-                    <ListItemText primary='Нов Продукт' />
-                </ListItem>
+                    <ListItem >
+                        <ListItemIcon><AddCircleIcon size='large' htmlColor="black" /></ListItemIcon>
+                        <ListItemText primary='Нов Продукт' />
+                    </ListItem>
                 </Link>
 
                 <Link to="/Invoices/All" style={{ textDecoration: 'none' }}>
-                <ListItem >
-                    <ListItemIcon><ListAltIcon size='large' htmlColor="black"/></ListItemIcon>
-                    <ListItemText primary='Всички фактури' />
-                </ListItem>
+                    <ListItem >
+                        <ListItemIcon><ListAltIcon size='large' htmlColor="black" /></ListItemIcon>
+                        <ListItemText primary='Всички фактури' />
+                    </ListItem>
                 </Link>
 
             </List>
             <Divider />
+            <List>
+                    <ListItem onClick={clickHandler} >
+
+                        <ListItemIcon><FiberNewIcon size='large' htmlColor="black" /> </ListItemIcon>
+                        <ListItemText primary='Нова статистика' />
+                    </ListItem>
+           
+                
+
+            </List>
 
         </div>
     );
