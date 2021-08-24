@@ -1,8 +1,10 @@
 using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Data.Seeding;
+using InvoiceGenerator.Services.CloadStorageService;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Services.Mapping;
+using InvoiceGenerator.Services.Messaging;
 using InvoiceGenerator.Services.MicrosoftWordService;
 using InvoiceGenerator.Web.Extensions;
 using InvoiceGenerator.Web.Models;
@@ -10,6 +12,7 @@ using InvoiceGenerator.Web.Models.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +49,7 @@ namespace InvoiceGenerator.Web
 
 
 
-
+            services.AddMemoryCache();
             //Add Identity with JWT 
             services.AddIdentity<ApplicationUser, ApplicationRole>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -67,6 +70,15 @@ namespace InvoiceGenerator.Web
                     ValidAudience = Configuration["JWT:ValidAudience"],
                     ValidIssuer = Configuration["JWT:ValidIssuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnChallenge = async context =>
+                    {
+                        context.HandleResponse();
+                        context.Response.StatusCode = 401;
+                        await context.Response.WriteAsJsonAsync(new ResponseViewModel { Message = "Not authorized", Status = "Unsuccessful" });
+                    }
                 };
 
             });
@@ -99,6 +111,13 @@ namespace InvoiceGenerator.Web
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            services.AddTransient<IDropBoxService>(x =>
+            new DropBoxService( this.Configuration["DropBox:ApiKey"]));
+            services.AddTransient<IEmailSender>(x => 
+            new SendGridEmailSender(
+                this.Configuration["SendGrid:ApiKey"], 
+                this.Configuration["SendGrid:EmailSender"], 
+                this.Configuration["SendGrid:EmailSenderName"]));
             services.AddTransient<ICompanyService, CompanyService>();
             services.AddTransient<IAddressService, AddressService>();
             services.AddTransient<IClientService, ClientService>();
@@ -109,6 +128,11 @@ namespace InvoiceGenerator.Web
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IOfferedService, OfferedServices>();
+            services.AddTransient<IHistoryEventService, HistoryEventService>();
+            services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<ICompanySettingsService, CompanySettingsService>();
+            services.AddTransient<IHomePageContentService ,HomePageContentService>();
+
             
 
 
@@ -150,7 +174,7 @@ namespace InvoiceGenerator.Web
 
 
             app.UseHttpsRedirection();
-            // app.UseStaticFiles();
+             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
             app.UseRouting();

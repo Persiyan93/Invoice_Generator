@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,13 @@ namespace InvoiceGenerator.Web.Controllers
     {
         private readonly IClientService clientService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IMemoryCache cache;
 
-        public ClientsController(IClientService clientService, UserManager<ApplicationUser> userManager)
+        public ClientsController(IClientService clientService, UserManager<ApplicationUser> userManager , IMemoryCache cache)
         {
             this.clientService = clientService;
             this.userManager = userManager;
+            this.cache = cache;
         }
 
       
@@ -103,6 +106,26 @@ namespace InvoiceGenerator.Web.Controllers
             var client = await clientService.GetClientByIdAsync<AdditionalClientInfo>(clientId);
 
             return this.Ok(client);
+
+        }
+
+        [HttpGet]
+        [Route("TopClients")]
+        public async Task<IActionResult> GetTopClients(string clientId)
+        {
+            var user = await  userManager.GetUserAsync(this.User);
+            var cacheKey = "TopClients" + user.CompanyId;
+            ICollection<TopClientsViewModel> clients;
+
+            if (!this.cache.TryGetValue(cacheKey, out clients))
+            {
+                clients = await clientService.GetTopClientsForLastMonthAsync(user.CompanyId);
+                this.cache.Set(cacheKey, clients, TimeSpan.FromHours(24));
+            }
+
+          
+
+            return this.Ok(clients);
 
         }
 

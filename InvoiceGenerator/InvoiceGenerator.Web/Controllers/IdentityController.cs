@@ -1,6 +1,7 @@
 ﻿using InvoiceGenerator.Common;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Services.Data;
+using InvoiceGenerator.Services.MicrosoftWordService;
 using InvoiceGenerator.Web.Models;
 using InvoiceGenerator.Web.Models.AccessAreas;
 using InvoiceGenerator.Web.Models.Identity;
@@ -28,19 +29,22 @@ namespace InvoiceGenerator.Web.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
         private readonly IIdentityService identityService;
+        private readonly IDocumentService documentService;
 
         public IdentityController
             (
             RoleManager<ApplicationRole> roleManager,
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration,
-            IIdentityService identityService
+            IIdentityService identityService,
+            IDocumentService documentService
             )
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
             this.configuration = configuration;
             this.identityService = identityService;
+            this.documentService = documentService;
         }
 
         [HttpPost]
@@ -49,6 +53,7 @@ namespace InvoiceGenerator.Web.Controllers
 
             var user = await userManager.FindByNameAsync(inputModel.UserName);
             var isLocked = userManager.IsLockedOutAsync(user);
+                
             var isPasswordCorrect = await userManager.CheckPasswordAsync(user, inputModel.Password);
             if (user != null && isPasswordCorrect && !isLocked.Result) 
             {
@@ -59,6 +64,8 @@ namespace InvoiceGenerator.Web.Controllers
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name,user.UserName),
+
+                    new Claim(ClaimTypes.NameIdentifier,user.Id),
 
                     new Claim("companyId",user.CompanyId),
 
@@ -104,7 +111,8 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> Register(RegisterInputModel inputModel)
         {
             var response = new ResponseViewModel();
-            await identityService.RegisterUserAsync(inputModel);
+            var companyId=await identityService.RegisterUserAsync(inputModel);
+            documentService.GenerateCompanyTemplate(companyId);
             response.Status = "Successfully";
             response.Message = string.Format(SuccessMessages.SuccessfullyAddedUser, inputModel.Email);
 
@@ -114,34 +122,10 @@ namespace InvoiceGenerator.Web.Controllers
         }
 
 
-        [HttpGet]
-        [Route("GetUserRoles")]
-        [Authorize]
-        public async Task<IActionResult> GetPermissions()
-        {
-            var user = await userManager.FindByNameAsync(this.User.Identity.Name);
-            if (user==null)
-            {
-                new ResponseViewModel
-                {
-                    Status = "Unsuccessful",
-                    Message = ErrorMessages.UserNotLoggedIn
-
-                };
-
-            }
-
-
-            var userPermissions = await getUserPermissins(user);
-
-            return this.Ok(userPermissions);
-        }
-
-
-        private async Task<AccessAreaModel> getUserPermissins(ApplicationUser user)
+        private async Task<UserAccessModel> getUserPermissins(ApplicationUser user)
         {
             var userRoles = await userManager.GetRolesAsync(user);
-            var userPermission = new AccessAreaModel();
+            var userPermission = new UserAccessModel();
             foreach (var userRole in userRoles)
             {
                 switch (userRole)
@@ -170,7 +154,13 @@ namespace InvoiceGenerator.Web.Controllers
             return userPermission;
 
         }
-       
+
+
+
+
+
+
+
     }
 
 }
