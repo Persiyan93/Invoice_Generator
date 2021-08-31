@@ -24,7 +24,7 @@ namespace InvoiceGenerator.Data.Models
 
         public string AccontablePersonName { get; set; }
 
-        public string Email { get; set; }
+        public string EmailAddressOfCompany { get; set; }
 
         public bool IsActive { get; set; }
 

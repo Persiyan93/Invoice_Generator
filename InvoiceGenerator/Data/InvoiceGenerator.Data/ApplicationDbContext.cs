@@ -41,6 +41,8 @@ namespace InvoiceGenerator.Data
 
         public DbSet<Email> Emails { get; set; }
 
+        public DbSet<BankAccount> BankAccounts { get; set; }
+
         public DbSet<HistoryEvent> HistoryEvents { get; set; }
         public DbSet<ArticleHistoryEvent> ArticleHistoryEvents { get; set; }
         public DbSet<InvoiceHistoryEvent> InvoiceHistoryEvents { get; set; }

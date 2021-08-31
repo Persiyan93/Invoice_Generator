@@ -30,6 +30,10 @@ namespace InvoiceGenerator.Data.Models
 
         public string ClientId { get; set; }
 
+        public BankAccount BankAccount { get; set; }
+
+        public string BankAccountId { get; set; }
+
         public string ContactPersonId { get; set; }
 
         public ContactPerson ContactPerson { get; set; }

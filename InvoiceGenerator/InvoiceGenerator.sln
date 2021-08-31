@@ -31,11 +31,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Services.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Services.BackgroundServices", "Services\InvoiceGenerator.Services.BackgroundServices\InvoiceGenerator.Services.BackgroundServices.csproj", "{BB6B9682-64A3-4D03-80F2-2AC02435D3EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceGenerator.Services.CloadStorageService", "Services\InvoiceGenerator.Services.CloadStorageService\InvoiceGenerator.Services.CloadStorageService.csproj", "{7A75C1F3-E412-48E5-AEF7-EF84A948AA40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Services.CloadStorageService", "Services\InvoiceGenerator.Services.CloadStorageService\InvoiceGenerator.Services.CloadStorageService.csproj", "{7A75C1F3-E412-48E5-AEF7-EF84A948AA40}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C353A83D-C275-4B34-9773-CF0FD791546F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoice_Generator.Services.Tests", "Tests\Invoice_Generator.Services.Tests\Invoice_Generator.Services.Tests.csproj", "{DC0A0F63-3E24-44F3-9EA3-203D8066DD09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoice_Generator.Services.Tests", "Tests\Invoice_Generator.Services.Tests\Invoice_Generator.Services.Tests.csproj", "{DC0A0F63-3E24-44F3-9EA3-203D8066DD09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceGenerator.Services.PdfService", "Services\InvoiceGenerator.Services.PdfService\InvoiceGenerator.Services.PdfService.csproj", "{5EA5A662-A53E-4C29-911E-DE2DD5848153}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,10 @@ Global
 		{DC0A0F63-3E24-44F3-9EA3-203D8066DD09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC0A0F63-3E24-44F3-9EA3-203D8066DD09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC0A0F63-3E24-44F3-9EA3-203D8066DD09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EA5A662-A53E-4C29-911E-DE2DD5848153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA5A662-A53E-4C29-911E-DE2DD5848153}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EA5A662-A53E-4C29-911E-DE2DD5848153}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EA5A662-A53E-4C29-911E-DE2DD5848153}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +114,7 @@ Global
 		{BB6B9682-64A3-4D03-80F2-2AC02435D3EC} = {C6205EE6-51C0-4E31-AD64-1C5DC6EFA163}
 		{7A75C1F3-E412-48E5-AEF7-EF84A948AA40} = {C6205EE6-51C0-4E31-AD64-1C5DC6EFA163}
 		{DC0A0F63-3E24-44F3-9EA3-203D8066DD09} = {C353A83D-C275-4B34-9773-CF0FD791546F}
+		{5EA5A662-A53E-4C29-911E-DE2DD5848153} = {C6205EE6-51C0-4E31-AD64-1C5DC6EFA163}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F1F05753-4606-41AF-8FA5-BAD0FF37ADB8}
