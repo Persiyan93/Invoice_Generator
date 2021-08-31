@@ -14,11 +14,13 @@ namespace InvoiceGenerator.Web.Models.WordModels
     {
         public string Name { get; set; }
 
+        public string UnitType { get; set; }
+
         public double Quantity { get; set; }
 
         public decimal UnitPrice { get; set; }
 
-        public string UnitType { get; set; }
+      
 
         public void CreateMappings(IProfileExpression configuration)
         {
@@ -27,8 +29,8 @@ namespace InvoiceGenerator.Web.Models.WordModels
                                opt.MapFrom(i => i.Article.Name))
                 .ForMember(x => x.UnitPrice, opt =>
                                opt.MapFrom(i => i.Article.UnitPrice))
-                .ForMember(x => x.UnitType, opt =>
-                               opt.MapFrom(i => i.Article.UnitType == ArticleUnitType.Count ? "Бр." : "Кг."));
+               .ForMember(x => x.UnitType, opt =>
+                               opt.MapFrom(i => i.Article.UnitType == ArticleUnitType.Count ? "Count" : "Kilogram"));
 
 
 

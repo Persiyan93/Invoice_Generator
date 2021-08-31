@@ -19,6 +19,8 @@ namespace InvoiceGenerator.Web.Models.WordModels
 
         public string UnitType { get; set; }
 
+        public string AdditionalInfo { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<InvoiceToService, ServiceToInvoiceTemplateModel>()

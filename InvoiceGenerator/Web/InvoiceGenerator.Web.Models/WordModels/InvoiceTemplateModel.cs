@@ -17,9 +17,9 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
         public InvoiceTemplateModel()
         {
             this.Articles = new List<ArticleToInvoiceTemplateModel>();
-       
+
         }
-        
+
 
         public string InvoiceNumber { get; set; }
 
@@ -33,15 +33,17 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
 
         public string ClientAccontablePersonName { get; set; }
 
-        //public string SellerVatNumber { get; set; }
+        public string SellerVatNumber { get; set; }
 
-        //public string SellerCompanyName { get; set; }
+        public string SellerCompanyName { get; set; }
 
-        // public string SellerAddress { get; set; }
+        public string SellerAddress { get; set; }
 
-        //public string SellerUniqueIdentificationNumber { get; set; }
+        public string SellerUniqueIdentificationNumber { get; set; }
 
-        //public string SellerAccontablePersonName { get; set; }
+        public string SellerAccontablePersonName { get; set; }
+
+        public BankInfoModel SellerBankInfo { get; set; }
 
         public string PriceWithoutVat { get; set; }
 
@@ -56,6 +58,8 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
         public string DateOfTaxEvent { get; set; }
 
         public string CreatedBy { get; set; }
+
+        public double VatRate { get; set; }
 
         public ICollection<ServiceToInvoiceTemplateModel> Services { get; set; }
 
@@ -76,33 +80,33 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
                               opt.MapFrom(y => y.Client.UniqueIdentificationNumber))
                   .ForMember(x => x.ClientAccontablePersonName, opt =>
                               opt.MapFrom(y => y.Client.AccontablePersonName))
-                   //.ForMember(x => x.SellerVatNumber, opt =>
-                   //                 opt.MapFrom(y => y.Seller.VatNumber))
-                   //.ForMember(x => x.SellerCompanyName, opt =>
-                   //             opt.MapFrom(y => y.Seller.Name))
+                   .ForMember(x => x.SellerVatNumber, opt =>
+                                    opt.MapFrom(y => y.Seller.VatNumber))
+                   .ForMember(x => x.SellerCompanyName, opt =>
+                                opt.MapFrom(y => y.Seller.Name))
 
                    .ForMember(x => x.IssueDate, opt =>
                               opt.MapFrom(y => y.IssueDate.ToString("dd.MM.yyyy")))
                    .ForMember(x => x.DateOfTaxEvent, opt =>
                               opt.MapFrom(y => y.IssueDate.ToString("dd.MM.yyyy")))
                    .ForMember(x => x.MethodOfPayment, opt =>
-                              opt.MapFrom(y => y.PaymentMethod.ToString() == "cash" ? "В брой" : "Банков превод"))
-                       //.ForMember(x => x.SellerAccontablePersonName, opt =>
-                       //          opt.MapFrom(y => y.Seller.AccontablePersonName))
-                       // .ForMember(x => x.SellerUniqueIdentificationNumber, opt =>
-                       //          opt.MapFrom(y => y.Seller.UniqueIdentificationNumber))
-                       .ForMember(x => x.InvoicePrice, opt =>
+                              opt.MapFrom(y => y.PaymentMethod.ToString() == "cash" ? "Cash" : "BankTransfer"))
+                       .ForMember(x => x.SellerAccontablePersonName, opt =>
+                                 opt.MapFrom(y => y.Seller.AccontablePersonName))
+                        .ForMember(x => x.SellerUniqueIdentificationNumber, opt =>
+                                 opt.MapFrom(y => y.Seller.UniqueIdentificationNumber))
+                    .ForMember(x => x.InvoicePrice, opt =>
                               opt.MapFrom(y => ((double)y.PriceWithoutVat + (double)y.VatValue).ToString("F2")))
                        .ForMember(x => x.CreatedBy, opt =>
-                                       opt.MapFrom(i => i.User.Name));
+                                       opt.MapFrom(i => i.User.Name))
+                    .ForMember(x => x.SellerAddress, opt =>
+                              opt.MapFrom(y => y.Seller.Address.Town.Country.Name + " , " + y.Seller.Address.Town.Name + " , " + y.Seller.Address.AddressText));
 
-                    
-                      //.ForMember(x => x.SellerAddress, opt =>
-                      //        opt.MapFrom(y => y.Seller.Address.Town.Country.Name + " , " + y.Seller.Address.Town.Name + " , " + y.Seller.Address.AddressText));
 
-            
 
-       
+
+
+
 
 
 

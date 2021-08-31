@@ -27,7 +27,7 @@ namespace InvoiceGenerator.Web.Models.Articles
         public double  VatRate { get; set; }
 
         [Required]
-        public decimal Price { get; set; }
+        public decimal UnitPrice { get; set; }
 
         [Required]
         public double Quantity { get; set; }
