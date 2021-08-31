@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Resources\InvoicePdfResource.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Resources\InvoicePdfResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>InvoicePdfResource.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="itext7" Version="7.1.16" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="5.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\InvoiceGenerator.Data.Models\InvoiceGenerator.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\InvoiceGenerator.Data\InvoiceGenerator.Data.csproj" />
+    <ProjectReference Include="..\..\Web\InvoiceGenerator.Web.Models\InvoiceGenerator.Web.Models.csproj" />
+    <ProjectReference Include="..\InvoiceGenerator.Services.Data\InvoiceGenerator.Services.Data.csproj" />
+    <ProjectReference Include="..\InvoiceGenerator.Services.Mapping\InvoiceGenerator.Services.Mapping.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\InvoicePdfResource.bg.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\InvoicePdfResource.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="arial.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
