@@ -45,7 +45,7 @@ namespace InvoiceGenerator.Web.Models.Invoices
         public MethodsOfPayment PaymentMethod { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public LanguageOfInvoice Language { get; set; }
+        public Language Language { get; set; }
 
         public int PaymentPeriod { get; set; }
 

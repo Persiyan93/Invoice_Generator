@@ -1,16 +1,19 @@
 ﻿using AutoMapper;
 using InvoiceGenerator.Data.Migrations;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Company
 {
-    public class CompanySettingsModel :IMapFrom<DefaultInvoiceOptions>,IHaveCustomMappings
+    public class CompanySettingsModel :IMapFrom<CompanySettings>,IHaveCustomMappings
     {
         public int DefaultPaymentTerm { get; set; }
 
@@ -22,9 +25,18 @@ namespace InvoiceGenerator.Web.Models.Company
 
         public  int MaxCountOfUnPaidInvoices { get; set; }
 
+
+        [Required]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Language  DefaultInvoiceLanguage { get; set; }
+        
+        public string DefaultBankAccountId { get; set; }
+
+        
+
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<DefaultInvoiceOptions, CompanySettingsModel>()
+            configuration.CreateMap<CompanySettings, CompanySettingsModel>()
                 .ForMember(x => x.BlockClient, opt =>
                                    opt.MapFrom(d => d.BlockClientWhenReachMaxCountOfUnpaidInvoices));
         }

@@ -43,7 +43,7 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
 
         public string SellerAccontablePersonName { get; set; }
 
-        public BankInfoModel SellerBankInfo { get; set; }
+        public BankAccountTemplateModel BankAccount { get; set; }
 
         public string PriceWithoutVat { get; set; }
 
@@ -60,6 +60,12 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
         public string CreatedBy { get; set; }
 
         public double VatRate { get; set; }
+
+        public bool IsWithZeroVatRate { get; set; }
+
+        public string ReazonForZeroVatRate { get; set; }
+
+        public string PlaceOfPublishing { get; set; }
 
         public ICollection<ServiceToInvoiceTemplateModel> Services { get; set; }
 
@@ -100,7 +106,14 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
                        .ForMember(x => x.CreatedBy, opt =>
                                        opt.MapFrom(i => i.User.Name))
                     .ForMember(x => x.SellerAddress, opt =>
-                              opt.MapFrom(y => y.Seller.Address.Town.Country.Name + " , " + y.Seller.Address.Town.Name + " , " + y.Seller.Address.AddressText));
+                              opt.MapFrom(y => y.Seller.Address.Town.Country.Name + " , " + y.Seller.Address.Town.Name + " , " + y.Seller.Address.AddressText))
+                    .ForMember(x => x.IsWithZeroVatRate, opt =>
+                                   opt.MapFrom(i => i.IsInvoiceWithZeroVatRate))
+                    .ForMember(x => x.ReazonForZeroVatRate, opt =>
+                                   opt.MapFrom(i => i.ReasonForInvoiceWithZeroVatRate))
+                    .ForMember(x => x.PlaceOfPublishing, opt =>
+                                   opt.MapFrom(i => i.Seller.Address.Town.Name));
+                 
 
 
 

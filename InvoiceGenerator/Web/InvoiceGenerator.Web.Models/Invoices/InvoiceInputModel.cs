@@ -33,9 +33,9 @@ namespace InvoiceGenerator.Web.Models.Invoices
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public MethodsOfPayment PaymentMethod { get; set; }
 
-
+        [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public LanguageOfInvoice Language { get; set; }
+        public Language Language { get; set; }
 
 
 
@@ -44,12 +44,19 @@ namespace InvoiceGenerator.Web.Models.Invoices
         public string ReasonForInvoiceWithZeroVatRate { get; set; }
 
 
+        public string BankAccountId { get; set; }
+
+
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (IsInvoiceWithZeroVatRate && ReasonForInvoiceWithZeroVatRate == null)
             {
                 yield return new ValidationResult("Reason for invoice with zero vat rate is required !");
+            }
+            if (PaymentMethod==MethodsOfPayment.BankTransfer&&BankAccountId==null)
+            {
+                yield return new ValidationResult("You should select Bank Account");
             }
         }
     }
