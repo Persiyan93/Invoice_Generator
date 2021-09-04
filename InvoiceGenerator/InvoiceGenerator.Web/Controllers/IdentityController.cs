@@ -88,16 +88,28 @@ namespace InvoiceGenerator.Web.Controllers
                     );
 
                 var userPermissions =await getUserPermissins(user);
-             
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo,
-                    permissions=userPermissions
 
-                });
+                var resultToken = new JwtSecurityTokenHandler().WriteToken(token);
+                this.HttpContext.Response
+                    .Cookies
+                    .Append(
+                            "auth",
+                            resultToken,
+                            new CookieOptions
+                            {
+                                HttpOnly = true,
+                                SameSite = SameSiteMode.None,
+                                Secure=true,
+                                Expires = token.ValidTo,
+                                Path="/"
+                                
+                            }
+                            );
+               
+                    return Ok(new {Status="Successfully", permissions = userPermissions });
+          
             }
-            return Ok(new ResponseViewModel
+            return this.BadRequest(new ResponseViewModel
             {
                 Status = "Unsuccessful",
                 Message = "Wrong password or username"
@@ -120,6 +132,28 @@ namespace InvoiceGenerator.Web.Controllers
 
             return this.Ok(response);
         }
+
+        [HttpPost]
+        [Authorize]
+        [Route("Logout")]
+        public IActionResult Logout()
+        {
+             
+            this.HttpContext.Response.Cookies.Delete(
+                            "auth",
+                            new CookieOptions
+                            {
+                                HttpOnly = true,
+                                SameSite = SameSiteMode.None,
+                                Secure = true,
+                               
+                                Path = "/"
+
+                            }
+                            );
+            return this.Ok(new  ResponseViewModel{Status="Successfully",Message="Test"});
+        }
+
 
 
         private async Task<UserAccessModel> getUserPermissins(ApplicationUser user)

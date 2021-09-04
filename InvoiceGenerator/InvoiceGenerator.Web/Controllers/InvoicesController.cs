@@ -1,12 +1,16 @@
 ﻿using InvoiceGenerator.Common;
 using InvoiceGenerator.Data.Models;
+using InvoiceGenerator.Services.CloadStorageService;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Services.MicrosoftWordService;
+using InvoiceGenerator.Services.PdfService;
+using InvoiceGenerator.Services.PdfService.Enum;
 using InvoiceGenerator.Web.Models;
 using InvoiceGenerator.Web.Models.Invoices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,20 +21,23 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   [Authorize]
     public class InvoicesController : ControllerBase
 
 
     {
         private readonly IInvoiceService invoiceService;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IDocumentService documentService;
+        private readonly ICloudService cloudService;
+        private readonly IPdfService pdfService;
 
-        public InvoicesController(IInvoiceService invoiceService, UserManager<ApplicationUser> userManager,IDocumentService documentService)
+        public InvoicesController(IInvoiceService invoiceService, UserManager<ApplicationUser> userManager
+            ,ICloudService cloudService,IPdfService pdfService)
         {
             this.invoiceService = invoiceService;
             this.userManager = userManager;
-            this.documentService = documentService;
+            this.cloudService = cloudService;
+            this.pdfService = pdfService;
         }
 
 
@@ -50,15 +57,18 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> AddInvoice(InvoiceInputModel inputModel)
         {
             var user = await userManager.GetUserAsync(this.User);
-            
-            var invoiceId = await invoiceService.CreateInvoiceAsync(inputModel,user.CompanyId,user.Id);
-            documentService.GenerateInvoiceAsync(invoiceId, user.CompanyId);
+            var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>();
+            // Culture contains the information of the requested culture
+          
+           var invoiceId = await invoiceService.CreateInvoiceAsync(inputModel,user.CompanyId,user.Id);
+           var pdfAsByteArray =await pdfService.GenerateInvoicePdf(invoiceId);
+           await  cloudService.UploadFileAsync(invoiceId, pdfAsByteArray);
              
 
             return this.Ok(new ResponseViewModel
             {
                 Status = SuccessMessages.SuccessfullyStatus,
-                Message = string.Format(SuccessMessages.SuccessfullyCreatedInvoice, invoiceId)
+                Message = invoiceId
             });
 
         }
@@ -89,7 +99,7 @@ namespace InvoiceGenerator.Web.Controllers
             var userId = user.Id;
 
             await invoiceService.EditInvoiceAsync(inputModel, userId, invoiceId);
-            documentService.GenerateInvoiceAsync(invoiceId, user.CompanyId);
+           
 
             return this.Ok(new ResponseViewModel
             {
@@ -138,5 +148,23 @@ namespace InvoiceGenerator.Web.Controllers
             return this.Ok(new { FilteredInvoice = invoices, CountOfAllInvoices = invoicesCount });
         }
 
+
+        [HttpGet]
+        [Route("InvoiceIncomes")]
+        public async Task<IActionResult> GetIncomesByMonths()
+        {
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
+            var invoiceIncomesByMonths = await invoiceService.GetSalesByMonthsAsync(companyId);
+             return this.Ok(invoiceIncomesByMonths);
+        }
+
+        [HttpGet]
+        [Route("DefaultOptions")]
+        public async Task<IActionResult> GetInvoiceDefaultOptions()
+        {
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
+            var options = await invoiceService.GetDefaultInvoiceOptionsAsync(companyId);
+            return this.Ok(options);
+        }
     }
 }

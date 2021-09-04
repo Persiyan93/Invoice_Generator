@@ -50,7 +50,7 @@ namespace InvoiceGenerator.Web.Controllers
         }
 
         [HttpPost("{homePageContentId}")]
-        public async Task<IActionResult> AddNewContentToUserHomePage(string homePageContentId)
+        public async Task<IActionResult> AddNewContentToUserHomePage(int homePageContentId)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
            await  homePageContentService.AddNewContentToHomePageAsync(user.Id, homePageContentId);
@@ -78,7 +78,7 @@ namespace InvoiceGenerator.Web.Controllers
         }
 
         [HttpDelete("{contentId}")]
-        public async Task<IActionResult> RemoveContentFromUserHomePage(string contentId)
+        public async Task<IActionResult> RemoveContentFromUserHomePage(int contentId)
         {
             var user = await userManager.GetUserAsync(this.User);
 
