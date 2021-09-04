@@ -34,12 +34,14 @@ import BasicAlert from './components/Main/Elements/BasicAlert'
 import Testpage from './components/Main/Elements/Testpage'
 import CompanySettings from './components/Main/CompanySettings/CompanySettings';
 import InvoicesTable from './components/Main/InvoiceList/InvoicesTable'
-import { getCookieValue } from './services/cookieService'
+
 import { CompassCalibrationOutlined } from '@material-ui/icons';
 import InvoiceRoutes from './components/Routes/InvoiceRoutes'
 import CompanyRoutes from './components/Routes/CompanyRoutes'
-import EmailRoutes from './components/Routes/EmailRoutes'
+import GuestRoutes from './components/Routes/GuestRoutes'
 import ProductRoutes from './components/Routes/ProductRoutes'
+import BankAccountSettings from './components/Main/BankAccountSettings/BankAccountSettings';
+
 
 
 
@@ -55,7 +57,6 @@ function App() {
 
 
   useEffect(() => {
-    console.log('Inside useEffect')
     dataService.get(apiEndpoints.getUserInfo)
       .then(res => res.json())
       .then(res => {
@@ -63,12 +64,13 @@ function App() {
         if (res.Status == "Unsuccessful") {
           if (res.Message == 'Not authorized') {
             setUser({ isAuthenticated: false, permissions: [] })
-
+            
           }
+          console.log(res)
         }
         else {
-        console.log({...res.accessAreas});
-        setUser({ isAuthenticated: true, permissions: { ...res.accessAreas } })
+          console.log(res)
+          setUser({ isAuthenticated: true, permissions: { ...res.accessAreas } })
 
         }
         setBusy(false)
@@ -97,66 +99,60 @@ function App() {
                 notification={notification}
                 setNotification={setNotification}
               />
+              <>
+                <div className='background-Div'></div>
+                <div className='Container'  >
 
-              <div className='Container'  >
 
 
-
-                <Switch>
-                  <Route path="/Identity/Login" exact component={LoginForm} />
-                  <Route path="/Identity/Register" exact component={RegisterForm} />
-
-                  <PrivateRoutes user={user} path="/" exact component={Home} />
-                  <PrivateRoutes user={user} path="/Clients/NewClient" component={AddClient} />
-                  <PrivateRoutes user={user} path="/Clients/All" component={ClientList} />
-                  <PrivateRoutes user={user} path="/Clients/ClientInfo/:clientId" component={ClientInfo} />
-                 
-
-               
+                  <Switch>
                 
+                  <GuestRoutes user={user} path="/Identity/Login" component={LoginForm} />
+                  <GuestRoutes user={user} path="/Identity/Register" component={RegisterForm} />
+                   
+                    <Route exact path="/" render={props=><Home user={user} {...props}/>}/>
 
-                  <InvoiceRoutes user={user} path="/Invoices/All" component={InvoicesTable} />
-                  <InvoiceRoutes user={user} path="/Invoices/Edit/:invoiceId" component={NewInvoice} />
-                  <InvoiceRoutes user={user} path="/Invoices/NewInvoice/:invoiceId?" component={NewInvoice} />
-                 
-                  <CompanyRoutes user={user} path="/Users/CreateUser" component={CreateUser} />
-                  <CompanyRoutes user={user} path="/Users/NewPassword/:email/:token" component={NewPassword} />
-                  <CompanyRoutes user={user} path="/Users/All/" component={AllUsers} />
-                  <CompanyRoutes user={user} path="/History/" component={History} />
-                  <CompanyRoutes user={user} path="/Settings/" component={CompanySettings} />
-
-
-                  <ProductRoutes user={user} path="/Products/NewProduct" exact component={ProductInputForm} />
-                  <ProductRoutes user={user} path="/Products/NewProduct/NewService" component={NewServiceInputFrom} />
-                  <ProductRoutes user={user} path="/Products/NewProduct/NewArticle" component={NewArticleInputForm} />
-                  <ProductRoutes user={user} path="/Products/All" component={ProductTable} />
-
-
-               
-                 
-                  
-                  
-                 
-           
                 
-
-                  
-                 
-
-
-                  <Route path="/Errors/ConnectionError" component={ConnectionError} />
-                  
-                
-                  
-               
-                  <Route component={Error} />
+                    <PrivateRoutes user={user} path="/Clients/NewClient" component={AddClient} />
+                    <PrivateRoutes user={user} path="/Clients/All" component={ClientList} />
+                    <PrivateRoutes user={user} path="/Clients/ClientInfo/:clientId" component={ClientInfo} />
 
 
 
-                </Switch>
 
-              </div>
-              <Footer />
+
+                    <InvoiceRoutes user={user} path="/Invoices/All" component={InvoicesTable} />
+                    <InvoiceRoutes user={user} path="/Invoices/Edit/:invoiceId" component={NewInvoice} />
+                    <InvoiceRoutes user={user} path="/Invoices/NewInvoice/:invoiceId?" component={NewInvoice} />
+
+                    <CompanyRoutes user={user} path="/Users/CreateUser" component={CreateUser} />
+                    <CompanyRoutes user={user} path="/Users/NewPassword/:email/:token" component={NewPassword} />
+                    <CompanyRoutes user={user} path="/Users/All/" component={AllUsers} />
+                    <CompanyRoutes user={user} path="/History/" component={History} />
+                    <CompanyRoutes user={user} path="/Settings/" component={CompanySettings} />
+                    <CompanyRoutes user={user} path="/BankAccount/" component={BankAccountSettings} />
+
+
+                    <ProductRoutes user={user} path="/Products/NewProduct" exact component={ProductInputForm} />
+                    <ProductRoutes user={user} path="/Products/NewProduct/NewService" component={NewServiceInputFrom} />
+                    <ProductRoutes user={user} path="/Products/NewProduct/NewArticle" component={NewArticleInputForm} />
+                    <ProductRoutes user={user} path="/Products/All" component={ProductTable} />
+
+                    <Route path="/Errors/ConnectionError" component={ConnectionError} />
+
+
+
+
+                    <Route component={Error} />
+
+
+
+                  </Switch>
+
+                </div>
+              </>
+
+              {/* <Footer /> */}
             </>
 
           }

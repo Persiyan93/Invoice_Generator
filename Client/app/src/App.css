@@ -17,13 +17,30 @@
 }  */
 
  .Container{
-    /* position: relative; */
-   padding-top: 2%;
-   min-height: 100%;
-  height:91vh;
-   background-Color: #CBD3EA;
-   width: 100%;
+  /* position: fixed; */
+    /* position: absolute; */
+    /* padding-top: 2%; */
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    background-Color: #CBD3EA;
+  
+  
+   
+  
 } 
+.background-Div{
+  position: fixed;
+  max-width: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  background-Color: #CBD3EA;
+  width: 100%;
+    height: 100%;
+  z-index: -30;
+  width: 100%;
+ 
+}
 
 
 

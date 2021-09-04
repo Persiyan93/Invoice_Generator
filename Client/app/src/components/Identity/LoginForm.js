@@ -9,8 +9,18 @@ import * as identityService from '../../services/identityService';
 import * as  cookieService from '../../services/cookieService'
 import IdentityContext from '../../Context/IdentityContext'
 import NotificationContext from '../../Context/NotificationContext';
+import BackgroundImage from '../../resources/identityImage.jpg'
 const useStyles = makeStyles(theme => ({
+    backgroundImage:{
+        backgroundImage: `url(${BackgroundImage})`,
+        position: 'fixed',
+        minHeight: '100%',
+        minWidth: '100%',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'noRepeat'
 
+    },
     root: {
         '& .MuiFormControl-root': {
             width: '80%',
@@ -18,10 +28,11 @@ const useStyles = makeStyles(theme => ({
         }
     },
     pageContent: {
-        //backgroundColor:'#EAE8EE',
+        opacity:0.9,
         marginLeft: '25%',
+        marginTop:'40px',
         width: '50%',
-        height: '350px',
+        height: '400px',
         borderRadius: 10,
         margin: theme.spacing(3),
         padding: theme.spacing(3)
@@ -67,8 +78,7 @@ export default function LoginForm(props) {
                     setNotification({ isOpen: true, message: res.message })
                 }
                 else {
-                    let { token, expiration, permissions } = res
-                    cookieService.createCookie(token, expiration)
+                    let {  permissions } = res
                     setUser({ isAuthenticated: true, permissions: { ...permissions } })
                     props.history.push(`/`)
                 }
@@ -80,7 +90,7 @@ export default function LoginForm(props) {
     }
     const classes = useStyles();
     return (
-
+        <div className={classes.backgroundImage}>
         <Paper className={classes.pageContent}>
             <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
                 Вход в системата
@@ -127,5 +137,6 @@ export default function LoginForm(props) {
                 <Button variant='contained' color='primary' type='submit' className={classes.button}>Вход</Button>
             </form>
         </Paper>
+        </div>
     )
 }

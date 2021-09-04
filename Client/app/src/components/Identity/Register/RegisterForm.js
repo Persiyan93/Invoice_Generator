@@ -5,13 +5,24 @@ import * as identityService from '../../../services/identityService.js';
 import UserDetails from "./UserDetails.js";
 import CompanyDetails from "./CompanyDetails.js";
 import CompanyAddressDetails from "./CompanyAddressDetails.js";
+import BackgroundImage from '../../../resources/identityImage.jpg'
 
 
 
 
 const useStyles = themе => ({
+    background:{
+        backgroundImage: `url(${BackgroundImage})`,
+        position: 'fixed',
+        minHeight: '100%',
+        minWidth: '100%',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'noRepeat'
+
+    },
     pageContent: {
-        //backgroundColor:'#EAE8EE',
+        opacity:0.9,
         marginLeft: '25%',
         width: '50%',
         height: '550px',
@@ -132,6 +143,7 @@ class RegisterForm extends React.Component {
         switch (step) {
             case 1:
                 return (
+                    <div className={classes.background}>
                     <Paper className={classes.pageContent}>
                         <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
                             Регистрация
@@ -142,10 +154,12 @@ class RegisterForm extends React.Component {
                             changeHandler={this.changeHandler}
                         />
                     </Paper>
+                    </div >
                 )
 
             case 2:
                 return (
+                    <div className={classes.background}>
                     <Paper className={classes.pageContent}>
                         <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
                             Данни за фирмата
@@ -159,10 +173,12 @@ class RegisterForm extends React.Component {
 
                         </CompanyDetails>
                     </Paper>
+                    </div >
                 )
 
             case 3:
                 return (
+                    <div className={classes.background}>
                     <Paper className={classes.smallPage}>
                         <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
                             Адрес на фирмата
@@ -176,6 +192,7 @@ class RegisterForm extends React.Component {
 
                         </CompanyAddressDetails>
                     </Paper>
+                    </div >
                 )
 
 
