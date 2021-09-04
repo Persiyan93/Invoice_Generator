@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models.Enum
 {
-    public enum  LanguageOfInvoice
+    public enum  Language
     {
-       Bulgarian=1,
-       English=2
+        bg=1,
+        en=2
     }
 }

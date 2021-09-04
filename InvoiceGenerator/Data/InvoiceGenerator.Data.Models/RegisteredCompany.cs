@@ -20,7 +20,7 @@ namespace InvoiceGenerator.Data.Models
         }
         public string AdministratorId { get; set; }
 
-        public DefaultInvoiceOptions DefaultInvoiceOptions { get; set; }
+        public CompanySettings DefaultInvoiceOptions { get; set; }
 
         public string DefaultInvoiceOptinsId { get; set; }
 

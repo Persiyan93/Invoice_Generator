@@ -256,6 +256,46 @@ namespace InvoiceGenerator.Data.Migrations
                     b.HasDiscriminator<string>("TypeOfCompany").HasValue("Company");
                 });
 
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.CompanySettings", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("BlockClientWhenReachMaxCountOfUnpaidInvoices")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CompanyId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DefaultInvoiceBankAccountId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("DefaultInvoiceLanguage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DefaultPaymentTerm")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxCountOfUnPaidInvoices")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeriodInDaysBetweenTwoRepatedEmails")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("SendAutomaticGeneratedEmails")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId")
+                        .IsUnique()
+                        .HasFilter("[CompanyId] IS NOT NULL");
+
+                    b.HasIndex("DefaultInvoiceBankAccountId");
+
+                    b.ToTable("CompanySettings");
+                });
+
             modelBuilder.Entity("InvoiceGenerator.Data.Models.ContactPerson", b =>
                 {
                     b.Property<string>("Id")
@@ -293,41 +333,6 @@ namespace InvoiceGenerator.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Countries");
-                });
-
-            modelBuilder.Entity("InvoiceGenerator.Data.Models.DefaultInvoiceOptions", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("BlockClientWhenReachMaxCountOfUnpaidInvoices")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("CompanyId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DefaultLanguage")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DefaultPaymentTerm")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaxCountOfUnPaidInvoices")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PeriodInDaysBetweenTwoRepatedEmails")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("SendAutomaticGeneratedEmails")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId")
-                        .IsUnique()
-                        .HasFilter("[CompanyId] IS NOT NULL");
-
-                    b.ToTable("DefaultInvoiceOptions");
                 });
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Email", b =>
@@ -396,8 +401,10 @@ namespace InvoiceGenerator.Data.Migrations
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.HomePageContent", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BulgarainName")
                         .HasColumnType("nvarchar(max)");
@@ -418,8 +425,8 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("HomePageContentId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("HomePageContentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -892,6 +899,21 @@ namespace InvoiceGenerator.Data.Migrations
                     b.Navigation("Address");
                 });
 
+            modelBuilder.Entity("InvoiceGenerator.Data.Models.CompanySettings", b =>
+                {
+                    b.HasOne("InvoiceGenerator.Data.Models.RegisteredCompany", "Company")
+                        .WithOne("DefaultInvoiceOptions")
+                        .HasForeignKey("InvoiceGenerator.Data.Models.CompanySettings", "CompanyId");
+
+                    b.HasOne("InvoiceGenerator.Data.Models.BankAccount", "DefaultInvoiceBankAccount")
+                        .WithMany()
+                        .HasForeignKey("DefaultInvoiceBankAccountId");
+
+                    b.Navigation("Company");
+
+                    b.Navigation("DefaultInvoiceBankAccount");
+                });
+
             modelBuilder.Entity("InvoiceGenerator.Data.Models.ContactPerson", b =>
                 {
                     b.HasOne("InvoiceGenerator.Data.Models.Client", "Client")
@@ -899,15 +921,6 @@ namespace InvoiceGenerator.Data.Migrations
                         .HasForeignKey("ClientId");
 
                     b.Navigation("Client");
-                });
-
-            modelBuilder.Entity("InvoiceGenerator.Data.Models.DefaultInvoiceOptions", b =>
-                {
-                    b.HasOne("InvoiceGenerator.Data.Models.RegisteredCompany", "Company")
-                        .WithOne("DefaultInvoiceOptions")
-                        .HasForeignKey("InvoiceGenerator.Data.Models.DefaultInvoiceOptions", "CompanyId");
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Email", b =>
@@ -944,7 +957,9 @@ namespace InvoiceGenerator.Data.Migrations
                 {
                     b.HasOne("InvoiceGenerator.Data.Models.HomePageContent", "HomePageContent")
                         .WithMany("HomePageContentToUsers")
-                        .HasForeignKey("HomePageContentId");
+                        .HasForeignKey("HomePageContentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("InvoiceGenerator.Data.Models.ApplicationUser", "User")
                         .WithMany("UserHomePageContent")

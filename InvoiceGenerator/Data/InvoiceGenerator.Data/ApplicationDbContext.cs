@@ -37,7 +37,7 @@ namespace InvoiceGenerator.Data
 
         public DbSet<HomePageContent> HomePageContents { get; set; }
 
-        public DbSet<DefaultInvoiceOptions> DefaultInvoiceOptions { get; set; }
+        public DbSet<CompanySettings> CompanySettings { get; set; }
 
         public DbSet<Email> Emails { get; set; }
 

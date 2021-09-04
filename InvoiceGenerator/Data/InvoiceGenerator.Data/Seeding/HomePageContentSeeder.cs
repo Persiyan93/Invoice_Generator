@@ -27,6 +27,12 @@ namespace InvoiceGenerator.Data.Seeding
                     Name = GlobalConstants.TopArticlesForLastMonth,
                     BulgarainName = GlobalConstants.TopArticlesForLastMonthBulgarianName,
                     Type=HomePageContentTypes.Table
+                },
+                  new HomePageContent
+                {
+                    Name = GlobalConstants.IncomesForLast12Months,
+                    BulgarainName = GlobalConstants.IncomesForLast12MonthsBulgarianName,
+                    Type=HomePageContentTypes.Chart
                 }
             };
             await SeedContentAsync(context, homePageContents);

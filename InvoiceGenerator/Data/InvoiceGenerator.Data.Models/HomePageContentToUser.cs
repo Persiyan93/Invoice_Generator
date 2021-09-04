@@ -18,7 +18,7 @@ namespace InvoiceGenerator.Data.Models
 
         public ApplicationUser User { get; set; }
 
-        public string HomePageContentId { get; set; }
+        public int HomePageContentId { get; set; }
 
         public HomePageContent HomePageContent { get; set; }
     }

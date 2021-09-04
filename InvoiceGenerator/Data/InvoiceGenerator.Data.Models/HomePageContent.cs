@@ -11,10 +11,9 @@ namespace InvoiceGenerator.Data.Models
     {
         public HomePageContent()
         {
-            this.Id = Guid.NewGuid().ToString();
-            this.HomePageContentToUsers = new HashSet<HomePageContentToUser>();
+             this.HomePageContentToUsers = new HashSet<HomePageContentToUser>();
         }
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 

@@ -3,13 +3,16 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace InvoiceGenerator.Data.Migrations
 {
-    public partial class NewMigration : Migration
+    public partial class AddDefaultInvoiceOptions : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_InvoiceToArticle_Invoices_InvoiceId",
                 table: "InvoiceToArticle");
+
+            migrationBuilder.DropTable(
+                name: "DefaultInvoiceOptions");
 
             migrationBuilder.DropColumn(
                 name: "DiscountPercentage",
@@ -19,6 +22,11 @@ namespace InvoiceGenerator.Data.Migrations
                 name: "AdditionalOptions",
                 table: "Invoices",
                 newName: "PaymentPeriod");
+
+            migrationBuilder.RenameColumn(
+                name: "Email",
+                table: "Company",
+                newName: "EmailAddressOfCompany");
 
             migrationBuilder.RenameColumn(
                 name: "Price",
@@ -89,6 +97,12 @@ namespace InvoiceGenerator.Data.Migrations
                 oldType: "datetime2",
                 oldNullable: true);
 
+            migrationBuilder.AddColumn<string>(
+                name: "BankAccountId",
+                table: "Invoices",
+                type: "nvarchar(450)",
+                nullable: true);
+
             migrationBuilder.AddColumn<bool>(
                 name: "IsInvoiceWithZeroVatRate",
                 table: "Invoices",
@@ -101,34 +115,6 @@ namespace InvoiceGenerator.Data.Migrations
                 table: "Invoices",
                 type: "nvarchar(max)",
                 nullable: true);
-
-            migrationBuilder.AddColumn<bool>(
-                name: "BlockClientWhenReachMaxCountOfUnpaidInvoices",
-                table: "DefaultInvoiceOptions",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
-
-            migrationBuilder.AddColumn<int>(
-                name: "MaxCountOfUnPaidInvoices",
-                table: "DefaultInvoiceOptions",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "PeriodInDaysBetweenTwoRepatedEmails",
-                table: "DefaultInvoiceOptions",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<bool>(
-                name: "SendAutomaticGeneratedEmails",
-                table: "DefaultInvoiceOptions",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
 
             migrationBuilder.AddColumn<int>(
                 name: "Status",
@@ -172,6 +158,29 @@ namespace InvoiceGenerator.Data.Migrations
                 defaultValue: 0);
 
             migrationBuilder.CreateTable(
+                name: "BankAccounts",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    BankName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BicCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Iban = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CompanyId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BankAccounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BankAccounts_Company_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Company",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Emails",
                 columns: table => new
                 {
@@ -199,7 +208,7 @@ namespace InvoiceGenerator.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HistoryEvent",
+                name: "HistoryEvents",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -211,31 +220,45 @@ namespace InvoiceGenerator.Data.Migrations
                     CompanyId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     TypeOfHistoryEvent = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ArticleId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    InvoiceId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    InvoiceId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    InvoiceHistoryEvent_ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HistoryEvent", x => x.Id);
+                    table.PrimaryKey("PK_HistoryEvents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HistoryEvent_Articles_ArticleId",
+                        name: "FK_HistoryEvents_Articles_ArticleId",
                         column: x => x.ArticleId,
                         principalTable: "Articles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_HistoryEvent_AspNetUsers_UserId",
+                        name: "FK_HistoryEvents_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_HistoryEvents_AspNetUsers_InvoiceHistoryEvent_ApplicationUserId",
+                        column: x => x.InvoiceHistoryEvent_ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_HistoryEvents_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_HistoryEvent_Company_CompanyId",
+                        name: "FK_HistoryEvents_Company_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Company",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_HistoryEvent_Invoices_InvoiceId",
+                        name: "FK_HistoryEvents_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
                         principalTable: "Invoices",
                         principalColumn: "Id",
@@ -246,7 +269,8 @@ namespace InvoiceGenerator.Data.Migrations
                 name: "HomePageContents",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BulgarainName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false)
@@ -264,6 +288,7 @@ namespace InvoiceGenerator.Data.Migrations
                     CompanyId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BulgarianMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ArticleId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     InvoiceId = table.Column<string>(type: "nvarchar(450)", nullable: true)
@@ -292,12 +317,43 @@ namespace InvoiceGenerator.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CompanySettings",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CompanyId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DefaultPaymentTerm = table.Column<int>(type: "int", nullable: false),
+                    SendAutomaticGeneratedEmails = table.Column<bool>(type: "bit", nullable: false),
+                    PeriodInDaysBetweenTwoRepatedEmails = table.Column<int>(type: "int", nullable: false),
+                    DefaultInvoiceLanguage = table.Column<int>(type: "int", nullable: false),
+                    DefaultInvoiceBankAccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    BlockClientWhenReachMaxCountOfUnpaidInvoices = table.Column<bool>(type: "bit", nullable: false),
+                    MaxCountOfUnPaidInvoices = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanySettings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompanySettings_BankAccounts_DefaultInvoiceBankAccountId",
+                        column: x => x.DefaultInvoiceBankAccountId,
+                        principalTable: "BankAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CompanySettings_Company_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Company",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "HomePageContentToUser",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    HomePageContentId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    HomePageContentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -313,7 +369,7 @@ namespace InvoiceGenerator.Data.Migrations
                         column: x => x.HomePageContentId,
                         principalTable: "HomePageContents",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -343,6 +399,28 @@ namespace InvoiceGenerator.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Invoices_BankAccountId",
+                table: "Invoices",
+                column: "BankAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BankAccounts_CompanyId",
+                table: "BankAccounts",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanySettings_CompanyId",
+                table: "CompanySettings",
+                column: "CompanyId",
+                unique: true,
+                filter: "[CompanyId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanySettings_DefaultInvoiceBankAccountId",
+                table: "CompanySettings",
+                column: "DefaultInvoiceBankAccountId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Emails_ClientId",
                 table: "Emails",
                 column: "ClientId");
@@ -353,23 +431,33 @@ namespace InvoiceGenerator.Data.Migrations
                 column: "RegisteredCompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HistoryEvent_ArticleId",
-                table: "HistoryEvent",
+                name: "IX_HistoryEvents_ApplicationUserId",
+                table: "HistoryEvents",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HistoryEvents_ArticleId",
+                table: "HistoryEvents",
                 column: "ArticleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HistoryEvent_CompanyId",
-                table: "HistoryEvent",
+                name: "IX_HistoryEvents_CompanyId",
+                table: "HistoryEvents",
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HistoryEvent_InvoiceId",
-                table: "HistoryEvent",
+                name: "IX_HistoryEvents_InvoiceHistoryEvent_ApplicationUserId",
+                table: "HistoryEvents",
+                column: "InvoiceHistoryEvent_ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HistoryEvents_InvoiceId",
+                table: "HistoryEvents",
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HistoryEvent_UserId",
-                table: "HistoryEvent",
+                name: "IX_HistoryEvents_UserId",
+                table: "HistoryEvents",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -408,6 +496,14 @@ namespace InvoiceGenerator.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.AddForeignKey(
+                name: "FK_Invoices_BankAccounts_BankAccountId",
+                table: "Invoices",
+                column: "BankAccountId",
+                principalTable: "BankAccounts",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_InvoiceToArticle_Invoices_InvoiceId",
                 table: "InvoiceToArticle",
                 column: "InvoiceId",
@@ -419,14 +515,21 @@ namespace InvoiceGenerator.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
+                name: "FK_Invoices_BankAccounts_BankAccountId",
+                table: "Invoices");
+
+            migrationBuilder.DropForeignKey(
                 name: "FK_InvoiceToArticle_Invoices_InvoiceId",
                 table: "InvoiceToArticle");
+
+            migrationBuilder.DropTable(
+                name: "CompanySettings");
 
             migrationBuilder.DropTable(
                 name: "Emails");
 
             migrationBuilder.DropTable(
-                name: "HistoryEvent");
+                name: "HistoryEvents");
 
             migrationBuilder.DropTable(
                 name: "HomePageContentToUser");
@@ -435,10 +538,17 @@ namespace InvoiceGenerator.Data.Migrations
                 name: "NotificationToUser");
 
             migrationBuilder.DropTable(
+                name: "BankAccounts");
+
+            migrationBuilder.DropTable(
                 name: "HomePageContents");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Invoices_BankAccountId",
+                table: "Invoices");
 
             migrationBuilder.DropColumn(
                 name: "Status",
@@ -449,28 +559,16 @@ namespace InvoiceGenerator.Data.Migrations
                 table: "InvoiceToArticle");
 
             migrationBuilder.DropColumn(
+                name: "BankAccountId",
+                table: "Invoices");
+
+            migrationBuilder.DropColumn(
                 name: "IsInvoiceWithZeroVatRate",
                 table: "Invoices");
 
             migrationBuilder.DropColumn(
                 name: "ReasonForInvoiceWithZeroVatRate",
                 table: "Invoices");
-
-            migrationBuilder.DropColumn(
-                name: "BlockClientWhenReachMaxCountOfUnpaidInvoices",
-                table: "DefaultInvoiceOptions");
-
-            migrationBuilder.DropColumn(
-                name: "MaxCountOfUnPaidInvoices",
-                table: "DefaultInvoiceOptions");
-
-            migrationBuilder.DropColumn(
-                name: "PeriodInDaysBetweenTwoRepatedEmails",
-                table: "DefaultInvoiceOptions");
-
-            migrationBuilder.DropColumn(
-                name: "SendAutomaticGeneratedEmails",
-                table: "DefaultInvoiceOptions");
 
             migrationBuilder.DropColumn(
                 name: "Status",
@@ -500,6 +598,11 @@ namespace InvoiceGenerator.Data.Migrations
                 name: "PaymentPeriod",
                 table: "Invoices",
                 newName: "AdditionalOptions");
+
+            migrationBuilder.RenameColumn(
+                name: "EmailAddressOfCompany",
+                table: "Company",
+                newName: "Email");
 
             migrationBuilder.RenameColumn(
                 name: "UnitPrice",
@@ -551,6 +654,33 @@ namespace InvoiceGenerator.Data.Migrations
                 table: "Invoices",
                 type: "float",
                 nullable: true);
+
+            migrationBuilder.CreateTable(
+                name: "DefaultInvoiceOptions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CompanyId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DefaultLanguage = table.Column<int>(type: "int", nullable: false),
+                    DefaultPaymentTerm = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DefaultInvoiceOptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DefaultInvoiceOptions_Company_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Company",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DefaultInvoiceOptions_CompanyId",
+                table: "DefaultInvoiceOptions",
+                column: "CompanyId",
+                unique: true,
+                filter: "[CompanyId] IS NOT NULL");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_InvoiceToArticle_Invoices_InvoiceId",

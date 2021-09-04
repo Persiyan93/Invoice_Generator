@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Data.Models
 {
-    public class DefaultInvoiceOptions
+    public class CompanySettings
     {
-        public DefaultInvoiceOptions()
+        public CompanySettings()
         {
             this.Id = Guid.NewGuid().ToString();
         }
@@ -25,7 +25,11 @@ namespace InvoiceGenerator.Data.Models
 
         public int PeriodInDaysBetweenTwoRepatedEmails { get; set; }
 
-        public LanguageOfInvoice DefaultLanguage { get; set; }
+        public Language DefaultInvoiceLanguage { get; set; }
+
+        public string DefaultInvoiceBankAccountId { get; set; }
+
+        public BankAccount DefaultInvoiceBankAccount { get; set; }
 
         public bool BlockClientWhenReachMaxCountOfUnpaidInvoices { get; set; }
 

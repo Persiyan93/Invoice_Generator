@@ -59,7 +59,7 @@ namespace InvoiceGenerator.Data.Models
 
         public ApplicationUser User { get; set; }
 
-        public LanguageOfInvoice Language { get; set; }
+        public Language Language { get; set; }
 
         public bool IsInvoiceWithZeroVatRate { get; set; }
 
