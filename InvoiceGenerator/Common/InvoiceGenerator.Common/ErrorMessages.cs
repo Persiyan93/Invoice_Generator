@@ -28,6 +28,9 @@ namespace InvoiceGenerator.Common
         public const string BlockedArticle= "Article {0} with article Number:{0} is blocked!";
         public const string BlockedService= "Service {0} with  Number:{0} is blocked!";
         public const string InvalidHomePageContent= "Content with id {0} does not exist!";
+        public const string BankAccountExist = "Bank account with IBAN:{0} already exist!";
+        public const string DontHavePermission = "You don't have permission to perform this operation!";
+        public const string BankAccountDoesNotExist = "Bank account doesn't exist!";
 
     
 

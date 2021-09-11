@@ -30,8 +30,10 @@ namespace InvoiceGenerator.Common
         public const string SuccessfullyUpdateArticleQuantity = "Successfully updated article quantity";
         public const string SuccessfullyUpdateServiceStatus = "Successfully update status of service with Id:{0}";
         public const string SuccessfullyMarkAsRead = "Notification with Id:{0} successfully marked as read";
-        public const string SuccessfullyAddedContent = "Content was added successsfully to  Home page";
+        public const string SuccessfullyAddedContent = "Content was added successfully to  Home page";
         public const string SuccessfullyRemovedContent = "Content was removed successfully from user Home page";
+        public const string BankAccountAddedsuccessfully = "Bank account was added successfully";
+        public const string SuccessfullyRemovedBankAccount = "Bank account was removed successfully";
 
 
 
