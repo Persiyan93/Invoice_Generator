@@ -35,6 +35,8 @@ namespace InvoiceGenerator.Data.Configurations
                 .WithMany(c => c.Users)
                 .HasForeignKey(x => x.CompanyId);
 
+            
+
         }
     }
 }

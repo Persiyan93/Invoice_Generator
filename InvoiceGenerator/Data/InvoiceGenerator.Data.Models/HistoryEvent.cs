@@ -28,7 +28,8 @@ namespace InvoiceGenerator.Data.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
 
-        public ApplicationUser User { get; set; }
+       public ApplicationUser User { get; set; }
+
         [ForeignKey("Company")]
         public string CompanyId { get; set; }
      

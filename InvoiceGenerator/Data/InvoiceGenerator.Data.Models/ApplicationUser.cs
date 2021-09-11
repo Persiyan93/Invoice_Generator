@@ -16,6 +16,7 @@ namespace InvoiceGenerator.Data.Models
             this.InvoiceHistoryEvents = new HashSet<InvoiceHistoryEvent>();
             this.ArticleHistoryEvents = new HashSet<ArticleHistoryEvent>();
             this.UserHomePageContent = new HashSet<HomePageContentToUser>();
+            
             this.Events = new HashSet<HistoryEvent>();
         }
 
@@ -40,7 +41,7 @@ namespace InvoiceGenerator.Data.Models
         public ICollection<HistoryEvent> Events { get; set; }
 
         public ICollection<NotificationToUser> Notifications{ get; set; }
-        
+
         public ICollection<HomePageContentToUser> UserHomePageContent { get; set; }
 
 
