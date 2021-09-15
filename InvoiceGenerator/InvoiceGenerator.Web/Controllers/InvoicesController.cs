@@ -1,4 +1,5 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Services.CloadStorageService;
 using InvoiceGenerator.Services.Data;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,7 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   [Authorize]
+     [Authorize]
     public class InvoicesController : ControllerBase
 
 
@@ -30,14 +32,16 @@ namespace InvoiceGenerator.Web.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ICloudService cloudService;
         private readonly IPdfService pdfService;
+        private readonly IStringLocalizer<Messages> stringLocalizer;
 
         public InvoicesController(IInvoiceService invoiceService, UserManager<ApplicationUser> userManager
-            ,ICloudService cloudService,IPdfService pdfService)
+            ,ICloudService cloudService,IPdfService pdfService,IStringLocalizer<Messages> stringLocalizer)
         {
             this.invoiceService = invoiceService;
             this.userManager = userManager;
             this.cloudService = cloudService;
             this.pdfService = pdfService;
+            this.stringLocalizer = stringLocalizer;
         }
 
 
@@ -57,9 +61,6 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> AddInvoice(InvoiceInputModel inputModel)
         {
             var user = await userManager.GetUserAsync(this.User);
-            var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>();
-            // Culture contains the information of the requested culture
-          
            var invoiceId = await invoiceService.CreateInvoiceAsync(inputModel,user.CompanyId,user.Id);
            var pdfAsByteArray =await pdfService.GenerateInvoicePdf(invoiceId);
            await  cloudService.UploadFileAsync(invoiceId, pdfAsByteArray);
@@ -81,12 +82,12 @@ namespace InvoiceGenerator.Web.Controllers
             var user = await userManager.FindByNameAsync(this.User.Identity.Name);
             var userId = user.Id;
 
-           await invoiceService.UpdateStatusOfInvoicesAsync(inputModel, companyId, userId);
+           var invboiceNumber=await invoiceService.UpdateStatusOfInvoicesAsync(inputModel, companyId, userId);
 
             return this.Ok(new ResponseViewModel
             {
                 Status = SuccessMessages.SuccessfullyStatus,
-                Message = string.Format(SuccessMessages.SuccessfullyUpdateStatusOfInvoices)
+                Message = stringLocalizer["SuccessfullyUpdateStatusOfInvoices",invboiceNumber].Value
             });
 
         }
@@ -99,13 +100,19 @@ namespace InvoiceGenerator.Web.Controllers
             var userId = user.Id;
 
             await invoiceService.EditInvoiceAsync(inputModel, userId, invoiceId);
-           
+
+            var pdfAsByteArray = await pdfService.GenerateInvoicePdf(invoiceId);
+            await cloudService.UploadFileAsync(invoiceId, pdfAsByteArray);
+
 
             return this.Ok(new ResponseViewModel
             {
                 Status = SuccessMessages.SuccessfullyStatus,
-                Message = string.Format(SuccessMessages.SuccessfullyEditInvoice, invoiceId)
+                Message = invoiceId
             });
+
+
+           
 
         }
 

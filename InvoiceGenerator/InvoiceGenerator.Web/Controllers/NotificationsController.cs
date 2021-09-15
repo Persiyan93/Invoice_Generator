@@ -33,7 +33,7 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> GetUnreadNotification()
         {
             var user =await userManager.FindByNameAsync(this.User.Identity.Name);
-            var notifications = await notificationService.GetUnReadNotificationsAsync<NotificationViewModel>(user.Id);
+            var notifications = await notificationService.GetUnReadNotificationsAsync(user.Id);
 
             return this.Ok(notifications);
         }

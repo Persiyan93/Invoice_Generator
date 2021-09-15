@@ -1,4 +1,5 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Web.Models;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,13 +25,20 @@ namespace InvoiceGenerator.Web.Controllers
         private readonly IArticleService articleService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IMemoryCache cache;
-      
+        private readonly IStringLocalizer<Messages> stringLocalizer;
 
-        public ArticlesController(IArticleService articleService,UserManager<ApplicationUser> userManager,IMemoryCache cache)
+        public ArticlesController
+            (
+                 IArticleService articleService,
+                 UserManager<ApplicationUser> userManager,
+                 IMemoryCache cache,
+                IStringLocalizer<Messages> stringLocalizer
+            )
         {
             this.articleService = articleService;
             this.userManager = userManager;
             this.cache = cache;
+            this.stringLocalizer = stringLocalizer;
         }
 
         [HttpPost]
@@ -37,21 +46,22 @@ namespace InvoiceGenerator.Web.Controllers
         {
             var user = await userManager.GetUserAsync(this.User);
             var companyId = user.CompanyId;
-         var articleId = await articleService.AddArticle(inputModel,companyId,user.Id);
+            var articleName = await articleService.AddArticleAsync(inputModel, companyId, user.Id);
 
             return this.Ok(
                 new ResponseViewModel
                 {
                     Status = "Successful",
-                    Message = string.Format(SuccessMessages.SuccessfullyAddedArticle, articleId)
+                    Message = stringLocalizer["SuccessfullyAddedArticle", articleName]
                 });
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetAllArticles()
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
-            var articles = await articleService.GetAllArticlesByCompanyId<ArticleViewModel>(companyId);
+            var articles = await articleService.GetAllArticlesByCompanyIdAsync<ArticleViewModel>(companyId);
 
             return this.Ok(articles);
 
@@ -60,22 +70,22 @@ namespace InvoiceGenerator.Web.Controllers
         [HttpGet("{articleId}")]
         public async Task<IActionResult> GetArticleInfo(string articleId)
         {
-            var article =  await articleService.GetArticleById<ArticleViewModel>(articleId);
+            var article = await articleService.GetArticleByIdAsync<ArticleViewModel>(articleId);
 
             return this.Ok(article);
         }
 
         [HttpPut("{articleId}")]
-        public async Task<IActionResult> UpdateArticle(ArticleUpdateModel input,string articleId)
+        public async Task<IActionResult> UpdateArticle(ArticleUpdateModel input, string articleId)
         {
             var user = await userManager.FindByNameAsync(this.User.Identity.Name);
-            await articleService.UpdateArticle(input, articleId, user.Id);
+            var articleName=await articleService.UpdateArticleAsync(input, articleId, user.Id);
 
             var response = new ResponseViewModel
-               {
-                    Status = "Successful",
-                    Message = string.Format(SuccessMessages.SuccessfullyUpdateArticle, articleId)
-                };
+            {
+                Status = "Successful",
+                Message = stringLocalizer["SuccessfullyUpdatedArticleStatus",articleName]
+            };
             return this.Ok(response);
 
         }
@@ -85,13 +95,13 @@ namespace InvoiceGenerator.Web.Controllers
         [Route("ArticleQuantity/{articleid}")]
         public async Task<IActionResult> UpdateArticleQuantity(UpdateArticleQuantityModel input, string articleId)
         {
-         
+
             var user = await userManager.FindByNameAsync(this.User.Identity.Name);
-            await articleService.UpdateArticleQuantity(articleId, input.Quantity, user.Id);
+           var articleName= await articleService.UpdateArticleQuantityAsync(articleId, input.Quantity, user.Id);
             var response = new ResponseViewModel
             {
                 Status = "Successful",
-                Message = string.Format(SuccessMessages.SuccessfullyUpdateArticleQuantity)
+                Message = stringLocalizer["SuccessfullyAddedArticleQuantity",input.Quantity,articleName]
             };
             return this.Ok(response);
 
@@ -113,9 +123,9 @@ namespace InvoiceGenerator.Web.Controllers
                 this.cache.Set(cacheKey, articles, TimeSpan.FromHours(24));
             }
 
-          
-            
-           
+
+
+
             return this.Ok(articles);
 
         }

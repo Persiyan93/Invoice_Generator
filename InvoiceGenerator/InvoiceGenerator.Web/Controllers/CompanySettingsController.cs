@@ -1,9 +1,11 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Web.Models;
 using InvoiceGenerator.Web.Models.Company;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +21,13 @@ namespace InvoiceGenerator.Web.Controllers
     public class CompanySettingsController : ControllerBase
     {
         private readonly ICompanySettingsService settingsService;
+        private readonly IStringLocalizer<Messages> stringLocalizer;
 
-        public CompanySettingsController(ICompanySettingsService settingsService)
+        public CompanySettingsController(ICompanySettingsService settingsService,IStringLocalizer<Messages> stringLocalizer)
         {
 
             this.settingsService = settingsService;
+            this.stringLocalizer = stringLocalizer;
         }
 
         [HttpGet]
@@ -35,27 +39,27 @@ namespace InvoiceGenerator.Web.Controllers
             return this.Ok(settings);
         }
 
-     
 
-       
+
+
         [HttpPost]
         public async Task<IActionResult> UpdateCompanySettings(CompanySettingsModel input)
         {
-             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
 
             await settingsService.UpdateComapnySettingsAsync(companyId, input);
 
             return this.Ok(new ResponseViewModel
             {
                 Status = SuccessMessages.SuccessfullyStatus,
-                Message = string.Format(SuccessMessages.UpdateCompanySettings)
+                Message = stringLocalizer["SuccessfullyUpdateCompanySettings"].Value
             });
-
-
 
         }
 
-     
-     
+    
+
+
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Web.Models;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,12 +26,14 @@ namespace InvoiceGenerator.Web.Controllers
         private readonly IClientService clientService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IMemoryCache cache;
+        private readonly IStringLocalizer<Messages> stringLocalizer;
 
-        public ClientsController(IClientService clientService, UserManager<ApplicationUser> userManager , IMemoryCache cache)
+        public ClientsController(IClientService clientService, UserManager<ApplicationUser> userManager , IMemoryCache cache,IStringLocalizer<Messages> stringLocalizer)
         {
             this.clientService = clientService;
             this.userManager = userManager;
             this.cache = cache;
+            this.stringLocalizer = stringLocalizer;
         }
 
       
@@ -44,7 +48,7 @@ namespace InvoiceGenerator.Web.Controllers
                 new ResponseViewModel
                 {
                     Status = "Successful",
-                    Message = string.Format(SuccessMessages.SuccessfullyCreatedClient, clientId)
+                    Message = string.Format(stringLocalizer["SuccessfullyAddedClient"])
 
                 });
 
@@ -80,7 +84,7 @@ namespace InvoiceGenerator.Web.Controllers
             var response = new ResponseViewModel
             {
                 Status = "Successful",
-                Message = string.Format(SuccessMessages.SuccessfullyUpdateStatusOfClient, input.ClientId)
+                Message = stringLocalizer["SuccessfullyUpdateStatusOfClient"]
 
             };
             return this.Ok(response);

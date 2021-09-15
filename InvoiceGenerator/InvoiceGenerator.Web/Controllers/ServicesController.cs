@@ -1,4 +1,5 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Web.Models;
@@ -6,6 +7,7 @@ using InvoiceGenerator.Web.Models.OfferedService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +22,13 @@ namespace InvoiceGenerator.Web.Controllers
     {
         private readonly IOfferedService offeredService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IStringLocalizer<Messages> stringLocalizer;
 
-        public ServicesController(IOfferedService offeredService, UserManager<ApplicationUser> userManager)
+        public ServicesController(IOfferedService offeredService, UserManager<ApplicationUser> userManager,IStringLocalizer<Messages> stringLocalizer)
         {
             this.offeredService = offeredService;
             this.userManager = userManager;
+            this.stringLocalizer = stringLocalizer;
         }
 
 
@@ -34,13 +38,13 @@ namespace InvoiceGenerator.Web.Controllers
             var user = await userManager.FindByNameAsync(this.User.Identity.Name);
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
 
-            var serviceId = await offeredService.AddServiceAsync(inputModel, companyId);
+            var serviceName= await offeredService.AddServiceAsync(inputModel, companyId);
 
             return this.Ok(
                 new ResponseViewModel
                 {
                     Status = "Successful",
-                    Message = string.Format(SuccessMessages.SuccessfullyAddedService, serviceId)
+                    Message = stringLocalizer["SuccessfullyAddedService",serviceName]
                 });
         }
 
@@ -59,17 +63,17 @@ namespace InvoiceGenerator.Web.Controllers
         [HttpPut("{serviceId}")]
         public async Task<IActionResult> UpdateServiceStatus(ServiceUpdateModel input,string serviceId)
         {
-            
+
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
 
-             await offeredService.UpdateStatusOfServiceAsync(input, serviceId, companyId);
+            var serviceName=await offeredService.UpdateStatusOfServiceAsync(input, serviceId, companyId);
 
             return this.Ok(
                 new ResponseViewModel
                 {
                     Status = "Successful",
-                    Message = string.Format(SuccessMessages.SuccessfullyUpdateServiceStatus, serviceId)
-                });
+                    Message = stringLocalizer["SuccessfullyUpdatedService", serviceName]
+                }); ;
         }
     }
 }

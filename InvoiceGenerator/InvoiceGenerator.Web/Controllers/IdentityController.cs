@@ -29,22 +29,22 @@ namespace InvoiceGenerator.Web.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
         private readonly IIdentityService identityService;
-        private readonly IDocumentService documentService;
+       
 
         public IdentityController
             (
             RoleManager<ApplicationRole> roleManager,
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration,
-            IIdentityService identityService,
-            IDocumentService documentService
+            IIdentityService identityService
+           
             )
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
             this.configuration = configuration;
             this.identityService = identityService;
-            this.documentService = documentService;
+           
         }
 
         [HttpPost]
@@ -59,7 +59,7 @@ namespace InvoiceGenerator.Web.Controllers
             {
 
                 var userRoles = await userManager.GetRolesAsync(user);
-                var companyId = user.CompanyId;
+               
 
                 var authClaims = new List<Claim>
                 {
@@ -103,10 +103,16 @@ namespace InvoiceGenerator.Web.Controllers
                                 Expires = token.ValidTo,
                                 Path="/"
                                 
-                            }
-                            );
-               
+                            });
+                
+                this.HttpContext.Response.Cookies.Append(".AspNetCore.Culture", "c=bg|uic=bg",new CookieOptions {
+                    SameSite = SameSiteMode.None,
+                    Secure = true,
+                });
+
+
                     return Ok(new {Status="Successfully", permissions = userPermissions });
+                
           
             }
             return this.BadRequest(new ResponseViewModel
@@ -124,7 +130,7 @@ namespace InvoiceGenerator.Web.Controllers
         {
             var response = new ResponseViewModel();
             var companyId=await identityService.RegisterUserAsync(inputModel);
-            documentService.GenerateCompanyTemplate(companyId);
+           
             response.Status = "Successfully";
             response.Message = string.Format(SuccessMessages.SuccessfullyAddedUser, inputModel.Email);
 
