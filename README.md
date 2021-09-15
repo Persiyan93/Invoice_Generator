@@ -1,20 +1,30 @@
-# Invoice Generator Application is my defence project for ASP.NET Core course at [SoftUni].
-The website is a SinglePage Application (SPA)**
+# Invoice Generator Application is my defence project for ASP.NET Core course at [ SoftUni ].
+The website is a SinglePage Application (SPA)**.
 ## :pencil2: Overview
 ###Roles
 *Vistirors
 *Administrator of Company-User who has registered company
 *Employees-administrator of company can add users and define users permissions
-###Main functionality of website
-invoicemaker is a website where owneres of small companies can used for generating of invoices and tracking quantity of their products.Each registered compoany has Administrator.
-Administrator of company can
-* add new employee
-* block employee
-* change employee permissions
-* see a history of user actions
- 
+---
+### Features
+* Generates invoices in PDF format
+* Can Preview invoice before generating it
+* Auto-calculates the expenses of the purchases
+* Auto-saves generated invoices on the  Azure cloud
+* Invoices can be edited 
+* Users can arrange their home page 
+* Different type of reports
+* Tracking products quantity
+* Notifications
+* Notify customers who have overdue invoices
+* Multi language invoices
+* History of users actions
+---
+### Features in Development
+* Multy language
+* Different currencies
 
-
+---
 ## Used Frameworks
 
 * Net 5.0 
@@ -26,6 +36,9 @@ Administrator of company can
 * Material UI
 * Recharts.js
 * Moq
+
+---
+## Pictures
 
 
 
