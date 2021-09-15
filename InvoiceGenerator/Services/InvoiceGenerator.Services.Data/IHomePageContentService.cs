@@ -11,11 +11,11 @@ namespace InvoiceGenerator.Services.Data
     {
         Task<ICollection<T>> GetUserHomePageContentAsync<T>(string userId);
 
-        Task AddNewContentToHomePageAsync(string userId, string homePageContentId);
+        Task AddNewContentToHomePageAsync(string userId, int homePageContentId);
 
         Task<ICollection<T>> GetAllHomePageContetsWhichUserDoesNotUseAsync<T>(string userId);
 
-        Task RemoveSelectedContentFromHomePageAsync(string contentId ,string userId);
+        Task RemoveSelectedContentFromHomePageAsync(int contentId ,string userId);
 
 
     }

@@ -1,13 +1,17 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
+using InvoiceGenerator.Web.Models.Notifications;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Services.Data
@@ -15,19 +19,28 @@ namespace InvoiceGenerator.Services.Data
     public class NotificationService : INotificationService
     {
         private readonly ApplicationDbContext context;
+        private readonly IStringLocalizer stringLocalizer;
 
-        public NotificationService(ApplicationDbContext context)
+        public NotificationService(ApplicationDbContext context,IStringLocalizer<Messages> stringLocalizer)
         {
             this.context = context;
+            this.stringLocalizer = stringLocalizer;
         }
 
 
 
-        public async Task<ICollection<T>> GetUnReadNotificationsAsync<T>(string userId)
+        public async Task<ICollection<NotificationViewModel>> GetUnReadNotificationsAsync(string userId)
         {
+            var currentCulture = Thread.CurrentThread.CurrentCulture.Name;
             var notifications = await context.Notifications
-                .Where(n => n.ReadFromCollection.All(u => u.UserId != userId))
-                .To<T>()
+                .Where(n => n.ReadFromCollection.All(u => u.UserId != userId)&&n.Company.Users.Any(x=>x.Id==userId))
+                .Select(x=>new NotificationViewModel
+                {
+                    Id=x.NotificationId,
+                    Date=x.Date.ToString("dd.M"),
+                    Type = stringLocalizer[x.Type.ToString()],
+                    Message=currentCulture=="bg"?x.BulgarianMessage:x.Message
+                })
                 .ToListAsync();
 
             return notifications;

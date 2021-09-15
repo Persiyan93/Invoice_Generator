@@ -136,34 +136,43 @@
     <value>бр.</value>
   </data>
   <data name="CreatedBy" xml:space="preserve">
-    <value>Изготвил</value>
+    <value>Изготвил :</value>
   </data>
   <data name="Currency" xml:space="preserve">
     <value>{0} лв.</value>
   </data>
+  <data name="DateOfTaxEvent" xml:space="preserve">
+    <value>Дата на данъчното събитие :  {0} г.</value>
+  </data>
   <data name="IdentificationNumber" xml:space="preserve">
     <value>ЕИК:</value>
   </data>
-  <data name="InvoiceNumber" xml:space="preserve">
-    <value>Фактура №{0}</value>
+  <data name="Invoice" xml:space="preserve">
+    <value>Фактура </value>
   </data>
   <data name="InvoiceRecepient" xml:space="preserve">
     <value>Фактурата получена от :</value>
+  </data>
+  <data name="IssueDate" xml:space="preserve">
+    <value>Дата на издаване : {0} г.</value>
   </data>
   <data name="Kilogram" xml:space="preserve">
     <value>кг.</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Име</value>
+    <value>Име:     </value>
   </data>
   <data name="PaymentMethodName" xml:space="preserve">
     <value>Начин на плащане:</value>
+  </data>
+  <data name="PlaceOfPublishing" xml:space="preserve">
+    <value>Място на издаване : {0}</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>Стойност</value>
   </data>
   <data name="PriceWithoutVat" xml:space="preserve">
-    <value>Данъчна основа: {0} лв.</value>
+    <value>Данъчна основа: </value>
   </data>
   <data name="ProductName" xml:space="preserve">
     <value>Име на артикула или услугата</value>
@@ -171,11 +180,14 @@
   <data name="Quantity" xml:space="preserve">
     <value>Количество</value>
   </data>
+  <data name="ReasonForZeroVatRate" xml:space="preserve">
+    <value>Основание за нулева ставка :  {0}</value>
+  </data>
   <data name="Seller" xml:space="preserve">
     <value>Доставчик</value>
   </data>
   <data name="Sign" xml:space="preserve">
-    <value>Подпис</value>
+    <value>Подпис :   </value>
   </data>
   <data name="UnitPrice" xml:space="preserve">
     <value>Един.Цена</value>
@@ -190,12 +202,15 @@
     <value>ИН  по ЗДДС:</value>
   </data>
   <data name="VatRate" xml:space="preserve">
-    <value>ДДС {0}% : {1} лв.</value>
+    <value>ДДС {0}% </value>
   </data>
   <data name="WholePrice" xml:space="preserve">
-    <value>Общо : {0} лв.</value>
+    <value>Общо : </value>
   </data>
   <data name="Year" xml:space="preserve">
     <value>Издадена на : {0} г.</value>
+  </data>
+  <data name="ZeroVatRate" xml:space="preserve">
+    <value>Нулева ставка за ДДС      </value>
   </data>
 </root>

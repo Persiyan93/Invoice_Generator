@@ -13,13 +13,13 @@ namespace InvoiceGenerator.Services.Data
         public  Task<ICollection<UsersInListViewModel>> GetAllUsersAsync(string companyId, DateTime startDate, DateTime endDate, string orderBy,
                                     string order , int page , int rowsPerPage ,string filterString );
 
-        Task<T> GetUserHistory<T>(string userId);
+        Task<T> GetUserHistoryAsync<T>(string userId);
 
-        Task ChangeUserStatus(UpdateUserStatusModel input);
+        Task<string> ChangeUserStatusAsync(UpdateUserStatusModel input);
 
         Task<UserModel> GetUserInfoAsync(string userId);
 
-        Task UpdateUserAccessAsync(UserAccessModel input, string userId);
+        Task<string> UpdateUserAccessAsync(UserAccessModel input, string userId);
 
 
         

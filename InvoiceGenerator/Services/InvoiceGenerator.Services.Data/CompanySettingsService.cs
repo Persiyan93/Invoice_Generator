@@ -1,4 +1,5 @@
-﻿using InvoiceGenerator.Data;
+﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Data;
 using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.Company;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ namespace InvoiceGenerator.Services.Data
         }
         public async Task<CompanySettingsModel> GetCompanySettingsAsync(string companyId)
         {
-            var settings = await context.DefaultInvoiceOptions.Where(x => x.CompanyId == companyId)
+            var settings = await context.CompanySettings.Where(x => x.CompanyId == companyId)
                   .To<CompanySettingsModel>()
                   .FirstOrDefaultAsync();
 
@@ -29,13 +30,20 @@ namespace InvoiceGenerator.Services.Data
 
         public async Task UpdateComapnySettingsAsync(string companyId, CompanySettingsModel input)
         {
-            var settings = await context.DefaultInvoiceOptions.FirstOrDefaultAsync(x => x.CompanyId == companyId);
+            var settings = await context.CompanySettings.FirstOrDefaultAsync(x => x.CompanyId == companyId);
 
             settings.DefaultPaymentTerm = input.DefaultPaymentTerm;
             settings.PeriodInDaysBetweenTwoRepatedEmails = input.PeriodInDaysBetweenTwoRepatedEmails;
             settings.SendAutomaticGeneratedEmails = input.SendAutomaticGeneratedEmails;
             settings.BlockClientWhenReachMaxCountOfUnpaidInvoices = input.BlockClient;
             settings.MaxCountOfUnPaidInvoices = input.MaxCountOfUnPaidInvoices;
+            settings.DefaultInvoiceLanguage = input.DefaultInvoiceLanguage;
+            var bankAccount =await context.BankAccounts.FirstOrDefaultAsync(x => x.Id == input.DefaultInvoiceBankAccountId && x.IsActive && companyId == x.CompanyId);
+            if (bankAccount != null)
+            {
+                settings.DefaultInvoiceBankAccountId = bankAccount.Id;
+            }
+           
 
            await context.SaveChangesAsync();
             

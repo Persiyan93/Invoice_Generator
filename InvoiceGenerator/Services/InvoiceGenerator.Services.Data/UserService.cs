@@ -25,12 +25,14 @@ namespace InvoiceGenerator.Services.Data
             this.userManager = userManager;
         }
 
-        public async Task ChangeUserStatus(UpdateUserStatusModel input)
+        public async Task<string> ChangeUserStatusAsync(UpdateUserStatusModel input)
         {
             var user = await context.Users.FirstOrDefaultAsync(x => x.Id == input.UserId);
 
             user.Status = input.Status;
             await context.SaveChangesAsync();
+
+            return user.UserName;
         }
 
 
@@ -43,28 +45,31 @@ namespace InvoiceGenerator.Services.Data
             var users = await context.Users.Where(x => x.CompanyId == companyId)
                 .ContainsText(x => "Name", filterString)
                 .Select(x => new UsersInListViewModel
-                {
-                    FullName = x.Name,
-                    Id = x.Id,
-                    Email = x.Email,
-                    CountOfGeneratedInvoices = x.InvoiceHistoryEvents
-                                .Where(e => e.EventType == HistoryEventType.CreateInvoice &&
-                                                DateTime.Compare(e.Invoice.IssueDate, startDate) >= 0 &&
-                                                DateTime.Compare(e.Invoice.IssueDate, endDate) <= 0)
-                                .Count(),
-                    SumOfAllInvoices = (double)x.InvoiceHistoryEvents
-                                .Where(e => DateTime.Compare(e.Invoice.IssueDate, startDate) >= 0 &&
-                                            DateTime.Compare(e.Invoice.IssueDate, endDate) <= 0)
-                                .Sum(e => e.Invoice.PriceWithoutVat + e.Invoice.VatValue),
+                 {
+                     FullName = x.Name,
+                     Id = x.Id,
+                     Email = x.Email,
+                     CountOfGeneratedInvoices = x.Company.Invoices
+                                                .Where(i=>i.CreatedByUserId==x.Id&&
+                                                             DateTime.Compare(i.IssueDate, startDate) >= 0 &&
+                                                            DateTime.Compare(i.IssueDate, endDate) <= 0)
+                                                  .Count(),
+                   SumOfAllInvoices = (double)x.Company.Invoices
+                                                .Where(i => i.CreatedByUserId == x.Id &&
+                                                             DateTime.Compare(i.IssueDate, startDate) >= 0 &&
+                                                            DateTime.Compare(i.IssueDate, endDate) <= 0)
+                                        .Sum(i => i.PriceWithoutVat + i.VatValue),
 
-                    CountOfOverduedInvoices = x.InvoiceHistoryEvents
-                                .Where(e => e.EventType == HistoryEventType.MarkInvoiceAsOverdue &&
-                                                DateTime.Compare(e.Invoice.IssueDate, startDate) >= 0 &&
-                                                DateTime.Compare(e.Invoice.IssueDate, endDate) <= 0)
-                                .Count(),
-                    Status = x.Status
+                     CountOfOverduedInvoices =x.Company.Invoices
+                                                .Where(i => i.CreatedByUserId == x.Id && 
+                                                             i.Status==InvoiceStatus.Overdue&&
+                                                             DateTime.Compare(i.IssueDate, startDate) >= 0 &&
+                                                            DateTime.Compare(i.IssueDate, endDate) <= 0)
+                                                  .Count(),
+                                
+                     Status = x.Status
 
-                })
+                 })
                 .CustomOrderBy(orderBy, ordebyDesc)
                 .Skip(rowsPerPage * (page - 1))
                 .Take(rowsPerPage)
@@ -72,12 +77,12 @@ namespace InvoiceGenerator.Services.Data
 
 
             return users;
-
+            
         }
 
 
 
-        public Task<T> GetUserHistory<T>(string userId)
+        public Task<T> GetUserHistoryAsync<T>(string userId)
         {
             throw new NotImplementedException();
         }
@@ -87,7 +92,7 @@ namespace InvoiceGenerator.Services.Data
         {
             var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
-            var access = await getUserPermissins(user);
+            var access = await GetUserPermissinsAsync(user);
 
             var result = new UserModel
             {
@@ -100,10 +105,10 @@ namespace InvoiceGenerator.Services.Data
 
         }
 
-      
-        public async  Task UpdateUserAccessAsync(UserAccessModel input, string userId)
+
+        public async Task<string> UpdateUserAccessAsync(UserAccessModel input, string userId)
         {
-            var user =await  userManager.FindByIdAsync(userId);
+            var user = await userManager.FindByIdAsync(userId);
             var properties = input.GetType().GetProperties();
             if (input.EmailAccess)
             {
@@ -137,24 +142,11 @@ namespace InvoiceGenerator.Services.Data
             {
                 await userManager.RemoveFromRoleAsync(user, GlobalConstants.ProductsAccessRole);
             }
-          
-            //foreach (var propery in properties)
-            //{
-            //    var propertyName = propery.Name;
-            //  var propertyValue= (bool) propery.GetValue(input);
-            //    if (propertyValue)
-            //    {
-            //        var rolename = propertyName + "Role";
-            //        await userManager.AddToRoleAsync(user, rolename);
-            //    }
-            //    else
-            //    {
-            //        await userManager.RemoveFromRoleAsync(user, propertyName + "Role");
-            //    }
-            //}
+
+            return user.UserName;
         }
 
-        private async Task<UserAccessModel> getUserPermissins(ApplicationUser user)
+        private async Task<UserAccessModel> GetUserPermissinsAsync(ApplicationUser user)
         {
             var userRoles = await userManager.GetRolesAsync(user);
             var userPermission = new UserAccessModel();

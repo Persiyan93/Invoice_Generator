@@ -10,7 +10,7 @@ namespace InvoiceGenerator.Services.MicrosoftWordService
 
         void GenerateCompanyTemplate(string companyId);
 
-      void GenerateInvoiceAsync(string invoiceId,  string companyId);
+        void GenerateInvoiceAsync(string invoiceId,  string companyId);
 
         FileStream GetInvoiceAsPdf(string invoiceId);
     }

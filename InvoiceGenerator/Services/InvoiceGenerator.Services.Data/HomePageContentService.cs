@@ -20,7 +20,7 @@ namespace InvoiceGenerator.Services.Data
         {
             this.context = context;
         }
-        public  async Task AddNewContentToHomePageAsync(string userId, string homePageContentId)
+        public  async Task AddNewContentToHomePageAsync(string userId, int homePageContentId)
         {
             var homePageContent = await context.HomePageContents
                 .FirstOrDefaultAsync(x => x.Id == homePageContentId);
@@ -29,6 +29,14 @@ namespace InvoiceGenerator.Services.Data
                
                 throw new InvalidUserDataException(string.Format(ErrorMessages.InvalidHomePageContent, homePageContentId));
             }
+            var isUserHasContentToHisHomePage = await context.HomePageContents
+                .Select(x => x.HomePageContentToUsers.Any(u => u.Id == userId))
+                .FirstOrDefaultAsync();
+            if (isUserHasContentToHisHomePage)
+            {
+                throw new InvalidUserDataException("You can not add content 2 times ");
+            }
+
             var homePageToUser = new HomePageContentToUser
             {
                 UserId = userId
@@ -63,9 +71,11 @@ namespace InvoiceGenerator.Services.Data
             return allContentTypes;
         }
 
-        public async  Task RemoveSelectedContentFromHomePageAsync(string contentId, string userId)
+        public async  Task RemoveSelectedContentFromHomePageAsync(int contentId, string userId)
         {
-           var homePageContent = await context.HomePageContents.Include(x=>x.HomePageContentToUsers).FirstOrDefaultAsync();
+           var homePageContent = await context.HomePageContents
+                .Include(x=>x.HomePageContentToUsers)
+                .FirstOrDefaultAsync(x=>x.Id==contentId);
             if (homePageContent==null)
             {
                 throw new InvalidUserDataException(string.Format(ErrorMessages.InvalidHomePageContent, contentId));

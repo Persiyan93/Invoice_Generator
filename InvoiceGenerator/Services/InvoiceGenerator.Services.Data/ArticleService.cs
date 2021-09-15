@@ -10,24 +10,28 @@ using System.Collections.Generic;
 using System.Linq;
 using InvoiceGenerator.Web.Models;
 using System.Threading.Tasks;
+using InvoiceGenerator.Common.Resources;
+using Microsoft.Extensions.Localization;
 
 namespace InvoiceGenerator.Services.Data
 {
     public class ArticleService : IArticleService
     {
         private readonly ApplicationDbContext context;
+        private readonly IStringLocalizer<Messages> stringLocalizer;
 
-        public ArticleService(ApplicationDbContext context)
+        public ArticleService(ApplicationDbContext context,IStringLocalizer<Messages> stringLocalizer)
         {
             this.context = context;
+            this.stringLocalizer = stringLocalizer;
         }
-        public async Task<string> AddArticle(ArticleInputModel inputModel, string companyId ,string userId)
+        public async Task<string> AddArticleAsync(ArticleInputModel inputModel, string companyId ,string userId)
         {
             var company = context.RegisteredCompanies
                 .FirstOrDefault(x => x.IsActive == true && x.Id == companyId);
             if (company == null)
             {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist,companyId));
+                throw new InvalidUserDataException(stringLocalizer["RegisteredCompanyDoesNotExist",companyId]);
             }
             var article = new Article
             {
@@ -35,7 +39,7 @@ namespace InvoiceGenerator.Services.Data
                 ArticleNumber=inputModel.ArticleNumber,
                 UnitType = inputModel.UnitType,
                 Quantity = inputModel.Quantity,
-                UnitPrice = inputModel.Price,
+                UnitPrice = inputModel.UnitPrice,
                 VatRate = inputModel.VatRate,
                 CompanyId = companyId,
                 Status=ProductStatus.Active,
@@ -63,11 +67,11 @@ namespace InvoiceGenerator.Services.Data
             await context.ArticleHistoryEvents.AddAsync(historyEvent);
             await context.SaveChangesAsync();
 
-            return article.Id;
+            return article.Name;
 
         }
 
-        public async Task<ICollection<T>> GetAllArticlesByCompanyId<T>(string companyId)
+        public async Task<ICollection<T>> GetAllArticlesByCompanyIdAsync<T>(string companyId)
         {
             var articles = await context.Articles
                 .Where(x => x.CompanyId == companyId)
@@ -78,7 +82,7 @@ namespace InvoiceGenerator.Services.Data
 
         }
 
-        public async Task<T> GetArticleById<T>(string articleId)
+        public async Task<T> GetArticleByIdAsync<T>(string articleId)
         {
             var article = await context.Articles
                      .Where(x => x.Id == articleId)
@@ -99,7 +103,7 @@ namespace InvoiceGenerator.Services.Data
             return articles;
         }
 
-        public async  Task UpdateArticle(ArticleUpdateModel input, string articleId,string userId)
+        public async  Task<string> UpdateArticleAsync(ArticleUpdateModel input, string articleId,string userId)
         {
             var article = await context.Articles.FirstOrDefaultAsync(x => x.Id == articleId&&x.Company.Users.Any(u=>u.Id==userId));
             if (article==null)
@@ -131,13 +135,19 @@ namespace InvoiceGenerator.Services.Data
             await context.ArticleHistoryEvents.AddAsync(historyEvent);
             await context.SaveChangesAsync();
 
+            return article.Name;
+
 
 
         }
 
-        public async  Task UpdateArticleQuantity(string articleId, double newQuantity,string userId)
+        public async  Task<string> UpdateArticleQuantityAsync(string articleId, double newQuantity,string userId)
         {
            var article=await context.Articles.FirstOrDefaultAsync(x => x.Id == articleId );
+            if (article==null)
+            {
+                throw new InvalidUserDataException(stringLocalizer["NonExistentArticle", articleId]);
+            }
 
             article.Quantity += newQuantity;
 
@@ -153,6 +163,8 @@ namespace InvoiceGenerator.Services.Data
             };
             await context.ArticleHistoryEvents.AddAsync(articleHistoryEvent);
             await context.SaveChangesAsync();
+
+            return article.Name;
 
             
         }

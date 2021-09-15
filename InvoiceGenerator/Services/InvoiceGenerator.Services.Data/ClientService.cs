@@ -1,4 +1,5 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Data.Models.Enum;
@@ -7,6 +8,7 @@ using InvoiceGenerator.Web.Models.Address;
 using InvoiceGenerator.Web.Models.Client;
 using InvoiceGenerator.Web.Models.Company;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +22,13 @@ namespace InvoiceGenerator.Services.Data
     {
         private readonly ApplicationDbContext context;
         private readonly IAddressService addressService;
+        private readonly IStringLocalizer<Messages> stringLocalizer;
 
-        public ClientService(ApplicationDbContext context,IAddressService addressService)
+        public ClientService(ApplicationDbContext context,IAddressService addressService,IStringLocalizer<Messages> stringLocalizer)
         {
             this.context = context;
             this.addressService = addressService;
+            this.stringLocalizer = stringLocalizer;
         }
 
        
@@ -37,13 +41,13 @@ namespace InvoiceGenerator.Services.Data
                     .FirstOrDefaultAsync(x => x.VatNumber == inputModel.VatNumber && x.IsActive == true);
             if (client!=null)
             {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.ClientAlreadyExist, inputModel.VatNumber));
+                throw new InvalidUserDataException(stringLocalizer["ExistClient",inputModel.VatNumber]);
             }
             var company = await context.RegisteredCompanies
                 .FirstOrDefaultAsync(x => x.Id == companyId);
             if (company==null)
             {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist, companyId));
+                throw new InvalidUserDataException(stringLocalizer["RegisteredCompanyDoesNotExist",companyId]);
             }
             client = new Client
             {
@@ -72,7 +76,7 @@ namespace InvoiceGenerator.Services.Data
 
             if (client==null)
             {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.ClientDoesNotExist));
+                throw new InvalidUserDataException(stringLocalizer["ClientDoesNotExist",clientId]);
             }
             return client;
                 
@@ -136,7 +140,7 @@ namespace InvoiceGenerator.Services.Data
             var client =await context.Clients.FirstOrDefaultAsync(x => x.Id == input.ClientId);
             if (client==null)
             {
-                throw new InvalidUserDataException(ErrorMessages.ClientDoesNotExist);
+                throw new InvalidUserDataException(stringLocalizer["ClientDoesNotExist",input.ClientId]);
             }
             client.Status = input.Status;
             await context.SaveChangesAsync();

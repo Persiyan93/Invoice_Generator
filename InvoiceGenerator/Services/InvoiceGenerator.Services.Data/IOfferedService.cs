@@ -14,6 +14,6 @@ namespace InvoiceGenerator.Services.Data
 
         Task<ICollection<T>> GetAllServicesAsync<T>(string companyId);
 
-        Task UpdateStatusOfServiceAsync(ServiceUpdateModel input,string serviceId, string companyId);
+        Task<string> UpdateStatusOfServiceAsync(ServiceUpdateModel input,string serviceId, string companyId);
     }
 }

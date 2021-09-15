@@ -1,10 +1,12 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.OfferedService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +20,12 @@ namespace InvoiceGenerator.Services.Data
 
     {
         private readonly ApplicationDbContext context;
+        private readonly IStringLocalizer stringLocalizer;
 
-        public OfferedServices(ApplicationDbContext context)
+        public OfferedServices(ApplicationDbContext context,IStringLocalizer<Messages> stringLocalizer)
         {
             this.context = context;
+            this.stringLocalizer = stringLocalizer;
         }
         public async Task<string> AddServiceAsync(ServiceInputModel inputModel, string companyId)
         {
@@ -34,11 +38,10 @@ namespace InvoiceGenerator.Services.Data
                 Status = ProductStatus.Active
                
             };
-
             await context.Services.AddAsync(newService);
             await context.SaveChangesAsync();
 
-            return newService.Id;
+            return newService.Name;
 
 
 
@@ -54,18 +57,18 @@ namespace InvoiceGenerator.Services.Data
             return services;
         }
 
-        public async  Task UpdateStatusOfServiceAsync(ServiceUpdateModel input,string serviceId, string companyId )
+        public async  Task<string> UpdateStatusOfServiceAsync(ServiceUpdateModel input,string serviceId, string companyId )
         {
             var service = await context.Services.FirstOrDefaultAsync(x => x.Id == serviceId && x.CompanyId == companyId);
             if (service==null)
             {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.InvalidServiceId, serviceId));
+                throw new InvalidUserDataException(stringLocalizer["NonExistentService",serviceId]);
                
             }
 
             service.Status = input.Status;
-
             await context.SaveChangesAsync();
+            return service.Name;
 
             
         }

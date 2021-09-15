@@ -6,6 +6,6 @@ namespace InvoiceGenerator.Services.PdfService
 {
     public interface IPdfService
     {
-        Task GenerateInvoicePdf(string invoiceId, InvoiceLanguage language);
+        Task<byte[]> GenerateInvoicePdf(string invoiceId);
     }
 }

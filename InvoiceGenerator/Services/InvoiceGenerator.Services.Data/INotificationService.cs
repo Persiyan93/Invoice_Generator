@@ -13,7 +13,7 @@ namespace InvoiceGenerator.Services.Data
     {
 
       
-        public Task<ICollection<T>> GetUnReadNotificationsAsync<T>(string userId);
+        public Task<ICollection<NotificationViewModel>> GetUnReadNotificationsAsync(string userId);
 
         public Task MarkAsReadAsync(string userId, string companyId, string notificationId);
 
