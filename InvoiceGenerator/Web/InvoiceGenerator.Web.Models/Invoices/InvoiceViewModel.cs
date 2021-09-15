@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web.Models.Invoices
 {
-    public class InvoiceViewModel : IMapFrom<Invoice>
+    public class InvoiceViewModel : IMapFrom<Invoice>,IHaveCustomMappings
     {
 
         public string ClientId { get; set; }
@@ -45,12 +46,21 @@ namespace InvoiceGenerator.Web.Models.Invoices
         public MethodsOfPayment PaymentMethod { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Language Language { get; set; }
+        public Language InvoiceLanguage { get; set; }
 
         public int PaymentPeriod { get; set; }
 
         public bool IsInvoiceWithZeroVatRate { get; set; }
 
         public string ReasonForInvoiceWithZeroVatRate { get; set; }
+
+        public string BankAccountId { get; set; }
+
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration.CreateMap<Invoice, InvoiceViewModel>()
+                .ForMember(x => x.InvoiceLanguage, opt =>
+                               opt.MapFrom(i => i.Language));
+        }
     }
 }

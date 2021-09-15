@@ -35,7 +35,7 @@ namespace InvoiceGenerator.Web.Models.Invoices
 
         [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Language Language { get; set; }
+        public Language InvoiceLanguage { get; set; }
 
 
 

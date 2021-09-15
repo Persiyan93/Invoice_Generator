@@ -9,8 +9,6 @@ namespace InvoiceGenerator.Web.Models.AccessAreas
     public class UserAccessModel
     {
        
-
-        
         public bool InvoiceAccess { get; set; }
         
         public bool ProductsAccess { get; set; }

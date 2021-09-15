@@ -30,7 +30,7 @@ namespace InvoiceGenerator.Web.Models.Company
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Language  DefaultInvoiceLanguage { get; set; }
         
-        public string DefaultBankAccountId { get; set; }
+        public string DefaultInvoiceBankAccountId { get; set; }
 
         
 
@@ -38,7 +38,10 @@ namespace InvoiceGenerator.Web.Models.Company
         {
             configuration.CreateMap<CompanySettings, CompanySettingsModel>()
                 .ForMember(x => x.BlockClient, opt =>
-                                   opt.MapFrom(d => d.BlockClientWhenReachMaxCountOfUnpaidInvoices));
+                                   opt.MapFrom(d => d.BlockClientWhenReachMaxCountOfUnpaidInvoices))
+                .ForMember(x => x.DefaultInvoiceBankAccountId, opt =>
+                           opt.MapFrom(d => d.DefaultInvoiceBankAccountId));
+                    
         }
     }
 
