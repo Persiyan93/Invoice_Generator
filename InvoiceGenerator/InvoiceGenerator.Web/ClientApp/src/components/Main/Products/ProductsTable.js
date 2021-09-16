@@ -1,70 +1,11 @@
-﻿import React, { useState, useEffect, } from 'react'
-import {makeStyles} from '@material-ui/core/';
+﻿import React, { useState} from 'react'
 import SearchBar from '../../Elements/SearchBar';
-
 import ProductTableNavigationMenu from './ProductTableNavigationMenu';
-
 import ArticlesTable from './Articles/ArticlesTable';
 import OfferedServicesTable from './Services/OfferedServicesTable'
-const useStyles = makeStyles(theme => ({
-    tableRow: {
-        borderTop: "outset",
-        borderBottom: "outset",
-
-    },
-    gridElement: {
-        // border-left: 1px solid;
-        borderTop: "solid",
-        borderLeft: "solid",
-
-        '&:hover': {
-            backgroundColor: '#A1A397',
-        },
-        cursor: 'pointer',
-        marginTop: 20,
-        borderRadius: 2
-    },
-    root: {
-        '& > *': {
-            borderBottom: 'unset',
-        },
-    },
-    table: {
-        '& thead th': {
-            fontWeight: '600',
-
-
-        },
-        '& tbody td': {
-            fontWeight: '300',
-
-        }, '& tbody tr:hover': {
-            backgroundColor: '#DAD4D3',
-            cursor: 'pointer'
-
-        }
-    },
-    searchInput: {
-        opacity: '0.6',
-        padding: '0px,5px',
-        fontSize: '0.6rem',
-        width: '70%',
-        '&:hover': {
-            backgroundColor: '#f2f2f2'
-        },
-        '& .MuiSvgIcon-root': {
-            marginRight: '8px'
-        }
-    },
-    menu: {
-        marginBottom: '20px',
-        borderRadius: '20px'
-    }
-
-}))
 
 export default function ProductsTable(props) {
-    const classes = useStyles();
+   
     const [isArticleSelected, selectArticle] = useState(true)
     const [filterString, setFilterString] = useState();
     const [articleFilterFunction, setArticleFilterFunc] = useState({ fn: (elements) => { return elements } })
@@ -104,11 +45,7 @@ export default function ProductsTable(props) {
 
 
 
-
-
-
-
-    return (
+     return (
         <>
 
             <SearchBar
@@ -135,21 +72,12 @@ export default function ProductsTable(props) {
                 :
                 (
                     <OfferedServicesTable
-                        filterFunction={articleFilterFunction} />
+                        filterFunction={serviceFilterFunction} />
                 )
 
             }
 
-
-
-
-
-
-
-
-
-
-        </>
+         </>
     )
 }
 

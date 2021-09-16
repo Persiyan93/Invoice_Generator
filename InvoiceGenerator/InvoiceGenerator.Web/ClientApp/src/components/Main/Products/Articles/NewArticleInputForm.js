@@ -92,15 +92,16 @@ export default function NewArticleInputForm(props) {
     function actionAfterSuccessfullyUpdateArticle() {
         setGetArticlesTriger(true)
         setOpenPopup(false);
-
-
     }
+
     function actionAfterSuccessfullyAddedArticle() {
         history.push('/Products/All')
     }
+
     function quantityMonitoringchangeHandler(e) {
         setArticle(prevState => ({ ...prevState, quantityMonitoring: !prevState.quantityMonitoring }))
     }
+
     const { name, unitType, unitPrice, quantity, vatRate, articleNumber, quantityMonitoring, quantityLowerLimit } = article
     const classes = useStyles();
     return (
@@ -202,7 +203,8 @@ export default function NewArticleInputForm(props) {
                             label='Известяване при достигане на зададеo количество'
                             checked={quantityMonitoring}
                             onChange={quantityMonitoringchangeHandler}
-                            control={<Checkbox color='primary' />} />
+                            control={<Checkbox color='primary' />}
+                        />
                     </FormControl>
                     {
                         quantityMonitoring &&
@@ -215,7 +217,8 @@ export default function NewArticleInputForm(props) {
                             value={quantityLowerLimit}
                             name="quantityLowerLimit"
                             label="Долна граница за известяване"
-                            onChange={changeHandler} />
+                            onChange={changeHandler}
+                        />
                     }
 
 

@@ -17,62 +17,62 @@ import ArticleQuantityInputForm from './ArticleQuantityInputForm'
 
 
 
-const useStyles = makeStyles(theme => ({
-    tableRow: {
-        borderTop: "outset",
-        borderBottom: "outset",
+//const useStyles = makeStyles(theme => ({
+//    tableRow: {
+//        borderTop: "outset",
+//        borderBottom: "outset",
 
-    },
-    gridElement: {
+//    },
+//    gridElement: {
 
-        borderTop: "solid",
-        borderLeft: "solid",
+//        borderTop: "solid",
+//        borderLeft: "solid",
 
-        '&:hover': {
-            backgroundColor: '#A1A397',
-        },
-        cursor: 'pointer',
-        marginTop: 20,
-        borderRadius: 2
-    },
-    root: {
-        '& > *': {
-            borderBottom: 'unset',
-        },
-    },
-    table: {
-        '& thead th': {
-            fontWeight: '600',
+//        '&:hover': {
+//            backgroundColor: '#A1A397',
+//        },
+//        cursor: 'pointer',
+//        marginTop: 20,
+//        borderRadius: 2
+//    },
+//    root: {
+//        '& > *': {
+//            borderBottom: 'unset',
+//        },
+//    },
+//    table: {
+//        '& thead th': {
+//            fontWeight: '600',
 
 
-        },
-        '& tbody td': {
-            fontWeight: '400',
+//        },
+//        '& tbody td': {
+//            fontWeight: '400',
 
-        }, '& tbody tr:hover': {
-            backgroundColor: '#DAD4D3',
-            cursor: 'pointer'
+//        }, '& tbody tr:hover': {
+//            backgroundColor: '#DAD4D3',
+//            cursor: 'pointer'
 
-        }
-    },
-    searchInput: {
-        opacity: '0.6',
-        padding: '0px,5px',
-        fontSize: '0.6rem',
-        width: '70%',
-        '&:hover': {
-            backgroundColor: '#f2f2f2'
-        },
-        '& .MuiSvgIcon-root': {
-            marginRight: '8px'
-        }
-    },
-    menu: {
-        marginBottom: '20px',
-        borderRadius: '20px'
-    }
+//        }
+//    },
+//    searchInput: {
+//        opacity: '0.6',
+//        padding: '0px,5px',
+//        fontSize: '0.6rem',
+//        width: '70%',
+//        '&:hover': {
+//            backgroundColor: '#f2f2f2'
+//        },
+//        '& .MuiSvgIcon-root': {
+//            marginRight: '8px'
+//        }
+//    },
+//    menu: {
+//        marginBottom: '20px',
+//        borderRadius: '20px'
+//    }
 
-}))
+//}))
 
 
 
@@ -98,7 +98,7 @@ export default function ArticleTable(props) {
     const { filterFunction } = props
     const [sorting, setSorting] = useState({ order: 'asc', orderBy: '' })
     const [paging, setPaging] = useState({ page: 0, rowsPerPage: 10 })
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
 
     const [articles, setArticles] = useState([]);
@@ -130,45 +130,49 @@ export default function ArticleTable(props) {
         setPaging(prevState => ({ ...prevState, page: newPage }));
 
     }
+
     function rowsPerPageHandler(event) {
         setPaging({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
-
     }
+
     function actionAfterSuccessfullyupdatedArticle() {
         setGetArticlesTriger(true)
     }
+
     function blockArticleHandler(e, articleId) {
         setNewStatus('Blocked')
         setOpenConfirmPopup(true)
         selectArticle(articles.find(x => x.id === articleId));
     }
+
     function activateArticleHandler(e, articleId) {
         setNewStatus('Active')
         setOpenConfirmPopup(true)
         selectArticle(articles.find(x => x.id === articleId));
-
     }
+
     function blockArticle() {
         setPutArticleTriger(true);
         setOpenConfirmPopup(false)
     }
+
     function editArticleHandler(e, articleId) {
         selectArticle(articles.find(x => x.id === articleId))
         setOpenEditArticlePopup(true);
     }
 
     function editArticleQuantityHandler(e, articleId) {
-        console.log('Inside edit article quantity ')
         e.preventDefault()
         selectArticle(articles.find(x => x.id === articleId))
         setOpenEditArticleQuantityPopup(true)
     }
+
     function actionAfterSuccessFullyUpdatedArticleQuantity() {
         setOpenEditArticleQuantityPopup(false);
         setGetArticlesTriger(true)
     }
 
-    const classes = useStyles();
+
     return (
         <>
 
@@ -255,7 +259,7 @@ export default function ArticleTable(props) {
             >
 
             </ConfirmPopup>
-            {/* const {title, children, openPopup, setOpenPopup, width, classes, icon} = this.props; */}
+       
             <Popup
                 title='Промяна на артикула'
                 openPopup={isOpenEditArticlePopup}
@@ -267,7 +271,7 @@ export default function ArticleTable(props) {
                     articleInfo={selectedArticle}
                     setGetArticlesTriger={setGetArticlesTriger}
                     setOpenPopup={setOpenEditArticlePopup}
-                ></NewArticleInputForm>
+                />
             </Popup>
 
             <Popup
@@ -280,7 +284,7 @@ export default function ArticleTable(props) {
                     actionAfterSuccessFullyUpdatedArticleQuantity={actionAfterSuccessFullyUpdatedArticleQuantity}
                     articleInfo={selectedArticle}
                     setOpenPopup={setOpenEditArticleQuantityPopup}
-                ></ArticleQuantityInputForm>
+                />
             </Popup>
 
 

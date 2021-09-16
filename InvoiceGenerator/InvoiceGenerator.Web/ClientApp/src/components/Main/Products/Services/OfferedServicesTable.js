@@ -1,81 +1,14 @@
-﻿import { useState} from 'react'
-import { makeStyles,  TableCell,  Paper,  TableRow, TableBody, TablePagination, IconButton} from '@material-ui/core/';
+﻿import { useState } from 'react'
+import { makeStyles, TableCell, Paper, TableRow, TableBody, TablePagination, IconButton } from '@material-ui/core/';
 import TableWithPagingAndSorting from '../../../Elements/TableWithPagingAndSorting';
 import getResultAfterPagingAndSorting from '../../../../services/sortingService';
 import useFetchGet from '../../../../hooks/useFetchGet';
 import useFetchPut from '../../../../hooks/useFetchPut';
 import apiEndpoints from '../../../../services/apiEndpoints';
-import { currencyFormater, unitTypeFormater, productStatusFormater } from '../../../../services/globalServices'
+import { currencyFormater, productStatusFormater } from '../../../../services/globalServices'
 import BlockIcon from '@material-ui/icons/Block';
-import EditIcon from '@material-ui/icons/Edit';
 import ConfirmPopup from '../../../Elements/ConfirmationPopup';
-/*import Popup from '../../../Elements/Popup'*/
 import CheckIcon from '@material-ui/icons/Check';
-import ControlPointIcon from '@material-ui/icons/ControlPoint'
-
-
-
-
-
-const useStyles = makeStyles(theme => ({
-    tableRow: {
-        borderTop: "outset",
-        borderBottom: "outset",
-
-    },
-    gridElement: {
-
-        borderTop: "solid",
-        borderLeft: "solid",
-
-        '&:hover': {
-            backgroundColor: '#A1A397',
-        },
-        cursor: 'pointer',
-        marginTop: 20,
-        borderRadius: 2
-    },
-    root: {
-        '& > *': {
-            borderBottom: 'unset',
-        },
-    },
-    table: {
-        '& thead th': {
-            fontWeight: '600',
-
-
-        },
-        '& tbody td': {
-            fontWeight: '400',
-
-        }, '& tbody tr:hover': {
-            backgroundColor: '#DAD4D3',
-            cursor: 'pointer'
-
-        }
-    },
-    searchInput: {
-        opacity: '0.6',
-        padding: '0px,5px',
-        fontSize: '0.6rem',
-        width: '70%',
-        '&:hover': {
-            backgroundColor: '#f2f2f2'
-        },
-        '& .MuiSvgIcon-root': {
-            marginRight: '8px'
-        }
-    },
-    menu: {
-        marginBottom: '20px',
-        borderRadius: '20px'
-    }
-
-}))
-
-
-
 
 
 const headCells = [
@@ -109,6 +42,7 @@ export default function OfferedServicesTable(props) {
     var updateServiceUrl = apiEndpoints.updateServiceStatus + `/${selectedServiceId}`;
     useFetchPut(updateServiceUrl, putServiceTriger, setPutServiceTriger, { status: newStatus }, actionAfterSuccessfullyUpdetedService);
 
+
     function servicesAfterPagingAndSorting(event) {
         const { order, orderBy } = sorting
         const { page, rowsPerPage } = paging
@@ -122,27 +56,25 @@ export default function OfferedServicesTable(props) {
         setPaging(prevState => ({ ...prevState, page: newPage }));
 
     }
+
     function rowsPerPageHandler(event) {
         setPaging({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
 
     }
 
     function blockServiceHandler(e, serviceId) {
-
         setNewStatus('Blocked')
         setOpenConfirmPopup(true)
         selectServiceId(serviceId);
     }
+
     function activateServiceHandler(e, serviceId) {
         setNewStatus('Active')
         setOpenConfirmPopup(true)
         selectServiceId(serviceId);
-
     }
+
     function blockService() {
-        console.log('Inside block service')
-        console.log(newStatus);
-        console.log(selectedServiceId)
         setPutServiceTriger(true);
         setOpenConfirmPopup(false);
     }
@@ -154,7 +86,7 @@ export default function OfferedServicesTable(props) {
 
 
 
-    const classes = useStyles();
+
     return (
         <>
 
@@ -235,11 +167,6 @@ export default function OfferedServicesTable(props) {
             >
 
             </ConfirmPopup>
-
-
-
-
-
 
         </>
 

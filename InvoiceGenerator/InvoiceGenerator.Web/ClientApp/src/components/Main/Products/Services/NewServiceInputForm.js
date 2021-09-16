@@ -1,13 +1,12 @@
-﻿import {useState, useContext } from 'react';
+﻿import {useState } from 'react';
 import { useHistory } from 'react-router';
 import { TextField, Button, makeStyles, Paper} from '@material-ui/core/';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import apiEndpoints from '../../../../services/apiEndpoints';
 import useFetchPost from '../../../../hooks/useFetchPost';
-import { validateService } from '../../../../services/validationService'
+import { validateService } from '../../../../services/validationService';
+import PageTitle from '../../../Elements/PageTitle';
 
-import NotificationContext from '../../../../Context/NotificationContext'
-import PageTitle from '../../../Elements/PageTitle'
 const useStyles = makeStyles(theme => ({
     root: {
         '& .MuiFormControl-root': {
@@ -33,13 +32,10 @@ const serviceInitialValues = {
     name: '',
     vatRate: 0,
     defaultPrice: 0,
-
-
 }
 
 export default function NewServiceInputForm(props) {
-    const { setNotification } = useContext(NotificationContext)
-    const history = useHistory();
+     const history = useHistory();
     const [service, setService] = useState(serviceInitialValues)
     const [errors, setErrors] = useState({})
 
@@ -49,6 +45,7 @@ export default function NewServiceInputForm(props) {
     //Add new article
     const [postServiceTriger, setPostServiceTriger] = useState(false);
     useFetchPost(apiEndpoints.addNewService, { ...service }, postServiceTriger, setPostServiceTriger, actionAfterSuccessffullyCreatedService);
+
     function actionAfterSuccessffullyCreatedService() {
         history.push('/Products/All')
     }
@@ -68,14 +65,10 @@ export default function NewServiceInputForm(props) {
         if (validateService(service, setErrors)) {
             setPostServiceTriger(true)
         }
-
-
-
     }
 
 
-
-    const { name, vatRate, serviceNumber, defaultPrice } = service
+    const { name, vatRate, defaultPrice } = service
     const classes = useStyles();
     return (
         <>
