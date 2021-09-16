@@ -30,7 +30,7 @@ export function validateInvoiceInputModel(invoice) {
 
         errors.push('Срока за плащане трябва да бъде положително число.')
     }
-    if (invoice.paymentMethod === 'BankTransfer' && invoice.bankAccountId.length === 0) {
+    if (invoice.paymentMethod === 'BankTransfer' && !invoice.bankAccountId) {
         errors.push('Моля изберете банкова сметка от падащотот меню')
     }
 
@@ -64,7 +64,7 @@ export function validateArticleQuanitytyInInvoice(articlesInStock, requiredArtic
 export function validateClientInputModel(client, setErrors,) {
     const errors = {}
     if (client.companyName.length == 0) {
-        //setErrors(prevState=>({...prevState,companyName:'Моля въветете името на фирмата'}))
+       
         errors.companyName = 'Моля въветете името на фирмата'
 
     }

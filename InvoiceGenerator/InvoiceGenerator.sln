@@ -27,8 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Common", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Services.Messaging", "Services\InvoiceGenerator.Services.Messaging\InvoiceGenerator.Services.Messaging.csproj", "{A8CCF620-1869-4CD8-B0E3-6012F4502653}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Services.MicrosoftWordService", "Services\InvoiceGenerator.Services.MicrosoftWordService\InvoiceGenerator.Services.MicrosoftWordService.csproj", "{853924FA-26B3-4B1D-A6AA-288FCDCDB9ED}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Services.BackgroundServices", "Services\InvoiceGenerator.Services.BackgroundServices\InvoiceGenerator.Services.BackgroundServices.csproj", "{BB6B9682-64A3-4D03-80F2-2AC02435D3EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Services.CloadStorageService", "Services\InvoiceGenerator.Services.CloadStorageService\InvoiceGenerator.Services.CloadStorageService.csproj", "{7A75C1F3-E412-48E5-AEF7-EF84A948AA40}"
@@ -37,7 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C353A83D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoice_Generator.Services.Tests", "Tests\Invoice_Generator.Services.Tests\Invoice_Generator.Services.Tests.csproj", "{DC0A0F63-3E24-44F3-9EA3-203D8066DD09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceGenerator.Services.PdfService", "Services\InvoiceGenerator.Services.PdfService\InvoiceGenerator.Services.PdfService.csproj", "{5EA5A662-A53E-4C29-911E-DE2DD5848153}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceGenerator.Services.PdfService", "Services\InvoiceGenerator.Services.PdfService\InvoiceGenerator.Services.PdfService.csproj", "{5EA5A662-A53E-4C29-911E-DE2DD5848153}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,10 +75,6 @@ Global
 		{A8CCF620-1869-4CD8-B0E3-6012F4502653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8CCF620-1869-4CD8-B0E3-6012F4502653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8CCF620-1869-4CD8-B0E3-6012F4502653}.Release|Any CPU.Build.0 = Release|Any CPU
-		{853924FA-26B3-4B1D-A6AA-288FCDCDB9ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{853924FA-26B3-4B1D-A6AA-288FCDCDB9ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{853924FA-26B3-4B1D-A6AA-288FCDCDB9ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{853924FA-26B3-4B1D-A6AA-288FCDCDB9ED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BB6B9682-64A3-4D03-80F2-2AC02435D3EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BB6B9682-64A3-4D03-80F2-2AC02435D3EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB6B9682-64A3-4D03-80F2-2AC02435D3EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -110,7 +104,6 @@ Global
 		{0BE6E09D-CB9A-4D09-A525-E84A611B803E} = {F9830B88-25E6-43C2-BEE0-1F4521D6520C}
 		{04095D62-AE5C-4E3E-A09C-530336154621} = {7CDEB159-3C6F-4282-BF21-DFF2578C6891}
 		{A8CCF620-1869-4CD8-B0E3-6012F4502653} = {C6205EE6-51C0-4E31-AD64-1C5DC6EFA163}
-		{853924FA-26B3-4B1D-A6AA-288FCDCDB9ED} = {C6205EE6-51C0-4E31-AD64-1C5DC6EFA163}
 		{BB6B9682-64A3-4D03-80F2-2AC02435D3EC} = {C6205EE6-51C0-4E31-AD64-1C5DC6EFA163}
 		{7A75C1F3-E412-48E5-AEF7-EF84A948AA40} = {C6205EE6-51C0-4E31-AD64-1C5DC6EFA163}
 		{DC0A0F63-3E24-44F3-9EA3-203D8066DD09} = {C353A83D-C275-4B34-9773-CF0FD791546F}
