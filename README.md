@@ -2,9 +2,9 @@
 The website is a SinglePage Application SPA.
 ## :pencil2: Overview
 ### Roles
-*Vistirors
-*Administrator of Company-User who has registered company
-*Employees-administrator of company can add users and define users permissions
+* Vistirors
+* Administrator of Company-User who has registered company
+* Employees-administrator of company can add users and define users permissions
 ---
 ### Features
 * Generates invoices in PDF format

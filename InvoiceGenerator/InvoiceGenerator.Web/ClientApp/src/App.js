@@ -1,4 +1,3 @@
-
 import './App.css';
 import React, { useContext, useState, useEffect, } from 'react';
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
@@ -45,12 +44,12 @@ import BasicAlert from './components/Elements/BasicAlert'
 
 
 function App() {
-   
+
     const history = useHistory();
     const [user, setUser] = useState({ isAuthenticated: false, permissions: [] })
     const [isBusy, setBusy] = useState(true)
     const [notification, setNotification] = useState({ isOpen: false, message: '' })
-    
+
     useEffect(() => {
 
         dataService.get(apiEndpoints.getUserInfo)
@@ -59,7 +58,6 @@ function App() {
                 if (res.status == "Unsuccessful") {
                     if (res.message == 'Not authorized') {
                         setUser({ isAuthenticated: false, permissions: [] })
-                        history.push('/Identity/Login')
                     }
 
                 }
@@ -71,7 +69,7 @@ function App() {
                 setBusy(false)
             })
             .catch(err => {
-               
+
             })
 
     }, [])
@@ -87,15 +85,15 @@ function App() {
 
                         !isBusy &&
                         <>
-                        <Header />
+                            <Header />
 
                             <>
                                 <div className='background-Div'></div>
                                 <div className='Container'>
                                     <BasicAlert
-                                      notification={notification}
-                                      setNotification={setNotification}
-                                   />
+                                        notification={notification}
+                                        setNotification={setNotification}
+                                    />
 
 
                                     <Switch>
@@ -145,7 +143,7 @@ function App() {
                                 </div>
                             </>
 
-                           
+
                         </>
 
                     }
