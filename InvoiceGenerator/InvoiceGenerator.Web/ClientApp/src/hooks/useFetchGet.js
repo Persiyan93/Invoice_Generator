@@ -19,10 +19,8 @@ const useFetchGet = (endpoint, setResult, triger, setTriger) => {
             dataService.get(endpoint)
                 .then(res => res.json())
                 .then(res => {
-                    console.log(res)
-                    if (res.Status === "Unsuccessful") {
-                        console.log('insideError')
-                        if (res.Message === 'Not authorized') {
+                    if (res.Status === "Unsuccessful" || res.status ==="Unsuccessful") {
+                       if (res.Message === 'Not authorized' || res.message ==="Not authorized") {
                             setUser({ isAuthenticated: false, permissions: [] })
                             history.push('/Identity/Login')
                         }
