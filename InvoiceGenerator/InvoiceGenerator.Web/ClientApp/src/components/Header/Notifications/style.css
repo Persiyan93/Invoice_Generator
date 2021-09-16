@@ -1,0 +1,53 @@
+﻿.notification {
+    position: "relative";
+    width: fit-content;
+    display: inline-flex;
+    margin-left: 97%;
+    margin-top: 1px;
+    background-color: rgb(77, 67, 67);
+    border-radius: 25px;
+}
+
+.iconSection {
+    position: relative;
+    /* width: fit-content; */
+    display: inline-flex;
+}
+
+.notificationBar {
+    display: block;
+    opacity: 0.98;
+    box-shadow: 2px 3px 17px -3px #c96f6f8c;
+    padding: 15px;
+    right: 0;
+    z-index: 1;
+    /* #dfdfdf; */
+    background: #afabab;
+    color: initial;
+}
+
+.notification:hover .notificationBar {
+    display: block;
+}
+
+.lineItmes {
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.iconBadge {
+    background: red;
+    width: 15px;
+    display: block;
+    text-align: center;
+    height: 15px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 9px;
+    line-height: 15px;
+    position: absolute;
+    right: 0;
+    bottom: 13px;
+    left: 12px;
+}
