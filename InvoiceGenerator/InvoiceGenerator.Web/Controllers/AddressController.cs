@@ -1,10 +1,12 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Web.Models;
 using InvoiceGenerator.Web.Models.Address;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +19,12 @@ namespace InvoiceGenerator.Web.Controllers
     public class AddressController : ControllerBase
     {
         private readonly IAddressService addressService;
+       
 
         public AddressController(IAddressService addressService)
         {
             this.addressService = addressService;
+          
         }
 
         [HttpPost]
@@ -36,5 +40,8 @@ namespace InvoiceGenerator.Web.Controllers
                     
                  });
         }
+      
+        
+       
     }
 }

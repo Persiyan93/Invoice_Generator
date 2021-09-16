@@ -5,16 +5,18 @@ using InvoiceGenerator.Services.CloadStorageService;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Services.Messaging;
-using InvoiceGenerator.Services.MicrosoftWordService;
+
 using InvoiceGenerator.Web.Extensions;
 using InvoiceGenerator.Web.Models;
 using InvoiceGenerator.Web.Models.Identity;
+using InvoiceGenerator.Common.Resources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
@@ -22,10 +24,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using InvoiceGenerator.Services.PdfService;
+using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Web
 {
@@ -43,13 +50,10 @@ namespace InvoiceGenerator.Web
         {
             //Connect app with MS SQL SERVER
             services.AddDbContext<ApplicationDbContext>(options =>
-
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
 
 
-
-            services.AddMemoryCache();
             //Add Identity with JWT 
             services.AddIdentity<ApplicationUser, ApplicationRole>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -78,15 +82,43 @@ namespace InvoiceGenerator.Web
                         context.HandleResponse();
                         context.Response.StatusCode = 401;
                         await context.Response.WriteAsJsonAsync(new ResponseViewModel { Message = "Not authorized", Status = "Unsuccessful" });
+                    },
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["auth"];
+                        return Task.CompletedTask;
                     }
+                    
                 };
 
             });
 
 
+            //Add memory Cache
+             services.AddMemoryCache();
+            //Add Culture
+            services.AddLocalization();
 
+            services.Configure<RequestLocalizationOptions>(
+                options =>
+                {
+                    var supportedCultures = new List<CultureInfo>
+                    {
+                        new CultureInfo("en"),
+                        new CultureInfo("bg")
+                    };
+                    options.DefaultRequestCulture = new RequestCulture("en");
+                    options.SupportedCultures = supportedCultures;
+                    options.SupportedUICultures = supportedCultures;
 
-            services.AddControllersWithViews();
+                });
+
+            services.AddControllersWithViews()
+                    .AddDataAnnotationsLocalization(options => {
+                        options.DataAnnotationLocalizerProvider = (type, factory) =>
+                            factory.Create(typeof(Messages));
+                    });
+
 
 
             services.Configure<ApiBehaviorOptions>(options =>
@@ -101,23 +133,28 @@ namespace InvoiceGenerator.Web
                             .Select(x => x.ErrorMessage)
                             .FirstOrDefault()
 
-                    }); 
+                    });
 
                 };
             });
+
+
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
             services.AddTransient<IDropBoxService>(x =>
-            new DropBoxService( this.Configuration["DropBox:ApiKey"]));
-            services.AddTransient<IEmailSender>(x => 
+            new DropBoxService(this.Configuration["DropBox:ApiKey"]));
+            services.AddTransient<ICloudService>(x => new CloudService(this.Configuration["AzureStorage:ConnectionString"]));
+            services.AddTransient<IEmailSender>(x =>
             new SendGridEmailSender(
-                this.Configuration["SendGrid:ApiKey"], 
-                this.Configuration["SendGrid:EmailSender"], 
+                this.Configuration["SendGrid:ApiKey"],
+                this.Configuration["SendGrid:EmailSender"],
                 this.Configuration["SendGrid:EmailSenderName"]));
+            services.AddTransient<IPdfService, PdfService>();
             services.AddTransient<ICompanyService, CompanyService>();
             services.AddTransient<IAddressService, AddressService>();
             services.AddTransient<IClientService, ClientService>();
@@ -125,15 +162,17 @@ namespace InvoiceGenerator.Web
             services.AddTransient<IArticleService, ArticleService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IInvoiceService, InvoiceService>();
-            services.AddTransient<IDocumentService, DocumentService>();
+           
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IOfferedService, OfferedServices>();
             services.AddTransient<IHistoryEventService, HistoryEventService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<ICompanySettingsService, CompanySettingsService>();
-            services.AddTransient<IHomePageContentService ,HomePageContentService>();
+            services.AddTransient<IHomePageContentService, HomePageContentService>();
+            services.AddTransient<IBankAccountService, BankAccountService>();
+            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
 
-            
+
 
 
         }
@@ -148,9 +187,10 @@ namespace InvoiceGenerator.Web
             }
             else
             {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                app.ConfigureExceptionHandler(logger);
+                //app.UseExceptionHandler("/Error");
+                //// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                //app.UseHsts();
             }
 
             app.UseCors(options =>
@@ -160,8 +200,20 @@ namespace InvoiceGenerator.Web
               .SetIsOriginAllowed(origin => true)
               .AllowCredentials());
 
+            //var locatlizationOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+            //var cookieProvider = locatlizationOptions.Value.RequestCultureProviders.OfType<CookieRequestCultureProvider>().First();
+            //cookieProvider.CookieName = "language";
+            //locatlizationOptions.Value
+
+
+            app.UseRequestLocalization();
+
+
+
             //Register Automaper 
             AutoMapperConfig.RegisterMappings(typeof(LoginInputModel).GetTypeInfo().Assembly);
+
+
 
             //Seeding Data
             using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -174,7 +226,9 @@ namespace InvoiceGenerator.Web
 
 
             app.UseHttpsRedirection();
-             app.UseStaticFiles();
+
+            app.UseStaticFiles();
+
             app.UseSpaStaticFiles();
 
             app.UseRouting();

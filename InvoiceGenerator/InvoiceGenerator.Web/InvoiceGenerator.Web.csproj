@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -7,9 +7,12 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <UserSecretsId>acca90fa-7ae5-4182-a8ed-4a67bde414c1</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/4d832262-65aa-48c7-add7-4014a66a426c/resourceGroups/InvoiceGenerator/providers/microsoft.insights/components/invoicemaker</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.6" />
   </ItemGroup>
@@ -27,13 +30,29 @@
     <ProjectReference Include="..\Services\InvoiceGenerator.Services.BackgroundServices\InvoiceGenerator.Services.BackgroundServices.csproj" />
     <ProjectReference Include="..\Services\InvoiceGenerator.Services.CloadStorageService\InvoiceGenerator.Services.CloadStorageService.csproj" />
     <ProjectReference Include="..\Services\InvoiceGenerator.Services.Data\InvoiceGenerator.Services.Data.csproj" />
-    <ProjectReference Include="..\Services\InvoiceGenerator.Services.MicrosoftWordService\InvoiceGenerator.Services.MicrosoftWordService.csproj" />
+    <ProjectReference Include="..\Services\InvoiceGenerator.Services.PdfService\InvoiceGenerator.Services.PdfService.csproj" />
     <ProjectReference Include="..\Web\InvoiceGenerator.Web.Models\InvoiceGenerator.Web.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\src\components\Header\" />
-    <Folder Include="NewFolder\" />
+    <None Update="fonts\arial.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\cambria.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\cambriab.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\cambriai.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\cambriaz.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\times.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
@@ -49,7 +68,8 @@
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+   
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build " />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
