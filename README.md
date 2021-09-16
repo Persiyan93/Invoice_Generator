@@ -1,7 +1,7 @@
-# Invoice Generator Application is my defence project for ASP.NET Core course at [ SoftUni ].
-The website is a SinglePage Application (SPA)**.
+# Invoice Generator Application is my defence project for ASP.NET Core course at SoftUni.
+The website is a SinglePage Application SPA.
 ## :pencil2: Overview
-###Roles
+### Roles
 *Vistirors
 *Administrator of Company-User who has registered company
 *Employees-administrator of company can add users and define users permissions
