@@ -4,9 +4,12 @@ import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
     root: style => ({
+      
+        display:'inline',
         marginTop: theme.spacing(2),
         display: 'center',
         width: '100%',
+        zIndex :1000
     }),
     notification: {
         margin: theme.spacing(2),

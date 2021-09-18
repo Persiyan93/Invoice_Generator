@@ -27,7 +27,7 @@ export default function ArticlesTableInTransferTableComponent(props) {
             selectProductFromLeftTable(prevState => (prevState.filter(x => x.id !== id)))
         }
         else {
-            ar product = articles.find(x => x.id == id);
+           let product = articles.find(x => x.id == id);
             selectProductFromLeftTable(prevState => ([...prevState, product]))
         }
     }

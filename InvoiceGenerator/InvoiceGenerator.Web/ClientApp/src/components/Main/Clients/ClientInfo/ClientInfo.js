@@ -16,15 +16,11 @@ const useStyles = makeStyles(theme => ({
 
     header: {
         textAlign: 'center',
-        // backgroundColor: '#EAF0E3',
-        // /backgroundColor: '#D3D9CC',
         backgroundColor: '#BBC1B4',
         borderRadius: 10,
         display: 'flex'
-    }
-    , container: {
-        // height: '300px',
-        // width: '650px'
+    },
+    container: {
         marginTop: theme.spacing(10)
     },
     body: {

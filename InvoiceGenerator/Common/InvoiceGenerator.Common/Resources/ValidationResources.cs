@@ -2,7 +2,7 @@
 
 namespace InvoiceGenerator.Common.Resources
 {
-    public class Messages
+    public class ValidationResources
     {
     }
 }

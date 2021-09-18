@@ -1,15 +1,15 @@
-﻿import React from "react";
-import {Paper, withStyles, Typography } from "@material-ui/core";
+﻿import { useState } from 'react'
+import { makeStyles, } from "@material-ui/core";
+import useFetchPost from '../../../../hooks/useFetchPost'
+import apiEndpoints from '../../../../services/apiEndpoints'
 import * as identityService from '../../../../services/identityService';
 import UserDetails from "./UserDetails.js";
 import CompanyDetails from "./CompanyDetails.js";
 import CompanyAddressDetails from "./CompanyAddressDetails.js";
 import BackgroundImage from '../../../../resources/identityImage.jpg'
 
+const useStyles = makeStyles(theme => ({
 
-
-
-const useStyles = themе => ({
     background: {
         backgroundImage: `url(${BackgroundImage})`,
         position: 'fixed',
@@ -20,187 +20,131 @@ const useStyles = themе => ({
         backgroundRepeat: 'noRepeat'
 
     },
-    pageContent: {
-        opacity: 0.9,
-        marginLeft: '25%',
-        width: '50%',
-        height: '550px',
-        borderRadius: 10,
-        margin: themе.spacing(3),
-        padding: themе.spacing(3)
-    },
-    smallPage: {
-        marginLeft: '25%',
-        width: '50%',
-        height: '370px',
-        borderRadius: 10,
-        margin: themе.spacing(3),
-        padding: themе.spacing(3)
 
-    },
-    title: {
-        marginBottom: themе.spacing(3)
+}))
+
+const initialUserDetail = {
+    name: '',
+    username: '',
+    password: '',
+    repatPassword: '',
+    email: '',
+}
+const initialCompanyDetails = {
+    companyName: '',
+    vatNumber: '',
+    companyType: '',
+    accountablePersonName: '',
+    companyEmail: '',
+    uniqueIdentificationNumber: '',
+
+}
+const initialCompanyAddressDetails = {
+    addressText: '',
+    town: '',
+    country: ''
+}
+export default function RegisterForm(props) {
+    const classes = useStyles();
+    const [step, setStep] = useState(1);
+    const [userDetails, setUserDetails] = useState(initialUserDetail);
+    const [companyDetails, setCompanyDetails] = useState(initialCompanyDetails);
+    const [companyAddressDetails, setCompanyAddressDetails] = useState(initialCompanyAddressDetails);
+
+    const [postRegisterFormTriger, setPostRegisterFormTriger] = useState(false);
+    let userData = { ...userDetails, companyDetails: { ...companyDetails, address: { ...companyAddressDetails } } }
+    useFetchPost(apiEndpoints.register,userData,postRegisterFormTriger,setPostRegisterFormTriger,actionAfterSuccessfullyRegisteredUser)
+
+    function actionAfterSuccessfullyRegisteredUser() {
+        props.history.push('/Identity/Login')
     }
-})
 
-class RegisterForm extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            step: 1,
-            name: '',
-            username: '',
-            password: '',
-            repatPassword: '',
-            email: '',
-            companyDetails: {
-                companyName: '',
-                vatNumber: '',
-                companyType: '',
-                address: {
-                    addressText: '',
-                    town: '',
-                    country: ''
-                },
-                accontablePersonName: '',
-                companyEmail: '',
-                uniqueIdentificationNumber: '',
-            }
-
-        }
-        this.changeHandler = this.changeHandler.bind(this);
-        this.submitHandler = this.submitHandler.bind(this);
-        this.prevStep = this.prevStep.bind(this);
-        this.nextStep = this.nextStep.bind(this);
-
+    function userDetailsChangeHandler() {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        setUserDetails(prevState => ({ ...prevState, [name]: value }))
     }
-    changeHandler(event) {
+
+    function companyDetailsChangeHandler() {
 
         const target = event.target;
         const value = target.value;
         const name = target.name;
-        if (name == 'addressText' || name == 'town' || name == 'country') {
-            this.setState(prevState => ({
-                ...prevState,
-                companyDetails: {
-                    ...prevState.companyDetails,
-                    address: {
-                        ...prevState.companyDetails.address, [name]: value
-                    }
-                }
-            }))
-        }
-        else if (name == 'companyName' || name == 'vatNumber'
-            || name == 'accontablePersonName' || name == 'companyEmail' || name == 'uniqueIdentificationNumber' || name == 'companyType') {
-            this.setState({
-                companyDetails:
-                    { ...this.state.companyDetails, [name]: value }
-            });
-        }
-        else {
-
-            this.setState({ [name]: value });
-        }
-
+        setCompanyDetails(prevState => ({ ...prevState, [name]: value }))
     }
 
-    submitHandler(event) {
-        event.preventDefault();
-        console.log('inside submit handler')
-        identityService.register({ ...this.state })
-            .then(res => res.json())
-            .then(res => {
-                if (res.status == "Unsuccessful") {
-                    console.log('Unsuccessful status ')
-                    console.log(res);
-                }
-                else {
-                    this.props.history.push('/Identity/Login')
-                }
-
-            })
-            .catch(err => {
-                this.props.history.push('/Errors/ConnectionError')
-            })
+    function companyAddressDetailsChangeHandler() {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        setCompanyAddressDetails(prevState => ({ ...prevState, [name]: value }))
+    }
+    function changeCompanyTypeHandler(e) {
+        setCompanyDetails(prevState => ({ ...prevState, companyType: e.target.value }))
     }
 
-    prevStep() {
-        console.log('Inside prevStep');
-        this.setState(prevState => ({ step: prevState.step - 1 }))
+    function submitHandler() {
+        setPostRegisterFormTriger(true)
     }
 
-    nextStep() {
-        console.log('Inside NextStep')
-        this.setState(prevState => ({ step: prevState.step + 1 }))
+    function prevStep() {
+        setStep(prevState => (prevState - 1))
     }
-    render() {
-        const { step, companyDetails } = this.state
 
-        const { classes } = this.props;
-        switch (step) {
-            case 1:
-                return (
-                    <div className={classes.background}>
-                        <Paper className={classes.pageContent}>
-                            <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
-                                Регистрация
-                        </Typography>
-                            <UserDetails
-                                nextStep={this.nextStep}
-                                inputFields={{ ...this.state }}
-                                changeHandler={this.changeHandler}
-                            />
-                        </Paper>
-                    </div >
-                )
+    function nextStep() {
+        setStep(prevState => (prevState + 1))
+    }
 
-            case 2:
-                return (
-                    <div className={classes.background}>
-                        <Paper className={classes.pageContent}>
-                            <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
-                                Данни за фирмата
-                        </Typography>
-                            <CompanyDetails
-                                nextStep={this.nextStep}
-                                prevStep={this.prevStep}
-                                inputFields={{ ...companyDetails }}
-                                changeHandler={this.changeHandler}
-                            >
+    switch (step) {
+        case 1:
+            return (
+                <div className={classes.background}>
+                    <UserDetails
+                        nextStep={nextStep}
+                        inputFields={userDetails}
+                        changeHandler={userDetailsChangeHandler}
+                    />
+                </div>
+            )
 
-                            </CompanyDetails>
-                        </Paper>
-                    </div >
-                )
 
-            case 3:
-                return (
-                    <div className={classes.background}>
-                        <Paper className={classes.smallPage}>
-                            <Typography className={classes.title} component="h1" variant="h6" gutterBottom={false} align="center">
-                                Адрес на фирмата
-                        </Typography>
-                            <CompanyAddressDetails
-                                submitHandler={this.submitHandler}
-                                prevStep={this.prevStep}
-                                inputFields={{ ...companyDetails }}
-                                changeHandler={this.changeHandler}
-                            >
+        case 2:
+            return (
+                <div className={classes.background}>
 
-                            </CompanyAddressDetails>
-                        </Paper>
-                    </div >
-                )
+                    <CompanyDetails
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        inputFields={companyDetails}
+                        changeHandler={companyDetailsChangeHandler}
+                        changeCompanyTypeHandler={changeCompanyTypeHandler}
+                    />
+
+
+                </div >
+            )
+
+        case 3:
+            return (
+                <div className={classes.background} >
+
+                    <CompanyAddressDetails
+                        submit={submitHandler}
+                        prevStep={prevStep}
+                        inputFields={companyAddressDetails}
+                        changeHandler={companyAddressDetailsChangeHandler}
+                    />
+
+
+                </div >
+            )
 
 
 
-            default:
-                return (<div></div>)
-        }
-
+        default:
+            return (<div></div>)
     }
 
 }
 
-
-export default withStyles(useStyles)(RegisterForm);

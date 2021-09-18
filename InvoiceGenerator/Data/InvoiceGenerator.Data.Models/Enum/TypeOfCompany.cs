@@ -8,13 +8,11 @@ namespace InvoiceGenerator.Data.Models.Enum
 {
     public enum TypeOfCompany
     {
-        SoleТrader = 1,
+        
         LtdWithOneOwner = 2,
-        JoinStockCompany=3,
-        Ltd = 4
-       
-       
+        JoinStockCompany = 3,
+        Ltd = 4,
+        SoleTrader=5
 
-          
     }
 }

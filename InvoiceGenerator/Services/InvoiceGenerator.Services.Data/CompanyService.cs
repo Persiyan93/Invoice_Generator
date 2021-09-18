@@ -1,11 +1,13 @@
 ﻿
 using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Data;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Data.Models.Enum;
 using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.Company;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,11 +18,13 @@ namespace InvoiceGenerator.Services.Data
     {
         private readonly ApplicationDbContext context;
         private readonly IAddressService addressService;
+        private readonly IStringLocalizer<Messages> stringLocalizer;
 
-        public CompanyService(ApplicationDbContext context, IAddressService addressService)
+        public CompanyService(ApplicationDbContext context, IAddressService addressService,IStringLocalizer<Messages>stringLocalizer)
         {
             this.context = context;
             this.addressService = addressService;
+            this.stringLocalizer = stringLocalizer;
         }
 
 
@@ -30,7 +34,7 @@ namespace InvoiceGenerator.Services.Data
             var companyFromDb = await context.RegisteredCompanies.FirstOrDefaultAsync(x => x.VatNumber == inputModel.VatNumber);
             if (companyFromDb != null)
             {
-                throw new InvalidUserDataException(string.Format(ErrorMessages.CompanyAlreadyExist, inputModel.VatNumber));
+                throw new InvalidUserDataException(stringLocalizer["CompanyAlreadyExist",inputModel.VatNumber].Value);
             }
 
             var company = new RegisteredCompany
@@ -48,6 +52,7 @@ namespace InvoiceGenerator.Services.Data
             {
                 company.UniqueIdentificationNumber = inputModel.UniqueIdentificationNumber;
             }
+            
             var addressId = await addressService.AddFullAddressAsync(inputModel.Address);
             var defaultOptions = new CompanySettings
             {

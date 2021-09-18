@@ -1,4 +1,5 @@
-﻿import BackgroundImage from '../../../resources/homeBackgroundImage.jpg'
+﻿import useProgressiveImage from '../../../hooks/useProgressiveImage'
+import BackgroundImage from '../../../resources/homeBackgroundImage.jpg'
 import { makeStyles, } from '@material-ui/core/';
 import { Link } from 'react-router-dom';
 
@@ -7,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     backgroundImage: {
-        backgroundImage: `url(${BackgroundImage})`,
+        //backgroundImage: `url(${BackgroundImage})`,
         position: 'fixed',
         minHeight: '100%',
         minWidth: '100%',
@@ -57,10 +58,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function HomeGuests(props) {
+    const loadedImage = useProgressiveImage('../../../resources/homeBackgroundImage.jpg')
      const classes = useStyles();
     return (
 
-        <div className={classes.backgroundImage}>
+    /*<div style={{backgroundImage:`url(${loadedImage||undefined})`}}>*/
+        <div className={classes.backgroundImage} style={{ backgroundImage: `url(${BackgroundImage})` }}>
             <div className={classes.pageTitle}>
                 <h1 className={classes.h1}>Безплатно онлайн фактуриране</h1>
                 <Link to="/Identity/Register" style={{ textDecoration: 'none' }}>

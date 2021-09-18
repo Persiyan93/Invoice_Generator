@@ -107,16 +107,16 @@ namespace InvoiceGenerator.Web
                         new CultureInfo("en"),
                         new CultureInfo("bg")
                     };
-                    options.DefaultRequestCulture = new RequestCulture("en");
+                    options.DefaultRequestCulture = new RequestCulture("bg");
                     options.SupportedCultures = supportedCultures;
                     options.SupportedUICultures = supportedCultures;
 
                 });
 
-            services.AddControllersWithViews()
+            services.AddControllers()
                     .AddDataAnnotationsLocalization(options => {
                         options.DataAnnotationLocalizerProvider = (type, factory) =>
-                            factory.Create(typeof(Messages));
+                            factory.Create(typeof(ValidationResources));
                     });
 
 

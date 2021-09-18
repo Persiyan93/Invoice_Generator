@@ -26,7 +26,7 @@ const useFetchPost = (endpoint, data, triger, setTriger, actionAfterSuccessfullO
                             history.push('/Identity/Login')
                         }
                         else {
-                            setNotification({ isOpen: true, message: res.Message, severity: 'error' })
+                            setNotification({ isOpen: true, message: res.message, severity: 'error' })
                             window.scrollTo(0, 0)
                         }
 

@@ -1,4 +1,5 @@
 ﻿using InvoiceGenerator.Common;
+using InvoiceGenerator.Common.Resources;
 using InvoiceGenerator.Data.Models;
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Services.MicrosoftWordService;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -29,22 +31,23 @@ namespace InvoiceGenerator.Web.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
         private readonly IIdentityService identityService;
-       
+        private readonly IStringLocalizer<Messages> stringLocalizer;
 
         public IdentityController
             (
             RoleManager<ApplicationRole> roleManager,
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration,
-            IIdentityService identityService
-           
+            IIdentityService identityService,
+            IStringLocalizer<Messages> stringLocalizer
+
             )
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
             this.configuration = configuration;
             this.identityService = identityService;
-           
+            this.stringLocalizer = stringLocalizer;
         }
 
         [HttpPost]
@@ -53,13 +56,13 @@ namespace InvoiceGenerator.Web.Controllers
 
             var user = await userManager.FindByNameAsync(inputModel.UserName);
             var isLocked = userManager.IsLockedOutAsync(user);
-                
+
             var isPasswordCorrect = await userManager.CheckPasswordAsync(user, inputModel.Password);
-            if (user != null && isPasswordCorrect && !isLocked.Result) 
+            if (user != null && isPasswordCorrect && !isLocked.Result)
             {
 
                 var userRoles = await userManager.GetRolesAsync(user);
-               
+
 
                 var authClaims = new List<Claim>
                 {
@@ -72,7 +75,7 @@ namespace InvoiceGenerator.Web.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
 
                 };
-               
+
                 foreach (var userRole in userRoles)
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
@@ -87,7 +90,7 @@ namespace InvoiceGenerator.Web.Controllers
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
-                var userPermissions =await getUserPermissins(user);
+                var userPermissions = await getUserPermissins(user);
 
                 var resultToken = new JwtSecurityTokenHandler().WriteToken(token);
                 this.HttpContext.Response
@@ -99,28 +102,29 @@ namespace InvoiceGenerator.Web.Controllers
                             {
                                 HttpOnly = true,
                                 SameSite = SameSiteMode.None,
-                                Secure=true,
+                                Secure = true,
                                 Expires = token.ValidTo,
-                                Path="/"
-                                
+                                Path = "/"
+
                             });
-                
-                this.HttpContext.Response.Cookies.Append(".AspNetCore.Culture", "c=bg|uic=bg",new CookieOptions {
+
+                this.HttpContext.Response.Cookies.Append(".AspNetCore.Culture", "c=bg|uic=bg", new CookieOptions
+                {
                     SameSite = SameSiteMode.None,
                     Secure = true,
                 });
 
 
-                    return Ok(new {Status="Successfully", permissions = userPermissions });
-                
-          
+                return Ok(new { Status = "Successfully", permissions = userPermissions });
+
+
             }
             return this.BadRequest(new ResponseViewModel
             {
                 Status = "Unsuccessful",
-                Message = "Wrong password or username"
+                Message = stringLocalizer["WrnongPasswordOrUserName"].Value
             });
-            
+
 
         }
 
@@ -129,12 +133,10 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> Register(RegisterInputModel inputModel)
         {
             var response = new ResponseViewModel();
-            var companyId=await identityService.RegisterUserAsync(inputModel);
-           
+            await identityService.RegisterUserAsync(inputModel);
+
             response.Status = "Successfully";
-            response.Message = string.Format(SuccessMessages.SuccessfullyAddedUser, inputModel.Email);
-
-
+            response.Message = stringLocalizer["SuccessfullyRegisteredUser"];
 
             return this.Ok(response);
         }
@@ -144,20 +146,19 @@ namespace InvoiceGenerator.Web.Controllers
         [Route("Logout")]
         public IActionResult Logout()
         {
-             
             this.HttpContext.Response.Cookies.Delete(
-                            "auth",
-                            new CookieOptions
-                            {
-                                HttpOnly = true,
-                                SameSite = SameSiteMode.None,
-                                Secure = true,
-                               
-                                Path = "/"
+                           "auth",
+                           new CookieOptions
+                           {
+                               HttpOnly = true,
+                               SameSite = SameSiteMode.None,
+                               Secure = true,
 
-                            }
-                            );
-            return this.Ok(new  ResponseViewModel{Status="Successfully",Message="Test"});
+                               Path = "/"
+
+                           }
+                           );
+            return this.Ok(new ResponseViewModel { Status = "Successfully", Message = "Test" });
         }
 
 

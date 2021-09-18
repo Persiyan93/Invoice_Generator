@@ -44,8 +44,6 @@ import BasicAlert from './components/Elements/BasicAlert'
 
 
 function App() {
-
-    const history = useHistory();
     const [user, setUser] = useState({ isAuthenticated: false, permissions: [] })
     const [isBusy, setBusy] = useState(true)
     const [notification, setNotification] = useState({ isOpen: false, message: '' })
@@ -69,7 +67,7 @@ function App() {
                 setBusy(false)
             })
             .catch(err => {
-
+                console.log(err);
             })
 
     }, [])

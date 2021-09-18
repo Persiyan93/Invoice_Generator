@@ -64,7 +64,7 @@ export function validateArticleQuanitytyInInvoice(articlesInStock, requiredArtic
 export function validateClientInputModel(client, setErrors,) {
     const errors = {}
     if (client.companyName.length == 0) {
-       
+
         errors.companyName = 'Моля въветете името на фирмата'
 
     }
@@ -125,7 +125,7 @@ export function validateArticleInputModel(article, setErrors) {
         errors.quantityLowerLimit = 'Долната граница не може да бъде отрицателна'
     }
 
-    console.log(errors)
+
     setErrors({ ...errors })
     if (Object.keys(errors).length === 0 && errors.constructor === Object) {
         return true
@@ -176,6 +176,87 @@ export function validateUserInputModel(user, setErrors) {
 
     }
     return false;
+}
 
+export function validateUserDetails(user, setErrors) {
+    const errors = {}
+    if (user.username.length === 0) {
+        errors.username = "Моля въведете потребителско име";
+    }
+    if (user.name.length === 0) {
+        errors.name = 'Моля въведете Име и фамилия'
+    }
+    let regex = new RegExp(emailRegex)
+    if (!regex.test(String(user.email).toLocaleLowerCase())) {
+        errors.email = 'Моля въведете валиден имейл адрес';
+    }
+    if (user.password.length === 0) {
+        errors.password = 'Моля въведете парола'
+    }
+    if (user.password.length<6) {
+        errors.password ='Минималната дължина на паролата е 6 символа'
+    }
+    if (user.password != user.repatPassword) {
+      errors.repeatPassword = 'Двете пароли се различват.Моля проверете за грешка';
+    }
+   
+    setErrors({ ...errors })
+    if (Object.keys(errors).length === 0 && errors.constructor === Object) {
+        return true
+    }
+    return false;
+
+}
+
+export  function validateCompanyDetails(company, setErrors) {
+    let errors = {}
+    if (company.companyName.length === 0) {
+        errors.companyName = 'Моля въведете имете но фирмата'
+    }
+    if (company.companyType.length === 0) {
+        errors.companyType = 'Моля въведете вида на фирмата'
+    }
+    let regex = new RegExp(vatNumberRegex)
+    if (!regex.test(company.vatNumber)) {
+        errors.vatNumber = 'Моля въведете валиден ДДС Номер'
+    }
+    let countryCode = company.vatNumber.substring(0, 2);
+    if (countryCode === 'BG' && company.uniqueIdentificationNumber.length == 0) {
+        errors.uniqueIdentificationNumber = 'Моля въведете ЕИК.За български фирми той е задължителен';
+    }
+    if (countryCode === 'BG' && company.uniqueIdentificationNumber.length != 0) {
+        let uniqueIdentificationNumber = company.uniqueIdentificationNumber;
+        let expectedUniqueIdentificationNumer = company.vatNumber.substring(2, company.vatNumber.length)
+        
+        if (expectedUniqueIdentificationNumer != uniqueIdentificationNumber) {
+            errors.uniqueIdentificationNumber = 'Моля въведете валиден ЕИК';
+        }
+    }
+    setErrors({ ...errors })
+    if (Object.keys(errors).length === 0 && errors.constructor === Object) {
+        return true
+    }
+    return false;
+
+}
+export function validateCompanyAddressDetails(address, setErrors) {
+    let errors = {}
+    console.log(address)
+    if (address.country.length === 0) {
+        errors.country = 'Моля въведете държава на регистрация '
+    }
+    if (address.town.length===0) {
+        errors.town = 'Моля въведете насеселеното място'
+    }
+    
+    if (address.addressText.length===0) {
+        errors.addressText = 'Моля въведете точен адрес'
+    }
+    
+    setErrors({ ...errors })
+    if (Object.keys(errors).length === 0 && errors.constructor === Object) {
+        return true
+    }
+    return false;
 
 }
