@@ -1,10 +1,10 @@
 ﻿import { useState } from 'react';
 import { Paper, makeStyles, TableRow, TableBody, TableCell, TablePagination} from '@material-ui/core'
-import getResultAfterPagingAndSorting from '../../../services/sortingService';
-import TableWithPagingAndSorting from '../../Elements/TableWithPagingAndSorting';
-import apiEndpoints from '../../../services/apiEndpoints';
-import useFetchGet from '../../../hooks/useFetchGet';
-import { eventTypeConverter } from '../../../services/globalServices'
+import getResultAfterPagingAndSorting from '../../../../services/sortingService';
+import TableWithPagingAndSorting from '../../../Elements/TableWithPagingAndSorting';
+import apiEndpoints from '../../../../services/apiEndpoints';
+import useFetchGet from '../../../../hooks/useFetchGet';
+import { eventTypeConverter } from '../../../../services/globalServices'
 
 
 const useStyles = makeStyles(theme => ({
@@ -64,7 +64,7 @@ export default function InvoiceHistory(props) {
     }
 
     const classes = useStyles();
-    console.log(invoiceEvents)
+ 
     return (
 
         <Paper className={classes.pageContent}>
