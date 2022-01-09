@@ -162,6 +162,12 @@
   <data name="SuccessfullyAddedClient" xml:space="preserve">
     <value>Клиента беше добавен успешно</value>
   </data>
+  <data name="SuccessfullyAddedContactPerson" xml:space="preserve">
+    <value>{0} беше добавен успешно към контактния лист.</value>
+  </data>
+  <data name="SuccessfullyAddedContent" xml:space="preserve">
+    <value>Показателя беше добавен успешно</value>
+  </data>
   <data name="SuccessfullyAddedService" xml:space="preserve">
     <value>Услуга {0} беше добавена успешно</value>
   </data>

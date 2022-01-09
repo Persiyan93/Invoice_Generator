@@ -23,7 +23,7 @@ namespace InvoiceGenerator.Common
                 case TypeOfCompany.Ltd:
                     result = "ООД";
                     break; 
-                case TypeOfCompany.SoleТrader:
+                case TypeOfCompany.SoleTrader:
                     result = "ET";
                     break;
 

@@ -19,8 +19,6 @@ namespace InvoiceGenerator.Data.Migrations
                 .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.HasSequence<int>("InvoiceNumbers", "shared");
-
             modelBuilder.Entity("InvoiceGenerator.Data.Models.Address", b =>
                 {
                     b.Property<string>("Id")
@@ -461,9 +459,7 @@ namespace InvoiceGenerator.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("InvoiceNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR shared.InvoiceNumbers");
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsInvoiceWithZeroVatRate")
                         .HasColumnType("bit");
