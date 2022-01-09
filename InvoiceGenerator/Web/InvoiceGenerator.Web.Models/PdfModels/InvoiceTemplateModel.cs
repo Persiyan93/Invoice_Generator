@@ -7,6 +7,7 @@ using InvoiceGenerator.Services.Mapping;
 using InvoiceGenerator.Web.Models.WordModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace InvoiceGenerator.Services.MicrosoftWordService.Models
 {
@@ -97,6 +98,8 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
                               opt.MapFrom(y => y.IssueDate.ToString("dd.MM.yyyy")))
                    .ForMember(x => x.MethodOfPayment, opt =>
                               opt.MapFrom(y => y.PaymentMethod == MethodsOfPayment.Cash ? "Cash" : "BankTransfer"))
+                   .ForMember(x => x.SellerCompanyName, opt =>
+                                   opt.MapFrom(y => $"\"{y.Seller.Name}\" {StringConverter.TranslateCompanyTypeToBulgarianLanguage(y.Seller.CompanyType)}"))
                        .ForMember(x => x.SellerAccontablePersonName, opt =>
                                  opt.MapFrom(y => y.Seller.AccontablePersonName))
                         .ForMember(x => x.SellerUniqueIdentificationNumber, opt =>
@@ -113,7 +116,9 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
                                    opt.MapFrom(i => i.ReasonForInvoiceWithZeroVatRate))
                     .ForMember(x => x.PlaceOfPublishing, opt =>
                                    opt.MapFrom(i => i.Seller.Address.Town.Name));
-                 
+                    //.ForMember(x => x.VatRate, opt =>
+                    //              opt.MapFrom(i => i.Services.Count == 0 ? 0 : (i.Services.Sum(x => x.Service.VatRate) / i.Services.Count) + i.Articles.Count == 0 ? 0 : (i.Articles.Sum(a => a.Article.VatRate) / i.Articles.Count)));
+
 
 
 

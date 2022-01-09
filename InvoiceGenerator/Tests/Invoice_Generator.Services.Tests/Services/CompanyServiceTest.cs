@@ -36,7 +36,7 @@ namespace Invoice_Generator.Services.Tests.Services
             var countOfCompanies = this.DbContext.RegisteredCompanies.Count();
             var expectedCountOfCompanies = 1;
             Assert.Equal(expectedCountOfCompanies, countOfCompanies);
-            var countOfDefaultInvoiceOptions = this.DbContext.DefaultInvoiceOptions.Count();
+            var countOfDefaultInvoiceOptions = this.DbContext.CompanySettings.Count();
             var expectedCountOfDefaultInvoiceOptions = 1;
             Assert.Equal(expectedCountOfDefaultInvoiceOptions, countOfDefaultInvoiceOptions);
 

@@ -60,7 +60,7 @@ namespace InvoiceGenerator.Services.Data
             {
                 return source;
             }
-            //string propName = ((MemberExpression)selector.Body).Member.Name;
+            
 
             return source.Where(ExpressionBuilder.ContainsText<T>(propName, text));
         }

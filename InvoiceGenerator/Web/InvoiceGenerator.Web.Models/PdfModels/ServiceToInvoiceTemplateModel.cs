@@ -25,7 +25,7 @@ namespace InvoiceGenerator.Web.Models.WordModels
         {
             configuration.CreateMap<InvoiceToService, ServiceToInvoiceTemplateModel>()
                 .ForMember(x => x.Name, opt =>
-                           opt.MapFrom(s => s.Service.Name))
+                           opt.MapFrom(s => s.AdditionalInfo))
                  .ForMember(x => x.Quantity, opt =>
                            opt.MapFrom(s => s.Quantity))
                   .ForMember(x => x.UnitPrice, opt =>

@@ -91,8 +91,8 @@ namespace Invoice_Generator.Services.Tests.Services
             //Arrange
             var invoiceService = new InvoiceService(this.DbContext);
             var invoice = new Invoice { SellerId = registeredCompanyId, Status = InvoiceStatus.WaitingForPayment ,PaymentDueDate=new DateTime(2020,10,10)};
-            var companySerings = new DefaultInvoiceOptions { BlockClientWhenReachMaxCountOfUnpaidInvoices = false, CompanyId = registeredCompanyId };
-            await this.DbContext.DefaultInvoiceOptions.AddAsync(companySerings);
+            var companySerings = new CompanySettings { BlockClientWhenReachMaxCountOfUnpaidInvoices = false, CompanyId = registeredCompanyId };
+            await this.DbContext.CompanySettings.AddAsync(companySerings);
             await this.DbContext.AddAsync(invoice);
             await this.DbContext.SaveChangesAsync();
             var input = new UpdateInvoiceStatusInputModel { InvoiceIds = new List<string> { invoice.Id }, Status = InvoiceStatus.Paid };

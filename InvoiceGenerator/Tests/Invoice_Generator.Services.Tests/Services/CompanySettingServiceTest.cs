@@ -20,8 +20,8 @@ namespace Invoice_Generator.Services.Tests.Services
             //Arrange
 
             var companySettingsService = new CompanySettingsService(this.DbContext);
-            var companySettings = new DefaultInvoiceOptions { CompanyId = registeredCompanyId };
-            await this.DbContext.DefaultInvoiceOptions.AddAsync(companySettings);
+            var companySettings = new CompanySettings { CompanyId = registeredCompanyId };
+            await this.DbContext.CompanySettings.AddAsync(companySettings);
             await this.DbContext.SaveChangesAsync();
 
 
@@ -41,8 +41,8 @@ namespace Invoice_Generator.Services.Tests.Services
             //Arrange
 
             var companySettingsService = new CompanySettingsService(this.DbContext);
-            var companySettings = new DefaultInvoiceOptions { CompanyId = registeredCompanyId,DefaultPaymentTerm=50 };
-            await this.DbContext.DefaultInvoiceOptions.AddAsync(companySettings);
+            var companySettings = new CompanySettings { CompanyId = registeredCompanyId,DefaultPaymentTerm=50 };
+            await this.DbContext.CompanySettings.AddAsync(companySettings);
             await this.DbContext.SaveChangesAsync();
             var newCompanySettings = new CompanySettingsModel {DefaultPaymentTerm=10 };
 
@@ -53,9 +53,9 @@ namespace Invoice_Generator.Services.Tests.Services
 
 
             //Assert
-            var countOfSettings = this.DbContext.DefaultInvoiceOptions.Count();
+            var countOfSettings = this.DbContext.CompanySettings.Count();
             Assert.Equal(1, countOfSettings);
-            var settings = this.DbContext.DefaultInvoiceOptions.FirstOrDefault();
+            var settings = this.DbContext.CompanySettings.FirstOrDefault();
             var expectedDefaultPaymentTerm = 10;
             Assert.Equal(expectedDefaultPaymentTerm, settings.DefaultPaymentTerm);
 

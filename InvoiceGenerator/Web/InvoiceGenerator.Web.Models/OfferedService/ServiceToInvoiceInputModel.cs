@@ -17,5 +17,7 @@ namespace InvoiceGenerator.Web.Models.OfferedService
 
         [Required]
         public double Quantity { get; set; }
+
+        public string AdditionalInfo { get; set; }
     }
 }

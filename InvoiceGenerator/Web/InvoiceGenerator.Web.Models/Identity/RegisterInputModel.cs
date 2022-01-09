@@ -23,6 +23,7 @@ namespace InvoiceGenerator.Web.Models.Identity
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
 
+        [Required]
         public CompanyInputModel   CompanyDetails { get; set; }
 
     }

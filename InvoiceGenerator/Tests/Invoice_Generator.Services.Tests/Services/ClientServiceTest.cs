@@ -24,128 +24,128 @@ namespace Invoice_Generator.Services.Tests.Services
 
 
 
-        [Fact]
-        public async Task TryToAddClientWithVatNumberWhichAllreadExistThrowException()
-        {
+        //[Fact]
+        //public async Task TryToAddClientWithVatNumberWhichAllreadExistThrowException()
+        //{
 
-            //Arrange
-            var addressService = new Mock<IAddressService>();
+        //    //Arrange
+        //    var addressService = new Mock<IAddressService>();
 
-            var clientService = new ClientService(this.DbContext, addressService.Object);
-            var client = new Client
-            {
-                VatNumber = "2",
-                IsActive = true
+        //    var clientService = new ClientService(this.DbContext, addressService.Object);
+        //    var client = new Client
+        //    {
+        //        VatNumber = "2",
+        //        IsActive = true
 
-            };
-            var newClient = new ClientInputModel { VatNumber = "2" };
-            this.DbContext.Clients.Add(client);
-            await this.DbContext.SaveChangesAsync();
+        //    };
+        //    var newClient = new ClientInputModel { VatNumber = "2" };
+        //    this.DbContext.Clients.Add(client);
+        //    await this.DbContext.SaveChangesAsync();
 
-            //Avtion
-            Func<Task> act = () => clientService.CreateClientAsync(newClient, "");
+        //    //Avtion
+        //    Func<Task> act = () => clientService.CreateClientAsync(newClient, "");
 
-            //Assert
-            var exception = await Assert.ThrowsAsync<InvalidUserDataException>(act);
+        //    //Assert
+        //    var exception = await Assert.ThrowsAsync<InvalidUserDataException>(act);
 
-        }
+        //}
 
-        [Fact]
-        public async Task TryAddClientToNotExistingCompany()
-        {
+        //[Fact]
+        //public async Task TryAddClientToNotExistingCompany()
+        //{
 
-            //Arrange
-            var addressService = new Mock<IAddressService>();
+        //    //Arrange
+        //    var addressService = new Mock<IAddressService>();
 
-            var clientService = new ClientService(this.DbContext, addressService.Object);
+        //    var clientService = new ClientService(this.DbContext, addressService.Object);
 
-            var newClient = new ClientInputModel { VatNumber = "2" };
+        //    var newClient = new ClientInputModel { VatNumber = "2" };
 
 
-            //Action
-            Func<Task> act = () => clientService.CreateClientAsync(newClient, "test");
+        //    //Action
+        //    Func<Task> act = () => clientService.CreateClientAsync(newClient, "test");
 
-            //Assert
-            var exception = await Assert.ThrowsAsync<InvalidUserDataException>(act);
-            var expectedError = string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist, "test");
-            Assert.Equal(expectedError, exception.Message);
+        //    //Assert
+        //    var exception = await Assert.ThrowsAsync<InvalidUserDataException>(act);
+        //    var expectedError = string.Format(ErrorMessages.CompanyWithSuchIdDoesNotExist, "test");
+        //    Assert.Equal(expectedError, exception.Message);
 
-        }
+        //}
 
-        [Fact]
-        public async Task SuccessfullAddedClientShouldReturnClientId()
-        {
-            var fakeAddressId = "fake";
-            var expectedCountOfClients = 1;
+        //[Fact]
+        //public async Task SuccessfullAddedClientShouldReturnClientId()
+        //{
+        //    var fakeAddressId = "fake";
+        //    var expectedCountOfClients = 1;
 
-            //Arrange
-            var addressService = new Mock<IAddressService>();
+        //    //Arrange
+        //    var addressService = new Mock<IAddressService>();
 
-            addressService.Setup(x => x.AddFullAddressAsync(It.IsAny<AddressInputModel>()))
-              .ReturnsAsync(() => fakeAddressId);
+        //    addressService.Setup(x => x.AddFullAddressAsync(It.IsAny<AddressInputModel>()))
+        //      .ReturnsAsync(() => fakeAddressId);
 
-            var clientService = new ClientService(this.DbContext, addressService.Object);
-            var newClient = new ClientInputModel { VatNumber = "2" };
+        //    var clientService = new ClientService(this.DbContext, addressService.Object);
+        //    var newClient = new ClientInputModel { VatNumber = "2" };
 
-            await this.DbContext.RegisteredCompanies.AddAsync(new RegisteredCompany { Id = "test" });
-            await this.DbContext.SaveChangesAsync();
-            //Action
+        //    await this.DbContext.RegisteredCompanies.AddAsync(new RegisteredCompany { Id = "test" });
+        //    await this.DbContext.SaveChangesAsync();
+        //    //Action
             
-            await clientService.CreateClientAsync(newClient, "test");
+        //    await clientService.CreateClientAsync(newClient, "test");
 
-            //Assert
-            var countOfClients = this.DbContext.Clients.Count();
-            Assert.Equal(expectedCountOfClients, countOfClients);
+        //    //Assert
+        //    var countOfClients = this.DbContext.Clients.Count();
+        //    Assert.Equal(expectedCountOfClients, countOfClients);
 
-        }
+        //}
 
-        [Fact]
-        public async Task TryGetClientWhoseDoesntExistThrowException()
-        {
+        //[Fact]
+        //public async Task TryGetClientWhoseDoesntExistThrowException()
+        //{
 
-            var clietnId = "test";
+        //    var clietnId = "test";
 
-            //Arrange
-            var addressService = new Mock<IAddressService>();
-            var clientService = new ClientService(this.DbContext, addressService.Object);
+        //    //Arrange
+        //    var addressService = new Mock<IAddressService>();
+        //    var clientService = new ClientService(this.DbContext, addressService.Object);
 
-            //Action
-            Func<Task> act = () => clientService.GetClientByIdAsync<ClientViewModel>(clietnId);
+        //    //Action
+        //    Func<Task> act = () => clientService.GetClientByIdAsync<ClientViewModel>(clietnId);
 
-            //Assert
-            var exception = await Assert.ThrowsAsync<InvalidUserDataException>(act);
-            var expectedError = string.Format(ErrorMessages.ClientDoesNotExist);
-            Assert.Equal(expectedError, exception.Message);
+        //    //Assert
+        //    var exception = await Assert.ThrowsAsync<InvalidUserDataException>(act);
+        //    var expectedError = string.Format(ErrorMessages.ClientDoesNotExist);
+        //    Assert.Equal(expectedError, exception.Message);
 
-        }
-        [Fact]
-        public async Task GetClientByClientIdSuccessfully()
-        {
-
-
-            //Arrange
-            await AddRegisteredCompanyToDb();
-            var addressService = new Mock<IAddressService>();
-            addressService.Setup(x => x.AddFullAddressAsync(It.IsAny<AddressInputModel>()))
-              .ReturnsAsync(() => addrressId);
-
-            var clientService = new ClientService(this.DbContext, addressService.Object);
-            var newClient = new Client();
-            var clientId = newClient.Id;
-
-            await this.DbContext.Clients.AddAsync(newClient);
-
-            await this.DbContext.SaveChangesAsync();
-
-            //Action
-            var result = await clientService.GetClientByIdAsync<ClientViewModel>(clientId);
-
-            //Assert
-            Assert.NotNull(result);
+        //}
+        //[Fact]
+        //public async Task GetClientByClientIdSuccessfully()
+        //{
 
 
+        //    //Arrange
+        //    await AddRegisteredCompanyToDb();
+        //    var addressService = new Mock<IAddressService>();
+        //    addressService.Setup(x => x.AddFullAddressAsync(It.IsAny<AddressInputModel>()))
+        //      .ReturnsAsync(() => addrressId);
 
-        }
+        //    var clientService = new ClientService(this.DbContext, addressService.Object);
+        //    var newClient = new Client();
+        //    var clientId = newClient.Id;
+
+        //    await this.DbContext.Clients.AddAsync(newClient);
+
+        //    await this.DbContext.SaveChangesAsync();
+
+        //    //Action
+        //    var result = await clientService.GetClientByIdAsync<ClientViewModel>(clientId);
+
+        //    //Assert
+        //    Assert.NotNull(result);
+
+
+
+        //}
 
 
 
@@ -178,31 +178,31 @@ namespace Invoice_Generator.Services.Tests.Services
         //    Assert.Equal(expectedResult, result.Count);
         //}
         [Fact]
-        public async Task UpdateClientStatusShouldUpdateProperlyClientStatus()
-        {
-            //Arrange
-            var addressService = new Mock<IAddressService>();
-            addressService.Setup(x => x.AddFullAddressAsync(It.IsAny<AddressInputModel>()))
-              .ReturnsAsync(() => addrressId);
+        //public async Task UpdateClientStatusShouldUpdateProperlyClientStatus()
+        //{
+        //    //Arrange
+        //    var addressService = new Mock<IAddressService>();
+        //    addressService.Setup(x => x.AddFullAddressAsync(It.IsAny<AddressInputModel>()))
+        //      .ReturnsAsync(() => addrressId);
 
-            var clientService = new ClientService(this.DbContext, addressService.Object);
-            var newclient = new Client { Status = ClientStatus.Active };
-             await this.DbContext.Clients.AddAsync(newclient);
-            await this.DbContext.SaveChangesAsync();
+        //    var clientService = new ClientService(this.DbContext, addressService.Object);
+        //    var newclient = new Client { Status = ClientStatus.Active };
+        //     await this.DbContext.Clients.AddAsync(newclient);
+        //    await this.DbContext.SaveChangesAsync();
            
 
-            //Action
-            await clientService
-                .UpdateClientStatusAsync(new ClientStatusUpdateModel { ClientId = newclient.Id, Status = ClientStatus.Blocked });
-            var userFromDb = await this.DbContext.Clients.FirstOrDefaultAsync();
+        //    //Action
+        //    await clientService
+        //        .UpdateClientStatusAsync(new ClientStatusUpdateModel { ClientId = newclient.Id, Status = ClientStatus.Blocked });
+        //    var userFromDb = await this.DbContext.Clients.FirstOrDefaultAsync();
 
-            //Assert
-            Assert.NotNull(userFromDb);
-            Assert.Equal(ClientStatus.Blocked, userFromDb.Status);
+        //    //Assert
+        //    Assert.NotNull(userFromDb);
+        //    Assert.Equal(ClientStatus.Blocked, userFromDb.Status);
 
 
 
-        }
+        //}
 
 
 

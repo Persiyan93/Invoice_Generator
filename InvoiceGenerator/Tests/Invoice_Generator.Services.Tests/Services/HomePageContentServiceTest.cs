@@ -24,7 +24,7 @@ namespace Invoice_Generator.Services.Tests.Services
 
             //Action
             var userId = "Test";
-            var contentId = "Test";
+            var contentId = 1;
             Func<Task> act = () => homePageContentService.AddNewContentToHomePageAsync(userId, contentId);
 
             //Assert
@@ -134,7 +134,7 @@ namespace Invoice_Generator.Services.Tests.Services
             var homePageContentService = new HomePageContentService(this.DbContext);
      
             //Action
-            Func<Task> act = () => homePageContentService.RemoveSelectedContentFromHomePageAsync("test", "test");
+            Func<Task> act = () => homePageContentService.RemoveSelectedContentFromHomePageAsync(1, "test");
 
             //Assert
             var exception = await Assert.ThrowsAsync<InvalidUserDataException>(act);

@@ -17,96 +17,96 @@ namespace Invoice_Generator.Services.Tests.Services
 
         private const string registeredCompanyId = "Test";
 
-        [Fact]
-        public async Task AddServiceAsyncShouldAddServiceInDb()
-        {
+        //[Fact]
+        //public async Task AddServiceAsyncShouldAddServiceInDb()
+        //{
 
-            //Arrange
-            var offeredService = new OfferedServices(this.DbContext);
-            var inputService = new ServiceInputModel();
-
-
-
-            //Action
-            //Func<Task> act = () => articleService.AddArticle(new ArticleInputModel(), "test", "test");
-
-            var serviceId=await offeredService.AddServiceAsync(inputService, registeredCompanyId);
-
-            //Assert
-            var expectedCountOfServicesInDb = 1;
-            var countOfServicesInDb = this.DbContext.Services.Count();
-            Assert.Equal(expectedCountOfServicesInDb, countOfServicesInDb);
-            Assert.NotNull(serviceId);
-
-        }
+        //    //Arrange
+        //    var offeredService = new OfferedServices(this.DbContext);
+        //    var inputService = new ServiceInputModel();
 
 
-        [Fact]
-        public async Task GetAllServicesAsyncShouldReturnOneService()
-        {
 
-            //Arrange
-            var offeredService = new OfferedServices(this.DbContext);
-            var inputService = new ServiceInputModel();
-            var serviceOne = new Service { CompanyId = registeredCompanyId };
-            await this.DbContext.AddAsync(serviceOne);
-            var serviceTwo = new Service { CompanyId = "Random" };
-            await this.DbContext.AddAsync(serviceTwo);
-            await this.DbContext.SaveChangesAsync();
+        //    //Action
+        //    //Func<Task> act = () => articleService.AddArticle(new ArticleInputModel(), "test", "test");
+
+        //    var serviceId=await offeredService.AddServiceAsync(inputService, registeredCompanyId);
+
+        //    //Assert
+        //    var expectedCountOfServicesInDb = 1;
+        //    var countOfServicesInDb = this.DbContext.Services.Count();
+        //    Assert.Equal(expectedCountOfServicesInDb, countOfServicesInDb);
+        //    Assert.NotNull(serviceId);
+
+        //}
 
 
-            //Action
-            var services = await offeredService.GetAllServicesAsync<ServiceViewModel>(registeredCompanyId);
+        //[Fact]
+        //public async Task GetAllServicesAsyncShouldReturnOneService()
+        //{
 
-            //Assert
-            var expectedCountOfServices = 1;
+        //    //Arrange
+        //    var offeredService = new OfferedServices(this.DbContext);
+        //    var inputService = new ServiceInputModel();
+        //    var serviceOne = new Service { CompanyId = registeredCompanyId };
+        //    await this.DbContext.AddAsync(serviceOne);
+        //    var serviceTwo = new Service { CompanyId = "Random" };
+        //    await this.DbContext.AddAsync(serviceTwo);
+        //    await this.DbContext.SaveChangesAsync();
+
+
+        //    //Action
+        //    var services = await offeredService.GetAllServicesAsync<ServiceViewModel>(registeredCompanyId);
+
+        //    //Assert
+        //    var expectedCountOfServices = 1;
            
-            Assert.Equal(expectedCountOfServices,services.Count);
+        //    Assert.Equal(expectedCountOfServices,services.Count);
           
 
-        }
+        //}
 
-        [Fact]
-        public async Task UpdateStatusOfServiceAsyncShouldChangeStatusOfService()
-        {
+        //[Fact]
+        //public async Task UpdateStatusOfServiceAsyncShouldChangeStatusOfService()
+        //{
 
-            //Arrange
-            var offeredService = new OfferedServices(this.DbContext);
-            var serviceOne = new Service { CompanyId = registeredCompanyId,  Status= ProductStatus.Active};
-            await this.DbContext.AddAsync(serviceOne);
-            await this.DbContext.SaveChangesAsync();
-            var inputService = new ServiceUpdateModel { Status = ProductStatus.Blocked };
-
-
-            //Action
-           await offeredService.UpdateStatusOfServiceAsync(inputService, serviceOne.Id, registeredCompanyId);
-
-            //Assert
-            var serviceFromDb = this.DbContext.Services.FirstOrDefault();
-            Assert.Equal(ProductStatus.Blocked, serviceFromDb.Status);
+        //    //Arrange
+        //    var offeredService = new OfferedServices(this.DbContext);
+        //    var serviceOne = new Service { CompanyId = registeredCompanyId,  Status= ProductStatus.Active};
+        //    await this.DbContext.AddAsync(serviceOne);
+        //    await this.DbContext.SaveChangesAsync();
+        //    var inputService = new ServiceUpdateModel { Status = ProductStatus.Blocked };
 
 
-        }
+        //    //Action
+        //   await offeredService.UpdateStatusOfServiceAsync(inputService, serviceOne.Id, registeredCompanyId);
 
-        [Fact]
-        public async Task TryUpdateStatusOfServiceWhichDoesNotExist()
-        {
-
-            //Arrange
-            var offeredService = new OfferedServices(this.DbContext);
-            var inputService = new ServiceUpdateModel { Status = ProductStatus.Blocked };
+        //    //Assert
+        //    var serviceFromDb = this.DbContext.Services.FirstOrDefault();
+        //    Assert.Equal(ProductStatus.Blocked, serviceFromDb.Status);
 
 
-            //Action
-            Func<Task> act = () => offeredService.UpdateStatusOfServiceAsync(inputService, "test", registeredCompanyId);
+        //}
 
-            //Assert
-            var exception = await Assert.ThrowsAsync<InvalidUserDataException>(act);
-            var expectedError = string.Format(ErrorMessages.InvalidServiceId, "test");
-            Assert.Equal(expectedError, exception.Message);
+        //[Fact]
+        //public async Task TryUpdateStatusOfServiceWhichDoesNotExist()
+        //{
+
+        //    //Arrange
+        //    var offeredService = new OfferedServices(this.DbContext);
+        //    var inputService = new ServiceUpdateModel { Status = ProductStatus.Blocked };
 
 
-        }
+        //    //Action
+        //    Func<Task> act = () => offeredService.UpdateStatusOfServiceAsync(inputService, "test", registeredCompanyId);
+
+        //    //Assert
+        //    var exception = await Assert.ThrowsAsync<InvalidUserDataException>(act);
+        //    var expectedError = string.Format(ErrorMessages.InvalidServiceId, "test");
+        //    Assert.Equal(expectedError, exception.Message);
+
+
+        //}
 
     }
 }
