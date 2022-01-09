@@ -23,7 +23,7 @@ export default function InvoicePrevew(props) {
 
             <Document
 
-                file={{ url: `${apiEndpoints.downloadInvoice}/${invoiceId}.pdf`, }}
+                file={{ url: `${apiEndpoints.downloadInvoice}/${invoiceId}`, }}
                 onLoadSuccess={onDocumentLoadSuccess}
             >
                 <Page pageNumber={pageNumber} />

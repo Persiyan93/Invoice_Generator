@@ -41,6 +41,7 @@ const clienDataInitialValues = {
     vatNumber: '',
     accontablePersonName: '',
     uniqueIdentificationNumber: '',
+    companyEmailAddress:'',
 }
 export default function NewClientForm(props) {
     const [errors, setErrors] = useState({})
@@ -78,7 +79,7 @@ export default function NewClientForm(props) {
     }
 
     const classes = useStyles();
-    const { companyName, companyType, vatNumber, accontablePersonName, uniqueIdentificationNumber, address } = clientData
+    const { companyName, companyType, vatNumber, accontablePersonName, uniqueIdentificationNumber, address, companyEmailAddress } = clientData
     return (
 
         <div className={classes.main}>
@@ -123,6 +124,18 @@ export default function NewClientForm(props) {
                             <TextField
                                 value={uniqueIdentificationNumber}
                                 name="uniqueIdentificationNumber" label="ЕИК"
+                                error={errors.uniqueIdentificationNumber}
+                                helperText={errors.uniqueIdentificationNumber}
+                                variant="outlined"  
+                                onChange={changeHandler}
+                            />
+
+                            <TextField
+                                value={companyEmailAddress}
+                                helperText={errors.email}
+                                error={errors.email}
+                                variant="outlined"
+                                name="companyEmailAddress" label="Имеил"
                                 onChange={changeHandler}
                             />
 
@@ -159,6 +172,7 @@ export default function NewClientForm(props) {
                                 name="addressText"
                                 label="Адрес"
                                 onChange={changeHandler} />
+
 
 
                             <FormControl className={classes.formControl} >

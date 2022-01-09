@@ -5,11 +5,13 @@ import ImportExportIcon from '@material-ui/icons/ImportExport';
 import { convertCompanyName, clientStatusFormater } from '../../../../services/globalServices'
 import apiEndpoints from "../../../../services/apiEndpoints";
 import useFetchGet from "../../../../hooks/useFetchGet";
-import AddressInfoCard from './AdditionalClientInfo/AddressInfoCard'
+import CompanyAddresses from './CompanyAddress/CompanyAddresses'
 import ContactList from './ContactsTable/ContactsTable'
-import AdditionalClientInfo from "./AdditionalClientInfo/AdditionalClientInfo";
 
-import ClientInvoices from "./ClientInvoices";
+import MainClientInfo from './MainClientInfo/MainClientInfo'
+import ClientInfoMenu from './ClientInfoMenu/ClientInfoMenu'
+import ClientInvoices from './ClientInvoices';
+import InvoicesTable from "../../Invoices/InvoiceTable/InvoicesTable";
 
 
 const useStyles = makeStyles(theme => ({
@@ -57,7 +59,7 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(3),
         padding: theme.spacing(3)
     },
-  
+
 
 
 }))
@@ -65,11 +67,13 @@ const useStyles = makeStyles(theme => ({
 
 export default function ClientInfo(props) {
     const clientId = props.match.params['clientId']
+    const [selectedMenu, setSelectedMenu] = useState('Invoices')
+    const [clientInfo, setClientInfo] = useState({})
 
-    const [clientInfo, setClientInfo] = useState({});
-    const [showAdditionalInfo, setShowAdditionalInfo] = useState(false)
-    const [showContactList, setShowContactList] = useState(false)
-    const [showInvoices, setShowInvoices] = useState(true)
+    function changePageHandler(e, menuName) {
+        setSelectedMenu(menuName);
+    }
+
 
 
     const [getClientInfoTriger, setgetClientInfoTriger] = useState(true)
@@ -77,182 +81,40 @@ export default function ClientInfo(props) {
     useFetchGet(getClientInfoUrl, setClientInfo, getClientInfoTriger, setgetClientInfoTriger);
 
 
-    function showAdditionalInfoHandler(e) {
-        setShowAdditionalInfo(prevState => (!prevState));
-    }
-    function showInvoicesHandler(e) {
-        setShowInvoices(prevState => (!prevState));
-    }
 
 
-    function showContactListHandler(e) {
-        setShowContactList(prevState => (!prevState));
-    }
-    console.log(showContactList)
     const classes = useStyles();
+    
     return (
         <>
             <Paper className={classes.pageContent}>
-                <div className={classes.title}>
-                    <Grid container >
-                        <Grid item md={12} align="center" >
-                            <Typography variant='h4'>Данни на фирмата </Typography>
-                        </Grid>
-                    </Grid>
+                <MainClientInfo
+                    clientInfo={clientInfo}
+                />
+                <div style={{ display: 'inline-flex' }}>
+                    <ClientInfoMenu
+                        changePageHandler={changePageHandler}
+                    />
 
-
-                    <Grid container alignItems="center" justifyContent={true}>
-                        <Grid item md={1} />
-
-                        <Grid item md={2}>
-
-                            <Typography variant='h6'>
-                                Име на фирмата
-                            </Typography>
-                            <Typography color="textSecondary">
-                                {convertCompanyName(clientInfo)}
-                            </Typography>
-                        </Grid>
-                        <Grid item md={1}></Grid>
-                        <Grid item md={1}>
-
-                            <Typography variant='h8'>
-                                Просрочени фактури
-                            </Typography>
-                            <Typography color="textSecondary">
-                                {clientInfo.countOfOverdueInvoices}
-                            </Typography>
-                        </Grid>
-                        <Grid item md={1} />
-                        <Grid item md={1}>
-                            <Typography variant='h8'>
-                                Статус
-                            </Typography>
-                            <Typography color="textSecondary">
-                                {clientStatusFormater(clientInfo.status)}
-                            </Typography>
-                        </Grid>
-                        <Grid item md={1} />
-                        <Grid item md={1}>
-
-                            <Typography variant='h8'>
-                                Неплатени фактури
-                            </Typography>
-                            <Typography color="textSecondary">
-                                {clientInfo.countOfUnpaidInvoices}
-                            </Typography>
-                        </Grid>
-                        <Grid item md={1} />
-                        <Grid item md={1}>
-
-                            <Typography variant='h6'>
-                                ДДС Номер
-                            </Typography>
-                            <Typography color="textSecondary">
-                                {clientInfo.vatNumber}
-                            </Typography>
-                        </Grid>
-                    </Grid>
-
-                </div>
-
-                {/*  Invoices */}
-                <div className={classes.container}>
-                    <div className={classes.header}>
-                        <Grid container align='center'>
-                            <Grid item md={11}>
-                                <Typography variant='h4'>Фактури на клиента</Typography>
-                            </Grid>
-                            <Grid item align='right'>
-                                <ImportExportIcon
-                                    style={{ width: "100%", cursor: "pointer", float: "right" }}
-                                    onClick={showInvoicesHandler}
-                                />
-                            </Grid>
-                        </Grid>
-                    </div>
-
-                    <div className={classes.body}>
+                    {
                         {
-                            showInvoices &&
-                            <ClientInvoices
-                                clientId={clientId}
-                                history={props.history}
-                            ></ClientInvoices>
-                        }
 
-                    </div>
+                            'Invoices':
+                                <div></div>
+                            ,
+                            'CompanyAddresses':
+                                <CompanyAddresses clientId={clientId} />
+                            ,
+                            'ContactList':
+                                <ContactList clientId={clientId}></ContactList>
+
+
+                        }[selectedMenu]
+                    }
+
+
+
                 </div>
-                {/* Contact list */}
-                <div className={classes.container}>
-                    <div className={classes.header}>
-                        <Grid container align='center'>
-                            <Grid item md={11}>
-                                <Typography variant='h4'>Лица за контакт</Typography>
-                            </Grid>
-                            <Grid item align='right'>
-                                <ImportExportIcon
-                                    style={{ width: "100%", cursor: "pointer", float: "right" }}
-                                    onClick={showContactListHandler}
-                                />
-                            </Grid>
-                        </Grid>
-                    </div>
-
-                    <div className={classes.body}>
-                        {
-                            showContactList &&
-                            <ContactList clientId={clientId}  ></ContactList>
-                        }
-
-                    </div>
-                </div>
-
-                {/* Additional Info */}
-                <div className={classes.container}>
-                    <div className={classes.header}>
-                        <Grid container align='center'>
-                            <Grid item md={11}>
-                                <Typography variant='h4'>Допълнителна информация</Typography>
-                            </Grid>
-                            <Grid item align='right'>
-                                <ImportExportIcon
-                                    style={{ width: "100%", cursor: "pointer", float: "right" }}
-                                    onClick={showAdditionalInfoHandler}
-                                />
-                            </Grid>
-                        </Grid>
-                    </div>
-
-                    <div className={classes.body}>
-                        {
-                            showAdditionalInfo &&
-                            <AdditionalClientInfo clientId={clientId} ></AdditionalClientInfo>
-                        }
-
-                    </div>
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
             </Paper>

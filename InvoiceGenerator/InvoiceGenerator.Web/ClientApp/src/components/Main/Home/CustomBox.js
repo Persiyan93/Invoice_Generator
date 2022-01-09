@@ -16,10 +16,13 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'white'
 
     },
-    container: {
-        height: '150px',
-        width: '600px'
-    }
+    container: props=>( {
+        position:'static',
+        marginLeft:'50px',
+        display:'inline-block',
+        height: props.containerHeight,
+        width: props.containerWidth
+    })
 
 
 }));
@@ -32,7 +35,7 @@ function CustomBox(props) {
         setBodyOpen(prevState => (!prevState))
     }
 
-    const classes = useStyles();
+    const classes = useStyles(props);
     return (
         <div className={classes.container}>
             <div className={classes.header}>

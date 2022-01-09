@@ -11,7 +11,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Popup from '../../../../Elements/Popup'
 import ConfirmationPopup from '../../../../Elements/ConfirmationPopup'
 import ContactPersonForm from "./NewContactPersonForm";
-import TableWithPagingAndSorting from '../../../../Elements/TableWithPagingAndSorting'
+import TableWithPaging from '../../../../Elements/TableWithPaging'
 
 
 
@@ -71,25 +71,7 @@ export default function ContactList(props) {
 
     }
 
-    function searchHandler(event) {
-        let target = event.target;
 
-        setFilterString(target.value)
-
-        setFilterFunc({
-            fn: elements => {
-                if (target.value == '') {
-                    return elements;
-                }
-                else {
-                    return elements.filter(x => x.name.toLowerCase().includes(target.value.toLowerCase()))
-                }
-            }
-        })
-
-
-
-    }
     function catchOpenPopup() {
 
         setOpenContactPersonForm(prevState => (!prevState))
@@ -112,30 +94,14 @@ export default function ContactList(props) {
     const tableContainer = Paper;
     return (
         // <div className={classes.root}>
-
-
-
         <>
 
-            {/* <SearchBar
-                title="Списък с лица за контакт"
-                searchbarLable="test"
-                placeHolder='Име на лицето'
-                searchHandler={searchHandler}
-                filterString={filterString}
-                setFilterString={setFilterString}
 
+            <div style={{padding:'20px' ,alignItems:'center' ,display:'flex',justifyContent:'center'}}>
 
-            >
+        
 
-            </SearchBar> */}
-            <TableWithPagingAndSorting
-                pagingAndSorting={pagingAndSorting}
-                setPagingAndSorting={setPagingAndSorting}
-                headCells={headCells}
-                isLoading={false}
-                tableContainer={tableContainer}
-            >
+                <TableWithPaging headCells={headCells}>
 
                 <TableBody className={classes.body}>
 
@@ -170,11 +136,12 @@ export default function ContactList(props) {
                             Добави Клиент
                         </Button>
                     </TableRow >
-                </TableBody>
+                    </TableBody>
+                    </TableWithPaging>
 
 
 
-            </TableWithPagingAndSorting>
+            </div>
 
             <ConfirmationPopup
                 setOpenPopup={setOpenConfirmationPopup}
@@ -199,8 +166,7 @@ export default function ContactList(props) {
 
             </Popup>
         </>
-        // </Paper>
-        // </div>
+      
 
     )
 

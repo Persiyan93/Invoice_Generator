@@ -7,10 +7,10 @@ import ClientAddressForm from './ClientAddressForm'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        minWidth: 300,
-        maxWidth: 400,
-        minHeight: 300,
-        maxHeight: 320,
+        marginTop: '40px',
+        marginLeft: '30px',
+        width: 650,
+        height: 140,
         display: 'inline-block',
         margin: '0 20px',
         pading: '0 45px',
@@ -27,23 +27,34 @@ const useStyles = makeStyles(theme => ({
         transform: 'scale(0.9)',
     },
     title: {
+        display: 'block',
         fontSize: 18,
+        textAlign: 'center'
     },
-    pos: {
+    secondaryFont: {
+        display: 'inline-block',
         marginTop: 7,
+        fontSize: 20,
+        marginRight: '20px',
+        fontFamily: ' Garamond, serif'
 
     },
+    mainFont: {
+        fontWeight: '520',
+        fontSize: 21,
+        marginRight: '5px'
+    }
 }));
 
 
 
-export default function AddressInfoCard(props) {
+export default function AddressCard(props) {
     const { clientId, disableButton, addressInfo: { country, town, addressText } } = props
     const [isOpenPopup, setOpenPopup] = useState(false);
 
 
 
-    const {  } = props
+    const { } = props
     const classes = useStyles();
     return (
         <>
@@ -57,7 +68,7 @@ export default function AddressInfoCard(props) {
                             {!disableButton &&
                                 < Button startIcon={<AddCircleOutlineIcon />} size="large" onClick={setOpenPopup}>
                                     Добави Адрес
-                </Button>
+                                     </Button>
                             }
 
 
@@ -72,32 +83,30 @@ export default function AddressInfoCard(props) {
                         <Typography className={classes.title} component="h2" variant="h5" gutterBottom>
                             {props.children}
                         </Typography>
-                        <Typography variant="h5" component="h2">
-                            Държава:
-            </Typography>
-                        <Typography className={classes.pos} color="textSecondary">
-                            {country}
-                        </Typography>
-                        <Typography variant="h5" component="h2">
-                            Град:
-            </Typography>
-                        <Typography className={classes.pos} color="textSecondary">
-                            {town}
-                        </Typography>
-                        <Typography variant="h5" component="h2">
-                            Адрес:
-            </Typography>
-                        <Typography className={classes.pos} color="textSecondary">
-                            {addressText}
-                        </Typography>
+                        <div style={{ display: 'inline-block' }}>
+                            <span className={classes.mainFont} > Държава:</span>
+                            <span className={classes.secondaryFont} > {country} </span>
+
+                            <span className={classes.mainFont}  >Населено място:</span>
+                            <span className={classes.secondaryFont} >{town}</span>
+                        </div>
+
+                        <div style={{ display: 'inline-block' }}>
+                            <span className={classes.mainFont} >   Адрес:</span>
+                            <span className={classes.secondaryFont} > {addressText} </span>
+                        </div>
+
+                          
+                        <div style={{float:'right'}}>
+                            {
+                                !disableButton &&
+                                <Button size="small" onClick={setOpenPopup}>Редактирай</Button>
+                            }
+                        </div>
+
 
                     </CardContent>
-                    {
-                        !disableButton &&
-                        <CardActions>
-                            <Button size="small" onClick={setOpenPopup}>Редактирай</Button>
-                        </CardActions>
-                    }
+                  
 
 
                 </Card>

@@ -1,5 +1,5 @@
-﻿import { useState} from 'react'
-import {makeStyles, TableCell,  Paper,  TableRow, TableBody,  TablePagination, IconButton} from '@material-ui/core/';
+﻿import { useState } from 'react'
+import { TableCell, Paper, TableRow, TableBody, TablePagination, IconButton } from '@material-ui/core/';
 import TableWithPagingAndSorting from '../../../Elements/TableWithPagingAndSorting';
 import getResultAfterPagingAndSorting from '../../../../services/sortingService'
 import useFetchGet from '../../../../hooks/useFetchGet';
@@ -14,67 +14,6 @@ import NewArticleInputForm from './NewArticleInputForm';
 import CheckIcon from '@material-ui/icons/Check';
 import ControlPointIcon from '@material-ui/icons/ControlPoint'
 import ArticleQuantityInputForm from './ArticleQuantityInputForm'
-
-
-
-//const useStyles = makeStyles(theme => ({
-//    tableRow: {
-//        borderTop: "outset",
-//        borderBottom: "outset",
-
-//    },
-//    gridElement: {
-
-//        borderTop: "solid",
-//        borderLeft: "solid",
-
-//        '&:hover': {
-//            backgroundColor: '#A1A397',
-//        },
-//        cursor: 'pointer',
-//        marginTop: 20,
-//        borderRadius: 2
-//    },
-//    root: {
-//        '& > *': {
-//            borderBottom: 'unset',
-//        },
-//    },
-//    table: {
-//        '& thead th': {
-//            fontWeight: '600',
-
-
-//        },
-//        '& tbody td': {
-//            fontWeight: '400',
-
-//        }, '& tbody tr:hover': {
-//            backgroundColor: '#DAD4D3',
-//            cursor: 'pointer'
-
-//        }
-//    },
-//    searchInput: {
-//        opacity: '0.6',
-//        padding: '0px,5px',
-//        fontSize: '0.6rem',
-//        width: '70%',
-//        '&:hover': {
-//            backgroundColor: '#f2f2f2'
-//        },
-//        '& .MuiSvgIcon-root': {
-//            marginRight: '8px'
-//        }
-//    },
-//    menu: {
-//        marginBottom: '20px',
-//        borderRadius: '20px'
-//    }
-
-//}))
-
-
 
 
 
@@ -180,7 +119,7 @@ export default function ArticleTable(props) {
                 headCells={headCells}
                 pagingAndSorting={sorting}
                 setPagingAndSorting={setSorting}
-                isLoading={isLoading}
+                isLoading={false}
                 tableContainer={Paper}
 
             >
@@ -188,8 +127,6 @@ export default function ArticleTable(props) {
                     {
                         articlesAfterPagingAndSorting().map((article) => (
                             <TableRow key={article.id}>
-
-
                                 <TableCell >
                                     {article.name}
                                 </TableCell>
@@ -259,7 +196,7 @@ export default function ArticleTable(props) {
             >
 
             </ConfirmPopup>
-       
+
             <Popup
                 title='Промяна на артикула'
                 openPopup={isOpenEditArticlePopup}

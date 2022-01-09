@@ -6,41 +6,35 @@ import NotificationContext from '../Context/NotificationContext'
 import * as globalServices from '../services/globalServices'
 
 
-const useFetchGet = (endpoint, setResult, triger, setTriger) => {
+const useFetchGet = (endpoint, setResult, triger, setTriger, actionAfterSuccessfullyOperation) => {
     const [errors, setErrors] = useState();
     const { user, setUser } = useContext(IdentityContext)
     const { setNotification } = useContext(NotificationContext)
 
-
-    let history = useHistory();
 
     useEffect(() => {
         if (triger) {
             dataService.get(endpoint)
                 .then(res => res.json())
                 .then(res => {
-                    if (res.Status === "Unsuccessful" || res.status ==="Unsuccessful") {
-                       if (res.Message === 'Not authorized' || res.message ==="Not authorized") {
+                    if (res.Status === "Unsuccessful" || res.status === "Unsuccessful") {
+                        if (res.Message === 'Not authorized' || res.message === "Not authorized") {
                             setUser({ isAuthenticated: false, permissions: [] })
-                            history.push('/Identity/Login')
                         }
                         else {
                             setNotification({ isOpen: true, message: res.Message, severity: 'error' })
                         }
-
                         setTriger(false)
                     }
 
-
-
                     else {
-
                         setResult(res)
                         setTriger(false);
-
-
-
-
+                        if (actionAfterSuccessfullyOperation) {
+                            actionAfterSuccessfullyOperation();
+                        }
+                      
+                        
                     }
 
                 })

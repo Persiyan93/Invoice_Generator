@@ -52,7 +52,9 @@ export default function Notification(props) {
                         width: "400px",
                         border: "0.5px solid #8080803d",
                         minHeight: "100px",
+                        maxHeight:"350px",
                         overflowY: "auto",
+                        overflow:'hiden',
                         top: "60px"
                     }}
                     className={"notificationBar"}
@@ -60,7 +62,7 @@ export default function Notification(props) {
                     <div style={{ display: "flex" }}>
                         <p style={{ fontSize: "20px", fontWeight: 550, textAlign: "left", width: "93%" }}>
                             Известия
-            </p>
+                        </p>
 
                         <CloseIcon onClick={(e) => closeNotificationWindowHandler(e, 'Test')}
                             style={{ width: "5%", cursor: "pointer" }}

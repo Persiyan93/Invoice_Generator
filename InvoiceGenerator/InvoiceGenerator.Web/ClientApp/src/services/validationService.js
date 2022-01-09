@@ -63,24 +63,39 @@ export function validateArticleQuanitytyInInvoice(articlesInStock, requiredArtic
 
 export function validateClientInputModel(client, setErrors,) {
     const errors = {}
+
     if (client.companyName.length == 0) {
-
         errors.companyName = 'Моля въветете името на фирмата'
-
     }
+    if (client.companyEmailAddress.length != 0) {
+        let regex= new RegExp(emailRegex)
+        if (!regex.test(String(client.companyEmailAddress).toLocaleLowerCase())) {
+            errors.email = "Моля въведете валиден имейл адрес";
+        }
+    }
+
     var regex = new RegExp(vatNumberRegex);
     if (!regex.test(client.vatNumber)) {
         errors.vatNumber = 'Невалиден формат на ДДС номера'
     }
-    if (client.address.country.length == 0) {
-
-        errors.country = 'Моля въведете държава на регистрация на фирмата'
+    if (client.address.country.includes('България')) {
+        if (client.uniqueIdentificationNumber.length == 0) {
+            errors.uniqueIdentificationNumber = 'Моля въведете ЕИК на фирмата'
+        }
+        else if (client.vatNumber.substring(2) != client.uniqueIdentificationNumber) {
+            errors.uniqueIdentificationNumber = 'Невалидно ЕИК'
+        }
+        
 
     }
+
+    if (client.address.country.length == 0) {
+        errors.country = 'Моля въведете държава на регистрация на фирмата'
+    }
+
     if (client.address.town.length == 0) {
 
         errors.town = 'Моля въведете град на регистрация на фирмата'
-
     }
     if (client.address.addressText == 0) {
 
@@ -89,8 +104,7 @@ export function validateClientInputModel(client, setErrors,) {
     }
     if (client.companyType.length == 0) {
 
-        errors.companyType = 'Моля изберете типа на фирмата от падащотот меню'
-
+        errors.companyType = 'Моля изберете типа на фирмата от падащотото меню'
     }
     setErrors({ ...errors })
     if (Object.keys(errors).length === 0 && errors.constructor === Object) {
@@ -193,13 +207,13 @@ export function validateUserDetails(user, setErrors) {
     if (user.password.length === 0) {
         errors.password = 'Моля въведете парола'
     }
-    if (user.password.length<6) {
-        errors.password ='Минималната дължина на паролата е 6 символа'
+    if (user.password.length < 6) {
+        errors.password = 'Минималната дължина на паролата е 6 символа'
     }
     if (user.password != user.repatPassword) {
-      errors.repeatPassword = 'Двете пароли се различват.Моля проверете за грешка';
+        errors.repeatPassword = 'Двете пароли се различват.Моля проверете за грешка';
     }
-   
+
     setErrors({ ...errors })
     if (Object.keys(errors).length === 0 && errors.constructor === Object) {
         return true
@@ -208,7 +222,7 @@ export function validateUserDetails(user, setErrors) {
 
 }
 
-export  function validateCompanyDetails(company, setErrors) {
+export function validateCompanyDetails(company, setErrors) {
     let errors = {}
     if (company.companyName.length === 0) {
         errors.companyName = 'Моля въведете имете но фирмата'
@@ -227,7 +241,7 @@ export  function validateCompanyDetails(company, setErrors) {
     if (countryCode === 'BG' && company.uniqueIdentificationNumber.length != 0) {
         let uniqueIdentificationNumber = company.uniqueIdentificationNumber;
         let expectedUniqueIdentificationNumer = company.vatNumber.substring(2, company.vatNumber.length)
-        
+
         if (expectedUniqueIdentificationNumer != uniqueIdentificationNumber) {
             errors.uniqueIdentificationNumber = 'Моля въведете валиден ЕИК';
         }
@@ -245,14 +259,14 @@ export function validateCompanyAddressDetails(address, setErrors) {
     if (address.country.length === 0) {
         errors.country = 'Моля въведете държава на регистрация '
     }
-    if (address.town.length===0) {
+    if (address.town.length === 0) {
         errors.town = 'Моля въведете насеселеното място'
     }
-    
-    if (address.addressText.length===0) {
+
+    if (address.addressText.length === 0) {
         errors.addressText = 'Моля въведете точен адрес'
     }
-    
+
     setErrors({ ...errors })
     if (Object.keys(errors).length === 0 && errors.constructor === Object) {
         return true

@@ -18,25 +18,23 @@ const useFetchPost = (endpoint, data, triger, setTriger, actionAfterSuccessfullO
             dataService.post(data, endpoint)
                 .then(res => res.json())
                 .then(res => {
-                    console.log()
                     if (res.status === "Unsuccessful" || res.Status === "Unsuccessful") {
-
                         if (res.message === 'Not authorized') {
                             setUser({ isAuthenticated: false, permissions: [] })
                             history.push('/Identity/Login')
                         }
                         else {
-                            setNotification({ isOpen: true, message: res.message, severity: 'error' })
+                            setNotification({ isOpen: true, message: res.Message, severity: 'error' })
                             window.scrollTo(0, 0)
                         }
 
                         setTriger(false)
                     }
                     else {
-                        actionAfterSuccessfullOperation();
                         setNotification({ isOpen: true, message: res.message, severity: 'success' })
                         window.scrollTo(0, 0)
                         setTriger(false)
+                        actionAfterSuccessfullOperation();
                     }
 
                 })

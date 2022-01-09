@@ -13,10 +13,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function ServiceQuantityInputForm(props) {
-    const { setInvoiceDetails, selectedService, setOpenPopup, services } = props
+    const { setInvoiceDetails, selectedService, setOpenPopup, } = props
     const classes = useStyles();
-    const [productsInfo, setProductsInfo] = useState({ quantity: 0, price: 0, })
-    const { quantity, price } = productsInfo;
+    const [productsInfo, setProductsInfo] = useState({ quantity: 1, price: 0,plateNumber:'',contractNumber:'' })
+    const { quantity, price,plateNumber,contractNumber} = productsInfo;
 
     useEffect(() => {
         setProductsInfo(prevState => ({ ...prevState, price: selectedService.defaultPriceWithoutVat }))
@@ -25,15 +25,25 @@ export default function ServiceQuantityInputForm(props) {
 
     function submitHandler(e) {
         e.preventDefault()
+       
         let newService = [selectedService].map(x => ({
             id: x.id,
             name: x.name,
             quantity: productsInfo.quantity,
             vatRate: x.vatRate,
-            price: productsInfo.price
+            price: productsInfo.price,
+            
+
         }))
 
         newService = newService[0];
+        if (productsInfo.contractNumber) {
+            newService.name+=` по заявка/договор ${productsInfo.contractNumber}`
+        }
+        if (productsInfo.plateNumber) {
+            newService.name+=` с превозно средство с рег.номер:${productsInfo.plateNumber}`
+        }
+        newService.additionalInfo = newService.name;
         setInvoiceDetails(prevState => ({ ...prevState, services: [...prevState.services, newService] }))
         setOpenPopup(false);
     }
@@ -48,6 +58,8 @@ export default function ServiceQuantityInputForm(props) {
         <form className={classes.root} onSubmit={submitHandler}>
             <TextField required variant="outlined" value={quantity} name="quantity" label="Количество" onChange={changeHandler} />
             <TextField required variant="outlined" value={price} name="price" label="Цена в левове" onChange={changeHandler} />
+            <TextField  variant="outlined" value={plateNumber} name="plateNumber" label="Регистрационен номер" onChange={changeHandler} />
+            <TextField  variant="outlined" value={contractNumber} name="contractNumber" label="Номер на заявката" onChange={changeHandler} />
 
             <Button variant="contained" type="submit" color="primary">
                 Потвърди

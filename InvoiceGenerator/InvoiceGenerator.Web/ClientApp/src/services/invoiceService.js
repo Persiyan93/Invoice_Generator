@@ -26,7 +26,7 @@ export function getInvoiceDefaultOptions() {
 }
 
 export function downloadInvoice(invoiceId) {
-    return dataService.get(apiEndpoints.downloadInvoice + `/${invoiceId}.pdf`);
+    return dataService.get(apiEndpoints.downloadInvoice + `/${invoiceId}`);
 }
 export function updateInvoiceStatus(invoiceId, status) {
     return dataService.post({ invoiceIds: [invoiceId], status: status }, endpoints.updateInvoiceStatus)

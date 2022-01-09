@@ -58,7 +58,8 @@ export default {
     deleteBankAccount: `${baseUrl}/BankAccounts`,
     getIncomes: `${baseUrl}/Invoices/InvoiceIncomes`,
     getInvoiceDefaultOptions: `${baseUrl}/Invoices/DefaultOptions`,
-    downloadInvoice: `${azureBlobBaseUrl}/invoices`,
+    //downloadInvoice: `${azureBlobBaseUrl}/invoices`,
+    downloadInvoice: `${baseUrl}/invoices/invoicepdf`,
     logoutUser: `${baseUrl}/Identity/Logout`
 
 

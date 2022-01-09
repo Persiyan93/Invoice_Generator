@@ -176,7 +176,7 @@ const NewInvoice = (props) => {
                 .then(res => res.json())
                 .then(res => {
                     if (res.status == "Unsuccessful") {
-                        console.log(res);
+                      
                     }
                     else {
                         let invoiceId = res.message

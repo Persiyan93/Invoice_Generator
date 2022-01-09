@@ -51,41 +51,46 @@ const useStyles = makeStyles((theme) => ({
 
     },
     content: {
+        display: 'inline-block',
         maxWidth: '100%',
-        flexGrow: 1,
+        width: '100%',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
         padding: theme.spacing(2),
     },
-    table: {
-        margin: theme.spacing(0)
-    }
+
 }));
 
 function HomeRegisteredUser(props) {
 
-    const [tablePositionn, setTablePositionn] = useState({ x: 0, y: 100 })
-    const tablePosition = useDrag((params) => {
-
-        const yPosition = params.xy[1];
-        const xPosition = params.xy[0];
-        console.log(yPosition);
-        console.log(xPosition)
-        console.log(parseInt(xPosition) <= parseInt(SCREEN_WIDTH))
-        if (parseInt(yPosition) >= 0 && yPosition <= parseInt(SCREEN_HEIGHT) && xPosition >= 0 && parseInt(xPosition) <= parseInt(SCREEN_WIDTH)) {
-            console.log('Y position:    ' + yPosition);
-            console.log('X position   : ' + xPosition)
-            setTablePositionn({
-                x: xPosition,
-                y: yPosition
-            })
+    const [logoPosition, setLogoposition] = useState({ x: 0, y: 100 })
+    const bindLogoPos = useDrag((params) => {
+        let xPosition = params.offset[0]
+        let yPosition=params.offset[1]
+        setLogoposition({
+            x: params.offset[0],
+            y:params.offset[1]
+        })
+        if (parseInt()) {
 
         }
-        // else{
-        //     console.log(params.initial)
-        //     setTablePositionn({
-        //         x: params.initial[0],
-        //         y: params.initial[1]
-        //     })
-        // }
+
+        //const yPosition = params.xy[1];
+        //const xPosition = params.xy[0];
+        //console.log(yPosition);
+        //console.log(xPosition)
+        //console.log(parseInt(xPosition) <= parseInt(SCREEN_WIDTH))
+        //if (parseInt(yPosition) >= 0 && yPosition <= parseInt(SCREEN_HEIGHT) && xPosition >= 0 && parseInt(xPosition) <= parseInt(SCREEN_WIDTH)) {
+        //    console.log('Y position:    ' + yPosition);
+        //    console.log('X position   : ' + xPosition)
+        //    setTablePositionn({
+        //        x: xPosition,
+        //        y: yPosition
+        //    })
+
+        //}
+
 
     });
     const [isOpenControlPanel, setOpenControlPanel] = useState(false);
@@ -139,60 +144,56 @@ function HomeRegisteredUser(props) {
                 <main className={classes.content}>
 
 
-                    <>
-                        {userHomePageContent.map(content => (
 
 
-                            {
-
-                                'Top clients for last month':
-                                    <div className={classes.table}>
-                                        <CustomBox
-
-                                            content={content}
-                                            removeContentFromHomePageHandler={removeContentFromHomePageHandler}
-                                           >
-                                            <TopClients />
-                                        </CustomBox>
-                                    </div>
-                                ,
-                                'Top articles for last month':
-                                    <div className={classes.table}>
-                                        <CustomBox
-                                            className={classes.table}
-                                            content={content}
-                                            removeContentFromHomePageHandler={removeContentFromHomePageHandler}
-
-                                        >
-                                            <TopArticles />
-                                        </CustomBox>
-                                    </div>,
-                                'Incomes for last 12 months':
-                                    <div className={classes.table} >
-                                        <CustomBox
-                                            className={classes.table}
-                                            content={content}
-                                            removeContentFromHomePageHandler={removeContentFromHomePageHandler}
-
-                                        >
-                                            <InvoiceIncomesBarCharts />
-                                        </CustomBox>
-                                    </div>,
-
-                            }[content.name]
-
-                        ))}
+                    {userHomePageContent.map(content => (
 
 
+                        {
 
+                            'Top clients for last month':
 
+                                <div {...bindLogoPos()} style={{ position: 'relative', top: logoPosition.y, left: logoPosition.x}}>
+                                <CustomBox
+                                    containerHeight={100}
+                                    containerWidth={630}
+                                    key={content.name}
+                                    content={content}
+                                    removeContentFromHomePageHandler={removeContentFromHomePageHandler}
+                                >
+                                    <TopClients />
+                                    </CustomBox>
+                           </div>
 
-                    </>
+                            ,
+                            'Top articles for last month':
+                                <CustomBox
+                                    containerHeight={100}
+                                    containerWidth={590}
+                                    key={content.name}
+                                    content={content}
+                                    removeContentFromHomePageHandler={removeContentFromHomePageHandler}
 
+                                >
+                                    <TopArticles />
+                                </CustomBox>,
 
+                            'Incomes for last 12 months':
+                                <CustomBox
+                                    containerHeight={100}
+                                    containerWidth={450}
+                                    key={content.name}
+                                    content={content}
+                                    removeContentFromHomePageHandler={removeContentFromHomePageHandler}
 
+                                >
+                                    <InvoiceIncomesBarCharts />
+                                </CustomBox>
+                            ,
 
+                        }[content.name]
 
+                    ))}
 
                 </main>
             </div>

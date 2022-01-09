@@ -127,7 +127,9 @@ export default function ClientListInInvoice(props) {
             setClientId(clientId)
         }
     }
-
+    function searchHandler(e) {
+         setFilterString(e.target.value)
+    }
     function confirmClientHandler(event) {
 
         props.setInvoiceDetails(prevState => ({ ...prevState, clientId: clientId }))
@@ -148,6 +150,7 @@ export default function ClientListInInvoice(props) {
                 searchbarLabel='Намери Клиент'
                 placeholder='Име на клиента или ДДС номер'
                 filterString={filterString}
+                searchHandler={searchHandler}
 
             />
 
