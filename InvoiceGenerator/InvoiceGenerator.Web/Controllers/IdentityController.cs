@@ -90,7 +90,7 @@ namespace InvoiceGenerator.Web.Controllers
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
-                var userPermissions = await getUserPermissins(user);
+                var userPermissions = await GetUserPermissins(user);
 
                 var resultToken = new JwtSecurityTokenHandler().WriteToken(token);
                 this.HttpContext.Response
@@ -153,17 +153,15 @@ namespace InvoiceGenerator.Web.Controllers
                                HttpOnly = true,
                                SameSite = SameSiteMode.None,
                                Secure = true,
-
                                Path = "/"
 
-                           }
-                           );
+                           });
             return this.Ok(new ResponseViewModel { Status = "Successfully", Message = "Test" });
         }
 
 
 
-        private async Task<UserAccessModel> getUserPermissins(ApplicationUser user)
+        private async Task<UserAccessModel> GetUserPermissins(ApplicationUser user)
         {
             var userRoles = await userManager.GetRolesAsync(user);
             var userPermission = new UserAccessModel();

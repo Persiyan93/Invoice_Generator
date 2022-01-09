@@ -22,7 +22,7 @@ import NewProduct from './components/Main/Products/NewProduct'
 import NewServiceInputFrom from './components/Main/Products/Services/NewServiceInputForm';
 import NewArticleInputForm from './components/Main/Products/Articles/NewArticleInputForm';
 import ProductsTable from './components/Main/Products/ProductsTable';
-import InvoicesTable from './components/Main/Invoices/InvoicesTable';
+import InvoicesTable from './components/Main/Invoices/InvoiceTable/InvoicesTable';
 import AllUsers from './components/Main/Company/Users/UsersTable';
 import CreateUser from './components/Main/Company/Users/AddUserInputForm';
 import BankAccountSettings from './components/Main/Company/Bank/BankAccountSettings';
@@ -98,7 +98,6 @@ function App() {
 
                                         <GuestRoutes user={user} path="/Identity/Login" component={LoginForm} />
                                         <GuestRoutes user={user} path="/Identity/Register" component={RegisterForm} />
-
                                         <Route exact path="/" render={props => <Home user={user} {...props} />} />
 
 

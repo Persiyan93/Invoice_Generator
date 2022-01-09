@@ -32,7 +32,7 @@ namespace InvoiceGenerator.Web.Controllers
         [Route("Unread")]
         public async Task<IActionResult> GetUnreadNotification()
         {
-            var user =await userManager.FindByNameAsync(this.User.Identity.Name);
+            var user = await userManager.GetUserAsync(this.User);
             var notifications = await notificationService.GetUnReadNotificationsAsync(user.Id);
 
             return this.Ok(notifications);
@@ -47,8 +47,6 @@ namespace InvoiceGenerator.Web.Controllers
             return this.Ok(new ResponseViewModel
             {
                 Status = SuccessMessages.SuccessfullyStatus,
-                Message = string.Format(SuccessMessages.SuccessfullyMarkAsRead, notificationId)
-
             });
         }
 

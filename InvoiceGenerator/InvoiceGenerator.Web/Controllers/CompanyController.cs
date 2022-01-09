@@ -16,6 +16,7 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService companyService;
@@ -27,28 +28,12 @@ namespace InvoiceGenerator.Web.Controllers
             this.userManager = userManager;
         }
 
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> CreateCompany(CompanyInputModel inputModel)
-        {
-            var userName = this.User.Identity.Name;
 
-            var user = await userManager.FindByNameAsync(userName);
-            var companyId = await companyService.CreateAsync(inputModel, user.Id);
-            await userManager.AddToRoleAsync(user, "AdministratorOfCompany");
-            return this.Ok(new ResponseViewModel
-            {
-                Status = "Successful",
-                Message = string.Format(SuccessMessages.SuccessfullyCreatedCompany, companyId)
-            });
-        }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetCompanyInfo()
         {
-            var userName = this.User.Identity.Name;
-            var user = await userManager.FindByNameAsync(userName);
+            var user = await userManager.GetUserAsync(this.User);
             var companyId = user.CompanyId;
             var companyInfo = await companyService.GetCompanyInfoAsync<CompanyViewModel>(companyId);
             return this.Ok(companyInfo);

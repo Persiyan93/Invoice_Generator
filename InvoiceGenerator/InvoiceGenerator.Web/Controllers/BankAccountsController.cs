@@ -2,6 +2,7 @@
 using InvoiceGenerator.Services.Data;
 using InvoiceGenerator.Web.Models;
 using InvoiceGenerator.Web.Models.BankAccount;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BankAccountsController : ControllerBase
     {
         private readonly IBankAccountService bankAccountService;

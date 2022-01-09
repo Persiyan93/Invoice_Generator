@@ -23,7 +23,7 @@ namespace InvoiceGenerator.Web.Controllers
         private readonly ICompanySettingsService settingsService;
         private readonly IStringLocalizer<Messages> stringLocalizer;
 
-        public CompanySettingsController(ICompanySettingsService settingsService,IStringLocalizer<Messages> stringLocalizer)
+        public CompanySettingsController(ICompanySettingsService settingsService, IStringLocalizer<Messages> stringLocalizer)
         {
 
             this.settingsService = settingsService;
@@ -31,7 +31,6 @@ namespace InvoiceGenerator.Web.Controllers
         }
 
         [HttpGet]
-
         public async Task<IActionResult> Get()
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
@@ -57,7 +56,7 @@ namespace InvoiceGenerator.Web.Controllers
 
         }
 
-    
+
 
 
 

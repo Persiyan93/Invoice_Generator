@@ -14,6 +14,7 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MailingAddressController : ControllerBase
     {
         private readonly IAddressService addressService;
@@ -24,26 +25,23 @@ namespace InvoiceGenerator.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> AddMailingAddress(MailingAddressInputModel inputModel)
         {
-            var addressId = await addressService.AddMailingAddressAsync(inputModel);
+            await addressService.AddMailingAddressAsync(inputModel);
             return this.Ok(
                 new ResponseViewModel
                 {
                     Status = "Successful",
                     Message = SuccessMessages.SuccessfullyAddedMailingAddress
-                }
-                );
+                });
         }
 
 
 
         [HttpGet("{mailingAddressId}")]
-        [Authorize]
         public async Task<IActionResult> GetMailingAddress(string mailingAddressId)
         {
-            var mailingAddress =await  addressService.GetAddressInfoAsync<AddressViewModel>(mailingAddressId);
+            var mailingAddress = await addressService.GetAddressInfoAsync<AddressViewModel>(mailingAddressId);
 
             return this.Ok(mailingAddress);
         }

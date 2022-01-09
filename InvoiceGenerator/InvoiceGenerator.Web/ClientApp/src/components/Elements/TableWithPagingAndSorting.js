@@ -17,8 +17,7 @@ const useStyles = makeStyles(theme => ({
         },
         '& tbody td': {
             fontWeight: '300',
-            //backgroundColor: '#DAD4D3',
-            // backgroundColor: invoice
+            
 
         }, '& tbody tr:hover': {
             backgroundColor: '#DAD4D3',

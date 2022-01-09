@@ -17,7 +17,7 @@ namespace InvoiceGenerator.Services.Data
 
         Task<int> UpdateStatusOfInvoicesAsync(UpdateInvoiceStatusInputModel inputModel, string companyId, string userId);
 
-         Task<ICollection<T>> GetAllCompanyInvoicesAsync<T>(string companyId, DateTime startDate, DateTime endDate, string orderBy, string order,  string filterString);
+         Task<ICollection<T>> GetAllCompanyInvoicesAsync<T>(string companyId, DateTime startDate, DateTime endDate, string orderBy, string order,  int invoiceNumber,string clientName,string createdBy,string invoiceStatus);
 
          Task<T> GetInvoiceByIdAsync<T>(string invoiceId);
 

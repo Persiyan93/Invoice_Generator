@@ -57,7 +57,8 @@ namespace InvoiceGenerator.Services.Data
                 SellerId = companyId,
                 UniqueIdentificationNumber = inputModel.UniqueIdentificationNumber ,
                 AccontablePersonName=inputModel.AccontablePersonName??null,
-                Status=ClientStatus.Active
+                Status=ClientStatus.Active,
+                EmailAddressOfCompany=inputModel.CompanyEmailAddress,
              };
             var addressId = await addressService.AddFullAddressAsync(inputModel.Address);
             client.AddressId = addressId;

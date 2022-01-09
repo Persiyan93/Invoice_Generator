@@ -18,7 +18,7 @@ namespace InvoiceGenerator.Services.Data
 
     {
         private readonly ApplicationDbContext context;
-       
+
 
         public InvoiceService(ApplicationDbContext context)
         {
@@ -31,8 +31,16 @@ namespace InvoiceGenerator.Services.Data
             int invoiceShipingTime = 5;
             var client = await context.Clients.FirstOrDefaultAsync(x => x.Id == inputModel.ClientId && x.IsActive == true);
             IsClientValid(client);
+            var lastInvoiceNumber = await context.Invoices
+                .Where(x => x.SellerId == companyId)
+                .OrderByDescending(x => x.InvoiceNumber)
+                .Select(x => x.InvoiceNumber)
+                .FirstOrDefaultAsync();
+            
+            var newInvoiceNumber = lastInvoiceNumber + 1;
             var invoice = new Invoice
             {
+                InvoiceNumber = newInvoiceNumber,
                 SellerId = companyId,
                 ClientId = inputModel.ClientId,
                 DateOfTaxEvent = inputModel.DateOfTaxEvent,
@@ -42,12 +50,12 @@ namespace InvoiceGenerator.Services.Data
                 PaymentMethod = inputModel.PaymentMethod,
                 CreatedByUserId = userId,
                 PaymentPeriod = inputModel.PaymentPeriod,
-                Language=inputModel.InvoiceLanguage
+                Language = inputModel.InvoiceLanguage
             };
-            if (invoice.PaymentMethod==MethodsOfPayment.BankTransfer)
+            if (invoice.PaymentMethod == MethodsOfPayment.BankTransfer)
             {
                 var bankAccount = await context.BankAccounts.FirstOrDefaultAsync(x => x.Id == inputModel.BankAccountId && x.IsActive);
-                if (bankAccount==null)
+                if (bankAccount == null)
                 {
                     throw new InvalidUserDataException(ErrorMessages.BankAccountDoesNotExist);
                 }
@@ -71,7 +79,7 @@ namespace InvoiceGenerator.Services.Data
                     {
                         CompanyId = companyId,
                         Message = string.Format(NotificationMessages.ArticleQuantityUnderLimt, articleFromStock.Name, articleFromStock.ArticleNumber),
-                        BulgarianMessage=string.Format(NotificationMessages.ArticleQuantityUnderLimtBG,articleFromStock.Name,articleFromStock.ArticleNumber),
+                        BulgarianMessage = string.Format(NotificationMessages.ArticleQuantityUnderLimtBG, articleFromStock.Name, articleFromStock.ArticleNumber),
                         Type = NotificationType.Warning
 
                     };
@@ -104,7 +112,7 @@ namespace InvoiceGenerator.Services.Data
                     ServiceId = service.Id,
                     PriceWithoutVat = service.Price,
                     Quantity = service.Quantity,
-
+                    AdditionalInfo = service.AdditionalInfo,
                 };
                 invoice.Services.Add(serviceToInvocie);
 
@@ -142,7 +150,7 @@ namespace InvoiceGenerator.Services.Data
             int invoiceShipingTime = 5;
             var invoice = await context.Invoices
                 .Include(x => x.Articles)
-                .Include(x=>x.Services)
+                .Include(x => x.Services)
                 .FirstOrDefaultAsync(x => x.Id == invoiceId);
             if (invoice == null)
             {
@@ -238,7 +246,7 @@ namespace InvoiceGenerator.Services.Data
                     throw new InvalidUserDataException(string.Format(ErrorMessages.InvalidServiceId, service.Id));
                 }
                 vatRateSum += serviceFromStock.VatRate;
-                var existService = invoice.Services.FirstOrDefault(x => x.ServiceId==service.Id);
+                var existService = invoice.Services.FirstOrDefault(x => x.ServiceId == service.Id);
                 if (existService != null)
                 {
                     existService.Quantity = service.Quantity;
@@ -250,19 +258,19 @@ namespace InvoiceGenerator.Services.Data
                 {
                     existService = new InvoiceToService
                     {
-                        InvoiceId=invoice.Id,
+                        InvoiceId = invoice.Id,
                         ServiceId = service.Id,
                         Quantity = service.Quantity,
                         PriceWithoutVat = service.Price,
 
                     };
                     invoice.Services.Add(existService);
-                   
+
                 }
 
 
             }
-           
+
             invoice.PriceWithoutVat = invoice.Articles.Sum(x => (x.ArticlePrice * (decimal)x.Quantity))
                                           + invoice.Services.Sum(x => (x.PriceWithoutVat * (decimal)x.Quantity));
             if (inputModel.IsInvoiceWithZeroVatRate)
@@ -310,7 +318,7 @@ namespace InvoiceGenerator.Services.Data
                     throw new InvalidUserDataException(ErrorMessages.ForeignInvoice);
                 }
                 invoice.Status = inputModel.Status;
-                if (inputModel.Status==InvoiceStatus.Paid)
+                if (inputModel.Status == InvoiceStatus.Paid)
                 {
                     var notification = new Notification
                     {
@@ -319,7 +327,7 @@ namespace InvoiceGenerator.Services.Data
                         Type = NotificationType.Info,
                         Message = $"Invoice with number {invoice.InvoiceNumber} was paid"
                     };
-                   await context.Notifications.AddAsync(notification);
+                    await context.Notifications.AddAsync(notification);
                     var invoiceEvent = new InvoiceHistoryEvent
                     {
                         InvoiceId = invoice.Id,
@@ -339,7 +347,7 @@ namespace InvoiceGenerator.Services.Data
             await context.SaveChangesAsync();
 
             return invoiceNumber;
-            
+
         }
 
         public async Task UpdateStatusofOverdueInvoicesAsync()
@@ -358,22 +366,22 @@ namespace InvoiceGenerator.Services.Data
                         .Where(x => x.Id == invoice.ClientId
                                     && x.Invoices.Where(i => i.Status == InvoiceStatus.Overdue).Count() >= companySettings.MaxCountOfUnPaidInvoices
                                     && x.Status == ClientStatus.Active).FirstOrDefaultAsync();
-                    if (client!=null)
+                    if (client != null)
                     {
                         client.Status = ClientStatus.Blocked;
                     }
-                    
+
                 }
                 var notificationMessage = string.Format(NotificationMessages.InvoiceisOverdue, invoice.InvoiceNumber);
                 var notification = new Notification
                 {
                     CompanyId = invoice.SellerId,
                     Message = $"Invoice {invoice.InvoiceNumber} is overdue",
-                    BulgarianMessage = $"Фактура с номер {invoice.InvoiceNumber} и стойност {invoice.PriceWithoutVat+invoice.VatValue}  е просрочена",
+                    BulgarianMessage = $"Фактура с номер {invoice.InvoiceNumber} и стойност {invoice.PriceWithoutVat + invoice.VatValue}  е просрочена",
                     Type = NotificationType.Warning
                 };
                 await context.Notifications.AddAsync(notification);
-             
+
             }
 
             await context.SaveChangesAsync();
@@ -441,15 +449,38 @@ namespace InvoiceGenerator.Services.Data
 
 
         public async Task<ICollection<T>> GetAllCompanyInvoicesAsync<T>(string companyId, DateTime startDate, DateTime endDate,
-                                                                    string orderBy, string order, string filterString)
+                                                                    string orderBy, string order, int invoiceNumber, string clientName, string createdBy, string invoiceStatus)
         {
 
             var ordebyDesc = order == "desc";
-            var invoices = await context.Invoices.Where(x => x.SellerId == companyId)
+            var invoiceQuery = context.Invoices.Where(x => x.SellerId == companyId)
                     .Where(x => DateTime.Compare(x.IssueDate, startDate) >= 0
-                              && DateTime.Compare(x.IssueDate, endDate) <= 0)
-                  .To<T>()
-                .PropertyContainsText("ClientName", filterString)
+                              && DateTime.Compare(x.IssueDate, endDate) <= 0);
+            if (invoiceNumber != 0)
+            {
+                invoiceQuery = invoiceQuery.Where(x => x.InvoiceNumber == invoiceNumber);
+
+            }
+
+            if (!string.IsNullOrEmpty(createdBy))
+            {
+                invoiceQuery = invoiceQuery.Where(x => x.CreatedByUserId == createdBy);
+            }
+
+            if (!string.IsNullOrEmpty(invoiceStatus))
+            {
+                var isSuccess = Enum.TryParse((typeof(InvoiceStatus)), invoiceStatus, out object invoiceStatusEnum);
+
+                if (isSuccess)
+                {
+                    invoiceQuery = invoiceQuery.Where(x => (int)x.Status == (int)invoiceStatusEnum);
+                }
+            }
+
+
+            var invoices = await invoiceQuery
+                .To<T>()
+                .PropertyContainsText("ClientName", clientName)
                 .CustomOrderBy(orderBy, ordebyDesc)
                 .ToListAsync();
 
@@ -484,16 +515,16 @@ namespace InvoiceGenerator.Services.Data
             return invoices;
         }
 
-        public  async Task<ICollection<InvoiceIncomesByMonthsViewModel>> GetSalesByMonthsAsync(string companyId)
+        public async Task<ICollection<InvoiceIncomesByMonthsViewModel>> GetSalesByMonthsAsync(string companyId)
         {
-            var salеsByMonths = await  context.Invoices
+            var salеsByMonths = await context.Invoices
                 .Where(i => i.SellerId == companyId)
-                .Select(i => new 
+                .Select(i => new
                 {
                     Month = i.IssueDate.Month,
                     Year = i.IssueDate.Year,
-                    InvoicePrice =i.PriceWithoutVat+i.VatValue 
-                   
+                    InvoicePrice = i.PriceWithoutVat + i.VatValue
+
 
                 })
                 .ToListAsync();
@@ -507,12 +538,12 @@ namespace InvoiceGenerator.Services.Data
             var salesForLastYear = months.GroupJoin(salеsByMonths
                                                     , m => new { Month = m.Month, Year = m.Year }
                                                     , invoice => new { Month = invoice.Month, Year = invoice.Year }
-                                                    , (p, g) => new InvoiceIncomesByMonthsViewModel 
-                                                    { 
+                                                    , (p, g) => new InvoiceIncomesByMonthsViewModel
+                                                    {
                                                         Month = p.Month,
                                                         Year = p.Year,
-                                                        InvoicesCount = g.Count() ,
-                                                        Incomes=g.Sum(i=>i.InvoicePrice)
+                                                        InvoicesCount = g.Count(),
+                                                        Incomes = g.Sum(i => i.InvoicePrice)
                                                     })
                 .ToList();
 
@@ -557,7 +588,7 @@ namespace InvoiceGenerator.Services.Data
 
         }
 
-       
+
     }
 
 

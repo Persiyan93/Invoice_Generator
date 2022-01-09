@@ -1,4 +1,5 @@
 ﻿using InvoiceGenerator.Services.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,11 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class HistoryController : ControllerBase
     {
         private readonly IHistoryEventService historyEventService;
-
-        private DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-        private DateTime endDate = DateTime.Now;
-
-        public HistoryController(IHistoryEventService  historyEventService)
+        public HistoryController(IHistoryEventService historyEventService)
         {
             this.historyEventService = historyEventService;
         }
@@ -26,10 +24,9 @@ namespace InvoiceGenerator.Web.Controllers
 
         [HttpGet]
         [Route("EventTypes")]
-        public   IActionResult GetEventTypes()
+        public IActionResult GetEventTypes()
         {
-            var eventTypes =  historyEventService.GetEventTypes();
-
+            var eventTypes = historyEventService.GetEventTypes();
             return this.Ok(eventTypes);
         }
 
@@ -38,26 +35,26 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> GetInvoiceHistory(string invoiceId)
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
-            var invoiceHistory = await historyEventService.GetInvoiceEventsAsync(invoiceId,companyId);
+            var invoiceHistory = await historyEventService.GetInvoiceEventsAsync(invoiceId, companyId);
 
             return this.Ok(invoiceHistory);
         }
         [HttpGet]
-       public async Task<IActionResult> GetEvents( DateTime startDate, DateTime endDate, int page = 0, int rowsPerPage=10,string order="asc",string orderBy= "DateOfEvent", string EventType="",
-                                            string userId="")
+        public async Task<IActionResult> GetEvents(DateTime startDate, DateTime endDate, int page = 0, int rowsPerPage = 10, string order = "asc", string orderBy = "DateOfEvent", string EventType = "",
+                                            string userId = "")
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
-            var historyEvents = await historyEventService.GetHistoryAsync(companyId , startDate, endDate, order,  orderBy, EventType ,
-                                            userId );
+            var historyEvents = await historyEventService.GetHistoryAsync(companyId, startDate, endDate, order, orderBy, EventType,
+                                            userId);
             var countOfEvents = historyEvents.Count;
             var filteredEvents = historyEvents
                 .Skip(rowsPerPage * page)
                 .Take(rowsPerPage)
                 .ToList();
 
-         return this.Ok(new { FilteredEvents= filteredEvents, CountOfAllEvents = countOfEvents });
+            return this.Ok(new { FilteredEvents = filteredEvents, CountOfAllEvents = countOfEvents });
         }
 
- 
+
     }
 }

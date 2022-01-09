@@ -16,6 +16,7 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AddressController : ControllerBase
     {
         private readonly IAddressService addressService;
@@ -28,7 +29,7 @@ namespace InvoiceGenerator.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+       
         public async Task<IActionResult> AddAddresss(AddressInputModel inputModel)
         {
             var adressId = await addressService.AddFullAddressAsync(inputModel);

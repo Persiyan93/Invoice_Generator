@@ -52,11 +52,11 @@ namespace InvoiceGenerator.Services.Data
             }
             if (!string.IsNullOrEmpty(eventType))
             {
-                
+
                 object historyEventType;
-               var isSuccess= Enum.TryParse((typeof(HistoryEventType)), eventType, out historyEventType);
+                var isSuccess= Enum.TryParse((typeof(HistoryEventType)), eventType, out historyEventType);
              
-                var p = historyEventType.ToString();
+                
                 if (isSuccess)
                 {
                    historyEventQuery = historyEventQuery.Where(x => (int)x.EventType==(int)historyEventType);

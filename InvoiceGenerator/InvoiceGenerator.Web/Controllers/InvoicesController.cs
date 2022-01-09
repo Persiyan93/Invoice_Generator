@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -63,7 +64,11 @@ namespace InvoiceGenerator.Web.Controllers
             var user = await userManager.GetUserAsync(this.User);
            var invoiceId = await invoiceService.CreateInvoiceAsync(inputModel,user.CompanyId,user.Id);
            var pdfAsByteArray =await pdfService.GenerateInvoicePdf(invoiceId);
-           await  cloudService.UploadFileAsync(invoiceId, pdfAsByteArray);
+
+            System.IO.File.WriteAllBytes($@"D:\Invoices\{invoiceId}.pdf", pdfAsByteArray);
+
+           
+           //await  cloudService.UploadFileAsync(invoiceId, pdfAsByteArray); 
              
 
             return this.Ok(new ResponseViewModel
@@ -73,6 +78,17 @@ namespace InvoiceGenerator.Web.Controllers
             });
 
         }
+
+        [HttpGet]
+        [Route("invoicepdf/{invoiceId}")]
+        public async Task<IActionResult> GetInvoiceAsPdf(string invoiceId)
+        {
+           var dataBytes = System.IO.File.ReadAllBytes(@$"D:\Invoices\{invoiceId}.pdf");
+            var dataAsStream = new MemoryStream(dataBytes);
+
+            return Ok(dataAsStream);
+        }
+
 
         [HttpPost]
         [Route("Status")]
@@ -120,11 +136,12 @@ namespace InvoiceGenerator.Web.Controllers
 
         public async Task<IActionResult> GetAll(DateTime startDate, DateTime endDate,
                     int rowsPerPage = 10, string filterString = "",
-                    string orderBy = "IssueDate", string order = "asc", int page = 0)
+                    string orderBy = "IssueDate", string order = "desc", 
+                    int page = 0,int invoiceNumber=0,string clientName="",string createdBy="",string invoiceStatus="")
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
             var invoices = await invoiceService.GetAllCompanyInvoicesAsync<InvoiceInListViewModel>(companyId, startDate, endDate,
-             orderBy, order,  filterString);
+             orderBy, order,invoiceNumber,clientName,createdBy,invoiceStatus);
             var invoicesCount = invoices.Count;
             invoices = invoices
                 .Skip(rowsPerPage * (page ))

@@ -21,13 +21,12 @@ namespace InvoiceGenerator.Web.Controllers
     public class ServicesController : ControllerBase
     {
         private readonly IOfferedService offeredService;
-        private readonly UserManager<ApplicationUser> userManager;
+
         private readonly IStringLocalizer<Messages> stringLocalizer;
 
-        public ServicesController(IOfferedService offeredService, UserManager<ApplicationUser> userManager,IStringLocalizer<Messages> stringLocalizer)
+        public ServicesController(IOfferedService offeredService, IStringLocalizer<Messages> stringLocalizer)
         {
             this.offeredService = offeredService;
-            this.userManager = userManager;
             this.stringLocalizer = stringLocalizer;
         }
 
@@ -35,16 +34,15 @@ namespace InvoiceGenerator.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddService(ServiceInputModel inputModel)
         {
-            var user = await userManager.FindByNameAsync(this.User.Identity.Name);
-            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
 
-            var serviceName= await offeredService.AddServiceAsync(inputModel, companyId);
+            var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
+            var serviceName = await offeredService.AddServiceAsync(inputModel, companyId);
 
             return this.Ok(
                 new ResponseViewModel
                 {
                     Status = "Successful",
-                    Message = stringLocalizer["SuccessfullyAddedService",serviceName]
+                    Message = stringLocalizer["SuccessfullyAddedService", serviceName]
                 });
         }
 
@@ -52,21 +50,17 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> GetAll()
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
-
             var services = await offeredService.GetAllServicesAsync<ServiceViewModel>(companyId);
-
-
             return this.Ok(services);
 
         }
 
         [HttpPut("{serviceId}")]
-        public async Task<IActionResult> UpdateServiceStatus(ServiceUpdateModel input,string serviceId)
+        public async Task<IActionResult> UpdateServiceStatus(ServiceUpdateModel input, string serviceId)
         {
 
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
-
-            var serviceName=await offeredService.UpdateStatusOfServiceAsync(input, serviceId, companyId);
+            var serviceName = await offeredService.UpdateStatusOfServiceAsync(input, serviceId, companyId);
 
             return this.Ok(
                 new ResponseViewModel

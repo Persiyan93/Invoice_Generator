@@ -44,7 +44,7 @@ namespace InvoiceGenerator.Services.Data
             {
                 Email = inputModel.Email,
                 UserName = inputModel.UserName,
-                Name = inputModel.UserName
+                Name = inputModel.Name,
             };
             var result = await userManager.CreateAsync(user, inputModel.Password);
             await userManager.AddToRoleAsync(user, GlobalConstants.AdministratorOfCompany);
