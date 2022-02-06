@@ -32,7 +32,7 @@ namespace InvoiceGenerator.Services.PdfService
 
 
         private readonly IInvoiceService invoiceService;
-       private readonly IStringLocalizer<InvoicePdfResource> stringLocalizer;
+        private readonly IStringLocalizer<InvoicePdfResource> stringLocalizer;
 
         private static string arialFontFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), @"fonts\arial.ttf");
         private static string cambriaFontFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), @"fonts\arial.ttf");
@@ -47,19 +47,19 @@ namespace InvoiceGenerator.Services.PdfService
 
             this.invoiceService = invoiceService;
             this.stringLocalizer = stringLocalizer;
-            this.artilFont= PdfFontFactory.CreateFont(arialFontFileName, iText.IO.Font.PdfEncodings.IDENTITY_H);
-            this.cambriaFont =PdfFontFactory.CreateFont(cambriaFontFileName, iText.IO.Font.PdfEncodings.IDENTITY_H);
-            this.timesFont= PdfFontFactory.CreateFont(timesfontFileName, iText.IO.Font.PdfEncodings.IDENTITY_H);
+            this.artilFont = PdfFontFactory.CreateFont(arialFontFileName, iText.IO.Font.PdfEncodings.IDENTITY_H);
+            this.cambriaFont = PdfFontFactory.CreateFont(cambriaFontFileName, iText.IO.Font.PdfEncodings.IDENTITY_H);
+            this.timesFont = PdfFontFactory.CreateFont(timesfontFileName, iText.IO.Font.PdfEncodings.IDENTITY_H);
         }
 
         public async Task<byte[]> GenerateInvoicePdf(string invoiceId)
         {
-           var invoice = await invoiceService.GetInvoiceByIdAsync<InvoiceTemplateModel>(invoiceId);
-             var pdfAsByteArray =GenerateInvoiceDocument(invoice);
+            var invoice = await invoiceService.GetInvoiceByIdAsync<InvoiceTemplateModel>(invoiceId);
+            var pdfAsByteArray = GenerateInvoiceDocument(invoice);
             return pdfAsByteArray;
         }
 
-        private byte [] GenerateInvoiceDocument(InvoiceTemplateModel invoice )
+        private byte[] GenerateInvoiceDocument(InvoiceTemplateModel invoice)
         {
             byte[] buffer;
             using (var memoryStream = new MemoryStream())
@@ -79,7 +79,7 @@ namespace InvoiceGenerator.Services.PdfService
                     var issueDateCell = new Cell().SetTextAlignment(TextAlignment.RIGHT);
                     var invoiceNumberCell = new Cell().SetTextAlignment(TextAlignment.LEFT);
                     var invoiceTitelCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetMinWidth(150);
-                    invoiceNumberCell.Add(new Paragraph("№" + invoice.InvoiceNumber).SetFont(timesFont).SetFontSize(10));
+                    invoiceNumberCell.Add(new Paragraph("№" + invoice.InvoiceNumber.ToString("D10")).SetFont(timesFont).SetFontSize(10));
                     invoiceTitelCell.Add(new Paragraph(stringLocalizer["Invoice"]).SetFont(timesFont).SetFontSize(13).SetBold());
                     issueDateCell.Add(new Paragraph(stringLocalizer["IssueDate", invoice.IssueDate]).SetFont(timesFont).SetFontSize(10));
                     invoiceHeaderTable.AddCell(invoiceNumberCell)
@@ -117,11 +117,12 @@ namespace InvoiceGenerator.Services.PdfService
 
 
                     //Add Empty cell
-                    var emptyCell = new Cell(1, 3);
+
+                    var emptyCell = new Cell(1, 2);
                     productsTable.AddCell(emptyCell);
 
                     //Add info cell which contain name of  net price
-                    var infoCell = new Cell();
+                    var infoCell = new Cell(1, 2);
                     infoCell.Add(new Paragraph(stringLocalizer["PriceWithoutVat"]));
                     infoCell.Add(new Paragraph(stringLocalizer["VatRate", invoice.VatRate]));
                     infoCell.Add(new Paragraph(stringLocalizer["WholePrice"]));
@@ -194,7 +195,7 @@ namespace InvoiceGenerator.Services.PdfService
                                   .Add(new Paragraph("IBAN: " + $"{invoice.BankAccount.Iban}")
                                    .SetFont(artilFont).SetFontSize(10));
                     }
-                   
+
                     additionalInfoTable.AddCell(paymentMethodCell);
 
                     //Add Creator Cell
@@ -229,17 +230,17 @@ namespace InvoiceGenerator.Services.PdfService
 
             }
             return buffer;
-            
+
         }
 
-        private Cell CreateCompanyinfoCell(string companyRole,string companyName,string companyAddress
-                         ,string uniqueIdentificationNumber,string vatNumber,string accountablePersonName)
+        private Cell CreateCompanyinfoCell(string companyRole, string companyName, string companyAddress
+                         , string uniqueIdentificationNumber, string vatNumber, string accountablePersonName)
         {
-            
+
             var cell = new Cell();
-             cell.Add(new Paragraph(stringLocalizer[companyRole].Value).SetFont(timesFont).SetFontSize(11).SetTextAlignment(TextAlignment.CENTER).SetBold());
+            cell.Add(new Paragraph(stringLocalizer[companyRole].Value).SetFont(timesFont).SetFontSize(11).SetTextAlignment(TextAlignment.CENTER).SetBold());
             cell.Add(new Paragraph(companyName).SetFont(timesFont).SetFontSize(11).SetTextAlignment(TextAlignment.CENTER).SetBold());
-            
+
             //Set company address
             var addressParagraph = new Paragraph();
             addressParagraph.Add(new Text(stringLocalizer["Address"].Value).SetFont(timesFont).SetFontSize(11).SetBold());
@@ -254,7 +255,7 @@ namespace InvoiceGenerator.Services.PdfService
                 identificationNumberParagraph.Add(uniqueIdentificationNumber);
                 cell.Add(identificationNumberParagraph);
             }
-           
+
 
             //Set VAT number
             var vatNumberParagraph = new Paragraph();
@@ -263,7 +264,7 @@ namespace InvoiceGenerator.Services.PdfService
             cell.Add(vatNumberParagraph);
 
             //Set ACcountable person
-            if (accountablePersonName!=null)
+            if (accountablePersonName != null)
             {
                 var accountablePersonParagraph = new Paragraph();
                 accountablePersonParagraph.Add(new Text(stringLocalizer["AccountablePerson"].Value).SetBold());
@@ -271,16 +272,16 @@ namespace InvoiceGenerator.Services.PdfService
                     .SetFont(timesFont).SetFontSize(9);
                 cell.Add(accountablePersonParagraph);
             }
-          
-             return cell;
+
+            return cell;
         }
 
-        private Table CreateProductTable(ICollection<ServiceToInvoiceTemplateModel>services,ICollection<ArticleToInvoiceTemplateModel>articles)
+        private Table CreateProductTable(ICollection<ServiceToInvoiceTemplateModel> services, ICollection<ArticleToInvoiceTemplateModel> articles)
         {
             var productTable = new Table(5);
             productTable.UseAllAvailableWidth();
             string[] headerTittles = { "ProductName", "UnitType", "Quantity", "UnitPrice", "Price" };
-       
+
 
             foreach (var headerTittle in headerTittles)
             {
@@ -326,13 +327,13 @@ namespace InvoiceGenerator.Services.PdfService
                 serviceQuantityCell.Add(new Paragraph(service.Quantity.ToString()).SetFont(timesFont).SetFontSize(9));
                 productTable.AddCell(serviceQuantityCell);
 
-                var serviceUnitPriceCell = new Cell().SetMinWidth(20).SetTextAlignment(TextAlignment.RIGHT); 
+                var serviceUnitPriceCell = new Cell().SetMinWidth(20).SetTextAlignment(TextAlignment.RIGHT);
                 serviceUnitPriceCell.Add(new Paragraph(stringLocalizer["Currency", service.UnitPrice]).SetFont(timesFont)
                                                 .SetFontSize(9));
                 productTable.AddCell(serviceUnitPriceCell);
 
                 var serviceSumCell = new Cell().SetTextAlignment(TextAlignment.RIGHT); ;
-                serviceSumCell.Add(new Paragraph(stringLocalizer["Currency", ((double)service.UnitPrice * service.Quantity)].Value).SetFont(timesFont).SetFontSize(11));
+                serviceSumCell.Add(new Paragraph(stringLocalizer["Currency", ((double)service.UnitPrice * service.Quantity).ToString("0,00")]).SetFont(timesFont).SetFontSize(11));
                 productTable.AddCell(serviceSumCell);
             }
 
@@ -345,7 +346,7 @@ namespace InvoiceGenerator.Services.PdfService
 
 
 
-        private Cell CreateInfoCell(string title,int rowSpan,int colSpan ,string name="")
+        private Cell CreateInfoCell(string title, int rowSpan, int colSpan, string name = "")
         {
             var cell = new Cell(rowSpan, colSpan);
             cell.Add(new Paragraph(stringLocalizer[title]).SetFont(artilFont).SetItalic());
@@ -355,12 +356,12 @@ namespace InvoiceGenerator.Services.PdfService
             }
             else
             {
-                cell.Add(new Paragraph(stringLocalizer["Name"] + new string('.',30)).SetFont(artilFont).SetFontSize(9));
+                cell.Add(new Paragraph(stringLocalizer["Name"] + new string('.', 30)).SetFont(artilFont).SetFontSize(9));
             }
-            
+
             cell.Add(new Paragraph(stringLocalizer["Sign"] + new string('.', 30)).SetFont(artilFont).SetFontSize(9));
             return cell;
         }
-        
+
     }
 }

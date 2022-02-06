@@ -36,11 +36,15 @@ namespace InvoiceGenerator.Services.Data
                 .OrderByDescending(x => x.InvoiceNumber)
                 .Select(x => x.InvoiceNumber)
                 .FirstOrDefaultAsync();
-            
-            var newInvoiceNumber = lastInvoiceNumber + 1;
+            if (lastInvoiceNumber == 0)
+            {
+                lastInvoiceNumber = 432;
+            }
+
+
             var invoice = new Invoice
             {
-                InvoiceNumber = newInvoiceNumber,
+                InvoiceNumber = lastInvoiceNumber + 1,
                 SellerId = companyId,
                 ClientId = inputModel.ClientId,
                 DateOfTaxEvent = inputModel.DateOfTaxEvent,
@@ -189,11 +193,6 @@ namespace InvoiceGenerator.Services.Data
                 articleFromStock.Quantity += article.Quantity;
                 invoice.Articles.Remove(article);
             }
-            var servicesWhichShouldBeRemoved = invoice.Services.Where(x => inputModel.Services.Any(s => s.Id == x.ServiceId)).ToList();
-            foreach (var service in servicesWhichShouldBeRemoved)
-            {
-                invoice.Services.Remove(service);
-            }
             double vatRateSum = 0;
             foreach (var article in inputModel.Articles)
             {
@@ -237,12 +236,16 @@ namespace InvoiceGenerator.Services.Data
 
                 }
             }
+            var serviceWhichWillBeDeleted = invoice.Services.Where(x => !inputModel.Services.Any(y => y.Id == x.ServiceId));
+            foreach (var service in serviceWhichWillBeDeleted)
+            {
+                invoice.Services.Remove(service);
+            }
             foreach (var service in inputModel.Services)
             {
                 var serviceFromStock = await context.Services.FirstOrDefaultAsync(x => x.Id == service.Id);
                 if (serviceFromStock == null)
                 {
-
                     throw new InvalidUserDataException(string.Format(ErrorMessages.InvalidServiceId, service.Id));
                 }
                 vatRateSum += serviceFromStock.VatRate;
@@ -251,7 +254,7 @@ namespace InvoiceGenerator.Services.Data
                 {
                     existService.Quantity = service.Quantity;
                     existService.PriceWithoutVat = service.Price;
-
+                    existService.AdditionalInfo = service.AdditionalInfo;
 
                 }
                 else
@@ -262,6 +265,7 @@ namespace InvoiceGenerator.Services.Data
                         ServiceId = service.Id,
                         Quantity = service.Quantity,
                         PriceWithoutVat = service.Price,
+                        AdditionalInfo = service.AdditionalInfo,
 
                     };
                     invoice.Services.Add(existService);

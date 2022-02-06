@@ -28,7 +28,9 @@ export default function ConfirmedArticlesInInvoice(props) {
     const [isOpenPopup, setOpenPopup] = useState(false)
     const [isOpenConfirmPopup, setOpenConfirmPopup] = useState(false)
     const [markedArticleIdForDeletion, selectArticleIdForDeletion] = useState('');
+    const [markedServiceIdForDeletion, selectServiceIdForDeletion] = useState('')
     const [isOpenAddServicePopup, setServicePopup] = useState(false);
+    const [isOpenServiceConfiramtionPopup, setOpenServiceConfirmPopup] = useState(false);
 
 
 
@@ -43,6 +45,9 @@ export default function ConfirmedArticlesInInvoice(props) {
     }
     function deleteArticle() {
         setInvoiceDetails(prevState => ({ ...prevState, articles: [...prevState.articles.filter(x => x.id != markedArticleIdForDeletion)] }))
+    }
+    function deleteService() {
+        setInvoiceDetails(prevState => ({ ...prevState, services: [...prevState.services.filter(x => x.id != markedServiceIdForDeletion)] }))
     }
     let averageVatRate = isInvoiceWithZeroVatRate ? 0
         : (articles.reduce((sum, article) => { return sum + article.vatRate }, 0) +
@@ -77,7 +82,7 @@ export default function ConfirmedArticlesInInvoice(props) {
 
 
 
-                                        <IconButton size="small" name={article.id} onClick={(e) => { setOpenConfirmPopup(true); selectArticleIdForDeletion(article.id) }}>
+                                        <IconButton size="small" name={article.id} onClick={(e) => { setOpenServiceConfirmPopup(true); selectArticleIdForDeletion(article.id) }}>
                                             <DeleteIcon fontSize="medium" htmlColor='#961E13' />
                                         </IconButton >
 
@@ -97,7 +102,7 @@ export default function ConfirmedArticlesInInvoice(props) {
 
 
 
-                                        <IconButton size="small" name={service.id} onClick={(e) => { setOpenConfirmPopup(true); selectArticleIdForDeletion(service.id) }}>
+                                        <IconButton size="small" name={service.id} onClick={(e) => { setOpenServiceConfirmPopup(true); selectServiceIdForDeletion(service.id) }}>
                                             <DeleteIcon fontSize="medium" htmlColor='#961E13' />
                                         </IconButton >
 
@@ -190,6 +195,13 @@ export default function ConfirmedArticlesInInvoice(props) {
                 actionAfterConfirmation={deleteArticle}
                 title='Премахване на артикул'
                 question='Сигурни ли сте че искате да премахнете артикула'
+            />
+            <ConfirmPopup
+                setOpenPopup={setOpenServiceConfirmPopup}
+                openPopup={isOpenServiceConfiramtionPopup}
+                actionAfterConfirmation={deleteService}
+                title='Премахване на артикул'
+                question='Сигурни ли сте че искате да премахнете услугата'
             />
         </>
 

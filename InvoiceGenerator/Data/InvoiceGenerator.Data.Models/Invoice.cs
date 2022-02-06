@@ -21,7 +21,7 @@ namespace InvoiceGenerator.Data.Models
         public string Id { get; set; }
 
         public int InvoiceNumber { get; set; }
-
+        
         public RegisteredCompany Seller { get; set; }
 
         public  string SellerId { get; set; }

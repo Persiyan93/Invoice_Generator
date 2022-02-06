@@ -11,6 +11,6 @@ namespace InvoiceGenerator.Web.Models.Client
     public class ClientInputModel : CompanyInputModel
     {
         [EmailAddress]
-        public string CompanyEmailAddress { get; set; }
+         public string CompanyEmailAddress { get; set; }
     }
 }

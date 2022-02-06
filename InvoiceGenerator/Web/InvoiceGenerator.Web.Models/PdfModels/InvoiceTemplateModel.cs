@@ -18,11 +18,12 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
         public InvoiceTemplateModel()
         {
             this.Articles = new List<ArticleToInvoiceTemplateModel>();
+            this.Services = new List<ServiceToInvoiceTemplateModel>();
 
         }
 
 
-        public string InvoiceNumber { get; set; }
+        public int InvoiceNumber { get; set; }
 
         public string ClientCompanyName { get; set; }
 
@@ -95,7 +96,7 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
                    .ForMember(x => x.IssueDate, opt =>
                               opt.MapFrom(y => y.IssueDate.ToString("dd.MM.yyyy")))
                    .ForMember(x => x.DateOfTaxEvent, opt =>
-                              opt.MapFrom(y => y.IssueDate.ToString("dd.MM.yyyy")))
+                              opt.MapFrom(y => y.DateOfTaxEvent.ToString("dd.MM.yyyy")))
                    .ForMember(x => x.MethodOfPayment, opt =>
                               opt.MapFrom(y => y.PaymentMethod == MethodsOfPayment.Cash ? "Cash" : "BankTransfer"))
                    .ForMember(x => x.SellerCompanyName, opt =>
@@ -115,18 +116,9 @@ namespace InvoiceGenerator.Services.MicrosoftWordService.Models
                     .ForMember(x => x.ReazonForZeroVatRate, opt =>
                                    opt.MapFrom(i => i.ReasonForInvoiceWithZeroVatRate))
                     .ForMember(x => x.PlaceOfPublishing, opt =>
-                                   opt.MapFrom(i => i.Seller.Address.Town.Name));
-                    //.ForMember(x => x.VatRate, opt =>
-                    //              opt.MapFrom(i => i.Services.Count == 0 ? 0 : (i.Services.Sum(x => x.Service.VatRate) / i.Services.Count) + i.Articles.Count == 0 ? 0 : (i.Articles.Sum(a => a.Article.VatRate) / i.Articles.Count)));
-
-
-
-
-
-
-
-
-
+                                   opt.MapFrom(i => i.Seller.Address.Town.Name))
+                    .ForMember(x => x.VatRate, opt =>
+                                opt.MapFrom(i => i.Services.Count == 0 ? 0 : (i.Services.Sum(x => x.Service.VatRate) / i.Services.Count)));
 
         }
     }

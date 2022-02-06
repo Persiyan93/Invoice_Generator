@@ -24,7 +24,7 @@ namespace InvoiceGenerator.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-     [Authorize]
+    [Authorize]
     public class InvoicesController : ControllerBase
 
 
@@ -36,7 +36,7 @@ namespace InvoiceGenerator.Web.Controllers
         private readonly IStringLocalizer<Messages> stringLocalizer;
 
         public InvoicesController(IInvoiceService invoiceService, UserManager<ApplicationUser> userManager
-            ,ICloudService cloudService,IPdfService pdfService,IStringLocalizer<Messages> stringLocalizer)
+            , ICloudService cloudService, IPdfService pdfService, IStringLocalizer<Messages> stringLocalizer)
         {
             this.invoiceService = invoiceService;
             this.userManager = userManager;
@@ -47,7 +47,7 @@ namespace InvoiceGenerator.Web.Controllers
 
 
 
-       
+
 
         [HttpGet("{invoiceId}")]
         public async Task<IActionResult> GetInvoiceDetails(string invoiceId)
@@ -62,14 +62,14 @@ namespace InvoiceGenerator.Web.Controllers
         public async Task<IActionResult> AddInvoice(InvoiceInputModel inputModel)
         {
             var user = await userManager.GetUserAsync(this.User);
-           var invoiceId = await invoiceService.CreateInvoiceAsync(inputModel,user.CompanyId,user.Id);
-           var pdfAsByteArray =await pdfService.GenerateInvoicePdf(invoiceId);
+            var invoiceId = await invoiceService.CreateInvoiceAsync(inputModel, user.CompanyId, user.Id);
+            var pdfAsByteArray = await pdfService.GenerateInvoicePdf(invoiceId);
 
             System.IO.File.WriteAllBytes($@"D:\Invoices\{invoiceId}.pdf", pdfAsByteArray);
 
-           
-           //await  cloudService.UploadFileAsync(invoiceId, pdfAsByteArray); 
-             
+
+            //await  cloudService.UploadFileAsync(invoiceId, pdfAsByteArray); 
+
 
             return this.Ok(new ResponseViewModel
             {
@@ -83,7 +83,7 @@ namespace InvoiceGenerator.Web.Controllers
         [Route("invoicepdf/{invoiceId}")]
         public async Task<IActionResult> GetInvoiceAsPdf(string invoiceId)
         {
-           var dataBytes = System.IO.File.ReadAllBytes(@$"D:\Invoices\{invoiceId}.pdf");
+            var dataBytes = System.IO.File.ReadAllBytes(@$"D:\Invoices\{invoiceId}.pdf");
             var dataAsStream = new MemoryStream(dataBytes);
 
             return Ok(dataAsStream);
@@ -98,27 +98,29 @@ namespace InvoiceGenerator.Web.Controllers
             var user = await userManager.FindByNameAsync(this.User.Identity.Name);
             var userId = user.Id;
 
-           var invboiceNumber=await invoiceService.UpdateStatusOfInvoicesAsync(inputModel, companyId, userId);
+            var invboiceNumber = await invoiceService.UpdateStatusOfInvoicesAsync(inputModel, companyId, userId);
 
             return this.Ok(new ResponseViewModel
             {
                 Status = SuccessMessages.SuccessfullyStatus,
-                Message = stringLocalizer["SuccessfullyUpdateStatusOfInvoices",invboiceNumber].Value
+                Message = stringLocalizer["SuccessfullyUpdateStatusOfInvoices", invboiceNumber].Value
             });
 
         }
 
         [HttpPut("{invoiceId}")]
-        public async Task<IActionResult> EditInvoice(InvoiceInputModel inputModel,string invoiceId)
+        public async Task<IActionResult> EditInvoice(InvoiceInputModel inputModel, string invoiceId)
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
             var user = await userManager.FindByNameAsync(this.User.Identity.Name);
             var userId = user.Id;
 
             await invoiceService.EditInvoiceAsync(inputModel, userId, invoiceId);
-
             var pdfAsByteArray = await pdfService.GenerateInvoicePdf(invoiceId);
-            await cloudService.UploadFileAsync(invoiceId, pdfAsByteArray);
+            System.IO.File.WriteAllBytes($@"D:\Invoices\{invoiceId}.pdf", pdfAsByteArray);
+
+            //This code can be used when Microsoft blob is active 
+            //await cloudService.UploadFileAsync(invoiceId, pdfAsByteArray);
 
 
             return this.Ok(new ResponseViewModel
@@ -128,7 +130,7 @@ namespace InvoiceGenerator.Web.Controllers
             });
 
 
-           
+
 
         }
 
@@ -136,20 +138,20 @@ namespace InvoiceGenerator.Web.Controllers
 
         public async Task<IActionResult> GetAll(DateTime startDate, DateTime endDate,
                     int rowsPerPage = 10, string filterString = "",
-                    string orderBy = "IssueDate", string order = "desc", 
-                    int page = 0,int invoiceNumber=0,string clientName="",string createdBy="",string invoiceStatus="")
+                    string orderBy = "IssueDate", string order = "desc",
+                    int page = 0, int invoiceNumber = 0, string clientName = "", string createdBy = "", string invoiceStatus = "")
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
             var invoices = await invoiceService.GetAllCompanyInvoicesAsync<InvoiceInListViewModel>(companyId, startDate, endDate,
-             orderBy, order,invoiceNumber,clientName,createdBy,invoiceStatus);
+             orderBy, order, invoiceNumber, clientName, createdBy, invoiceStatus);
             var invoicesCount = invoices.Count;
             invoices = invoices
-                .Skip(rowsPerPage * (page ))
+                .Skip(rowsPerPage * (page))
                 .Take(rowsPerPage)
                 .ToList();
-          
 
-            return this.Ok(new{FilteredInvoice=invoices,CountOfAllInvoices=invoicesCount });
+
+            return this.Ok(new { FilteredInvoice = invoices, CountOfAllInvoices = invoicesCount });
         }
 
 
@@ -161,7 +163,7 @@ namespace InvoiceGenerator.Web.Controllers
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
             var invoices = await invoiceService.GetClientInvoicesByClientIdAsync<InvoiceInListViewModel>(clientId, startDate, endDate,
-             orderBy, order) ;
+             orderBy, order);
             var invoicesCount = invoices.Count;
             invoices = invoices
                 .Skip(rowsPerPage * (page))
@@ -179,7 +181,7 @@ namespace InvoiceGenerator.Web.Controllers
         {
             var companyId = this.User.Claims.FirstOrDefault(x => x.Type == "companyId").Value;
             var invoiceIncomesByMonths = await invoiceService.GetSalesByMonthsAsync(companyId);
-             return this.Ok(invoiceIncomesByMonths);
+            return this.Ok(invoiceIncomesByMonths);
         }
 
         [HttpGet]

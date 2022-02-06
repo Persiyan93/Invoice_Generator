@@ -9,7 +9,7 @@ export function saveInvoice(invoice) {
 
 export function editInvoice(invoice, invoiceId) {
     console.log(invoice)
-    return dataService.put(invoice, endpoints.invoices + `/${invoiceId}?cylture=${invoice.invoiceLanguage}`)
+    return dataService.put(invoice, endpoints.invoices + `/${invoiceId}?culture=${invoice.invoiceLanguage}`)
 
 }
 export function getAllInvoices() {
